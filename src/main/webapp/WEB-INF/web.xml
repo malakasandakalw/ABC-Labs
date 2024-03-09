@@ -1,0 +1,68 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+  	<servlet-name>ManagersController</servlet-name>
+  	<display-name>ManagersController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.ManagersController</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ManagerDashboardController</servlet-name>
+  	<display-name>ManagerDashboardController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.ManagerDashboardController</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ReceptionistsController</servlet-name>
+  	<display-name>ReceptionistsController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.ReceptionistsController</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>TechniciansController</servlet-name>
+  	<display-name>TechniciansController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.TechniciansController</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>TestTypeController</servlet-name>
+  	<display-name>TestTypeController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.TestTypeController</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>ManagersController</servlet-name>
+  	<url-pattern>/ManagersController</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>ManagersController</servlet-name>
+  	<url-pattern>/manager-dashboard</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>ManagersController</servlet-name>
+  	<url-pattern>/manager-managers</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>ReceptionistsController</servlet-name>
+  	<url-pattern>/manager-receptionists</url-pattern>
+  </servlet-mapping>
+  
+   <servlet-mapping>
+  	<servlet-name>TechniciansController</servlet-name>
+  	<url-pattern>/manager-technicians</url-pattern>
+  </servlet-mapping>
+  
+   <servlet-mapping>
+  	<servlet-name>TestTypeController</servlet-name>
+  	<url-pattern>/manager-test-types</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
