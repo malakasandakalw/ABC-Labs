@@ -10,6 +10,11 @@ public class TestType {
 		
 	}
 
+	public TestType(String name, Double price) {
+		this.name = name;
+		this.price = price;
+	}
+	
 	public TestType(int id, String name, Double price) {
 		this.id = id;
 		this.name = name;

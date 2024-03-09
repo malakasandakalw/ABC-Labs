@@ -27,9 +27,8 @@ public class TestTypeServiceImpl implements TestTypeService {
 	}
 
 	@Override
-	public boolean createTestType(TestType testType) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean createTestType(TestType testType) throws ClassNotFoundException, SQLException {
+		return getTestTypeManager().createTestType(testType);
 	}
 
 	@Override
@@ -38,21 +37,18 @@ public class TestTypeServiceImpl implements TestTypeService {
 	}
 
 	@Override
-	public TestType getSpecificTestType(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public TestType getSpecificTestType(int id) throws ClassNotFoundException, SQLException {
+		return getTestTypeManager().getSpecificTestType(id);
 	}
 
 	@Override
-	public boolean updateTestType(TestType testType) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateTestType(TestType testType) throws ClassNotFoundException, SQLException {
+		return getTestTypeManager().updateTestType(testType);
 	}
 
 	@Override
-	public boolean deleteTestType(int id) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteTestType(int id) throws ClassNotFoundException, SQLException {
+		return getTestTypeManager().deleteTestType(id);
 	}
 
 }

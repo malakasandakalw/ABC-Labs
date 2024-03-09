@@ -1,6 +1,7 @@
 package com.code_with_malaka.ABC_lab_system.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,6 +19,51 @@ public class TestTypeManager {
 	private Connection getConnection() throws ClassNotFoundException, SQLException {
 		DbConnector connector =  getDbConnector();
 		return connector.getDbConnection();
+	}
+	
+	public boolean createTestType(TestType testType) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		String query = "INSERT INTO test_types (name, price) VALUES (?, ?)";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, testType.getName());
+		ps.setDouble(2, testType.getPrice());
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
+	public boolean updateTestType(TestType testType) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		String query = "UPDATE test_types SET name = ?, price = ? WHERE id = ?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, testType.getName());
+		ps.setDouble(2, testType.getPrice());
+		ps.setInt(3, testType.getId());
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
+	public boolean deleteTestType(int id) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		String query = "DELETE FROM test_types WHERE id = ?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, id);
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
 	}
 	
 	public List<TestType> getAllTestTypes() throws ClassNotFoundException, SQLException{
@@ -43,4 +89,29 @@ public class TestTypeManager {
 		return testTypesList;
 		
 	}
+	
+	public TestType getSpecificTestType(int id) throws ClassNotFoundException, SQLException {
+		
+		Connection connection = getConnection(); 
+		
+		String query = "SELECT * FROM test_types WHERE id = ?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, id);
+		
+		ResultSet rs = ps.executeQuery();
+		TestType testType = new TestType();
+		
+		while(rs.next()) {
+			testType.setId(rs.getInt("id"));
+			testType.setName(rs.getString("name"));
+			testType.setPrice(rs.getDouble("price"));
+		}
+		
+		ps.close();
+		connection.close();		
+		return testType;
+		
+	}
+	
 }

@@ -65,4 +65,9 @@
   	<url-pattern>/manager-test-types</url-pattern>
   </servlet-mapping>
   
+  <servlet-mapping>
+  	<servlet-name>TestTypeController</servlet-name>
+  	<url-pattern>/testType</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

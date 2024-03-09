@@ -1,11 +1,10 @@
-<%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" isELIgnored="false"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Manager Test Types</title>
+<title>Manager - Add Test Type</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -18,6 +17,7 @@
 <link href="css/style.css">
 </head>
 <body>
+
 	<nav class="navbar navbar-expand-md bg-body-tertiary">
 		<div class="container">
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -37,34 +37,20 @@
 	</nav>
 	<div class="container">
 	<p>${message}</p>
-	<a href="manager-add-new-test-type.jsp">Create New Test</a>
-		<table class="table table-stripped">
-			<thead>
-			</thead>
-			<tbody>
-				<tag:forEach var="testType" items="${testTypesList}">
-					<tr>
-						<td>${testType.name}</td>
-						<td>${testType.price}</td>
-						<td>
-							<form method="get" action="testType">
-							  <input type="hidden" name="test_type_id" value="${testType.id}" required>
-							  <input type="hidden" name="type" value="update-specific"/>
-							  <button type="submit" class="btn btn-success">Update</button>
-							</form>
-						</td>
-						<td>
-							<form method="post" action="testType">
-							  <input type="hidden" name="test_type_id" value="${testType.id}" required>
-							  <input type="hidden" name="type" value="delete-specific"/>
-							  <button type="submit" class="btn btn-danger">Delete</button>
-							</form>
-						</td>
-					</tr>
-				</tag:forEach>
-			</tbody>
-
-		</table>
+		<div class="col-md-5 mx-auto">
+			<form method="post" action="testType">
+			  <div class="mb-3">
+			    <label class="form-label">Test Name</label>
+			    <input type="text" class="form-control" id="test_name" name="test_name" required>
+			  </div>
+			  <div class="mb-3">
+			    <label class="form-label">Price</label>
+			    <input type="number" class="form-control" id="test_price" name="test_price" required>
+			  </div>
+			  <input type="hidden" name="type" value="create"/>
+			  <button type="submit" class="btn btn-primary">Create Test</button>
+			</form>
+		</div>
 	</div>
 </body>
 </html>
