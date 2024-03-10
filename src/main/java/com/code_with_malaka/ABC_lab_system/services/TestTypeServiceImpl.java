@@ -45,10 +45,19 @@ public class TestTypeServiceImpl implements TestTypeService {
 	public boolean updateTestType(TestType testType) throws ClassNotFoundException, SQLException {
 		return getTestTypeManager().updateTestType(testType);
 	}
+	
+	public boolean updateTestTypeStatus(int id, int status) throws ClassNotFoundException, SQLException {
+		return getTestTypeManager().updateTestTypeStatus(id, status);
+	}
 
 	@Override
 	public boolean deleteTestType(int id) throws ClassNotFoundException, SQLException {
 		return getTestTypeManager().deleteTestType(id);
+	}
+
+	@Override
+	public List<TestType> getTestTypesByTechnicianId(int id) throws ClassNotFoundException, SQLException {
+		return getTestTypeManager().getTestTypesByTechnicianId(id);
 	}
 
 }

@@ -5,9 +5,14 @@ public class TestType {
 	private int id;
 	private String name;
 	private Double price;
+	private int isActive;
 	
 	public TestType() {
 		
+	}
+	
+	public TestType(int id) {
+		this.id = id;
 	}
 
 	public TestType(String name, Double price) {
@@ -15,10 +20,11 @@ public class TestType {
 		this.price = price;
 	}
 	
-	public TestType(int id, String name, Double price) {
+	public TestType(int id, String name, Double price, int isActive) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
+		this.isActive = isActive;
 	}
 	
 
@@ -28,6 +34,14 @@ public class TestType {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public int getisActive() {
+		return isActive;
+	}
+
+	public void setisActive(int isActive) {
+		this.isActive = isActive;
 	}
 
 	public String getName() {

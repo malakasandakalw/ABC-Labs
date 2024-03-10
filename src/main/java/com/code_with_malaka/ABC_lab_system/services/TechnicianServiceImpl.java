@@ -28,8 +28,8 @@ private static TechnicianService technicianServiceObj;
 	}
 	
 	@Override
-	public boolean createTechnician(Technician technician) {
-		return false;
+	public boolean createTechnician(Technician technician) throws ClassNotFoundException, SQLException {
+		return getTechniciansManager().createTechnician(technician);
 	}
 
 	@Override
@@ -38,9 +38,8 @@ private static TechnicianService technicianServiceObj;
 	}
 
 	@Override
-	public Technician getSpecificTechnician(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Technician getSpecificTechnician(int id) throws ClassNotFoundException, SQLException {
+		return getTechniciansManager().getSpecificTechnician(id);
 	}
 
 	@Override
@@ -50,9 +49,8 @@ private static TechnicianService technicianServiceObj;
 	}
 
 	@Override
-	public boolean updateTechnician(Technician manager) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateTechnician(Technician technician) throws ClassNotFoundException, SQLException {
+		return getTechniciansManager().updateTechnician(technician);
 	}
 
 	@Override

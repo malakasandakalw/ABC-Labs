@@ -15,6 +15,8 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
 	crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://unpkg.com/@adminkit/core@latest/dist/css/app.css">
+<script src="https://unpkg.com/@adminkit/core@latest/dist/js/app.js"></script>
 <link href="css/style.css">
 </head>
 <body>
@@ -34,8 +36,15 @@
 						href="manager-test-types">Test Types</a></li>
 				</ul>
 			</div>
+			</div>
 	</nav>
 	<div class="container">
+	
+		<form method="get" action="technicians">
+		  <input type="hidden" name="type" value="new-technician"/>
+		  <button type="submit" class="btn btn-primary">Create Technician</button>
+		</form>
+	
 		<table class="table table-stripped">
 			<thead>
 			</thead>
@@ -44,6 +53,15 @@
 					<tr>
 						<td>${technician.name}</td>
 						<td>${technician.email}</td>
+						<td>
+							<div class="action-div">
+		                        <form method="get" action="technicians">
+		                           <input type="hidden" name="technician_id" value="${technician.id}" required>
+		                           <input type="hidden" name="type" value="update-specific"/>
+		                           <button type="submit" class="btn btn-success">Update</button>
+		                        </form>
+	                        </div>
+						</td>
 					</tr>
 				</tag:forEach>
 			</tbody>

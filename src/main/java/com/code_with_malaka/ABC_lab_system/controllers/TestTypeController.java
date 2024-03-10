@@ -20,14 +20,11 @@ public class TestTypeController extends HttpServlet {
        
     public TestTypeController() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type");
 		TestTypeServiceImpl testTypeService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
-		
-		System.out.println(type);
 		
     	if(type != null && type.equals("specific")) {
 //    		getSpecificProduct(request, response, managerService);
@@ -44,8 +41,6 @@ public class TestTypeController extends HttpServlet {
 		
 		TestTypeServiceImpl testTypeService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
 		
-		System.out.println(type);
-		
 		if(type != null && type.equals("create")) {
     		createTestType(request, response, testTypeService);
     	}
@@ -59,6 +54,40 @@ public class TestTypeController extends HttpServlet {
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+    	}
+    	else if(type != null && type.equals("deactivate-specific")) {
+        	try {
+				updateTestTypeActiveStatus(request, response, testTypeService, 0);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	else if(type != null && type.equals("activate-specific")) {
+    		try {
+				updateTestTypeActiveStatus(request, response, testTypeService, 1);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}
@@ -78,8 +107,6 @@ public class TestTypeController extends HttpServlet {
 			rd.forward(request, response);
 			
 		} else {
-			
-			System.out.println("Validation Success");
 			
 			String name = request.getParameter("test_name");
 			double price = Double.parseDouble(request.getParameter("test_price"));
@@ -111,6 +138,38 @@ public class TestTypeController extends HttpServlet {
 		
 	}
 	
+	private void updateTestTypeActiveStatus(HttpServletRequest request, HttpServletResponse response, TestTypeServiceImpl service, int isActive) throws ServletException, IOException, ClassNotFoundException, SQLException {
+		Integer id = Integer.parseInt(request.getParameter("test_type_id"));
+		
+		boolean result;
+		
+		String message = "";
+		
+		try {
+			result = service.updateTestTypeStatus(id, isActive);
+			if(result) {
+				message = "Successfully Updated!";
+			}
+			else {
+				message = "Failed!";
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			message = e.getMessage();
+		}
+		
+		HttpSession session = request.getSession();
+		
+		try {
+			List<TestType> testTypesList = service.getAllTestTypes();
+			session.setAttribute("testTypesList", testTypesList);
+		} catch (ClassNotFoundException | SQLException e) {
+			message = e.getMessage();
+		}
+		
+		session.setAttribute("message", message);
+		response.sendRedirect("manager-test-types.jsp");
+	}
+	
 	private void updateTestType(HttpServletRequest request, HttpServletResponse response, TestTypeServiceImpl service) throws ServletException, IOException, ClassNotFoundException, SQLException {
 		
 		if ((request.getParameter("test_name") == null || request.getParameter("test_name") == "") || (request.getParameter("test_price") == null) || request.getParameter("test_price") == "") {
@@ -129,8 +188,9 @@ public class TestTypeController extends HttpServlet {
 			Integer id = Integer.parseInt(request.getParameter("test_type_id"));
 			String name = request.getParameter("test_name");
 			double price = Double.parseDouble(request.getParameter("test_price"));
+			Integer isActive = Integer.parseInt(request.getParameter("test_is_active"));
 			
-			TestType testType =  new TestType(id, name, price);
+			TestType testType =  new TestType(id, name, price, isActive);
 			
 			boolean result;
 			

@@ -36,14 +36,29 @@ public class TestTypeManager {
 		return result > 0;
 	}
 	
+	public boolean updateTestTypeStatus(int id, int status) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection();
+		String query = "UPDATE test_types SET is_active = ? WHERE id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, status);
+		ps.setInt(2, id);
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
 	public boolean updateTestType(TestType testType) throws ClassNotFoundException, SQLException {
 		Connection connection = getConnection(); 
-		String query = "UPDATE test_types SET name = ?, price = ? WHERE id = ?";
+		String query = "UPDATE test_types SET name = ?, price = ?, is_active = ? WHERE id = ?";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setString(1, testType.getName());
 		ps.setDouble(2, testType.getPrice());
-		ps.setInt(3, testType.getId());
+		ps.setInt(3, testType.getisActive());
+		ps.setInt(4, testType.getId());
 		
 		int result = ps.executeUpdate();
 		
@@ -82,12 +97,35 @@ public class TestTypeManager {
 			testType.setId(resultset.getInt("id"));
 			testType.setName(resultset.getString("name"));
 			testType.setPrice(resultset.getDouble("price"));
+			testType.setisActive(resultset.getInt("is_active"));
 			testTypesList.add(testType);
 		}
 		statement.close();
 		connection.close();
 		return testTypesList;
 		
+	}
+	
+	public List<TestType> getTestTypesByTechnicianId(int id) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		
+		String query = "SELECT test_type_id FROM technicians_specific_tests WHERE technician_id = ?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, id);
+		
+		ResultSet rs = ps.executeQuery();
+		List<TestType> testTypesList = new ArrayList<TestType>();
+		
+		while(rs.next()) {
+			TestType testType = new TestType();
+			testType.setId(rs.getInt("test_type_id"));
+			testTypesList.add(testType);
+		}
+		
+		ps.close();
+		connection.close();		
+		return testTypesList;
 	}
 	
 	public TestType getSpecificTestType(int id) throws ClassNotFoundException, SQLException {
@@ -106,6 +144,7 @@ public class TestTypeManager {
 			testType.setId(rs.getInt("id"));
 			testType.setName(rs.getString("name"));
 			testType.setPrice(rs.getDouble("price"));
+			testType.setisActive(rs.getInt("is_active"));
 		}
 		
 		ps.close();
