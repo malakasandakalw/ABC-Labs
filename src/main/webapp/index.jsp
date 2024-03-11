@@ -11,6 +11,9 @@
 			<li class="nav-item">
 				<a class="nav-link" href="manager-dashboard">manager dashboard</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="receptionist-all-appointments">receptionist dashboard</a>
+			</li>
 		</ul>		
 	</div>
 </body>

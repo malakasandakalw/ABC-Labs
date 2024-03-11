@@ -33,8 +33,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	@Override
 	public List<Appointment> getAllAppointments() throws ClassNotFoundException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getAppointmentManager().getAllAppointments();
 	}
 
 	@Override
@@ -50,15 +49,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public Appointment getSpecificAppointments(int id) throws ClassNotFoundException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public Appointment getSpecificAppointment(int id) throws ClassNotFoundException, SQLException {
+		return getAppointmentManager().getSpecificAppointment(id);
 	}
 
 	@Override
-	public boolean updateAppointment(Appointment appointment) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateAppointment(Appointment appointment) throws ClassNotFoundException, SQLException {
+		return getAppointmentManager().updateAppointment(appointment);
 	}
 
 }

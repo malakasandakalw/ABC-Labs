@@ -1,5 +1,6 @@
 package com.code_with_malaka.ABC_lab_system.models;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,17 @@ public class Appointment {
 	private String details;
 	private String contactNumber;
 	private String email;
+	private Timestamp createdAt;
 	
+	public Appointment(int id, Date date, String status, Double totalPrice) {
+		this.id = id;
+		this.date = date;
+		this.status = status;
+		this.totalPrice = totalPrice;
+	}
+	public Appointment() {
+		// TODO Auto-generated constructor stub
+	}
 	public int getId() {
 		return id;
 	}
@@ -61,5 +72,12 @@ public class Appointment {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+	
 	
 }

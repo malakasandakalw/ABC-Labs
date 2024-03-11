@@ -2,9 +2,13 @@ package com.code_with_malaka.ABC_lab_system.controllers;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +19,7 @@ import com.code_with_malaka.ABC_lab_system.models.Appointment;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
 import com.code_with_malaka.ABC_lab_system.models.TestType;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentServiceImpl;
+import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TestTypeServiceImpl;
 
 public class AppointmentsController extends HttpServlet {
@@ -29,15 +34,15 @@ public class AppointmentsController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type");
 		
-		if (type != null && type.equals("specific")) {
-//    		getSpecificProduct(request, response, managerService);
+		if (type != null && type.equals("get-specific")) {
+    		getSpecificAppointment(request, response, "");
 		} else if (type != null && type.equals("new-appointment")) {
 			getTestTypesForCreateAppointment(request, response, "");
 		}else if(type != null && type.equals("update-specific")) {
 //			TestTypeServiceImpl testTypeService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
 //    		getSpecificTechnicianForUpdate(request, response, technicianService, testTypeService, "");
     	} else {
-//			getAllTechnicians(request, response, technicianService);
+			getAllAppointments(request, response);
 		}
 		
 	}
@@ -49,12 +54,58 @@ public class AppointmentsController extends HttpServlet {
     		createAppointment(request, response);
     	}
     	else if(type != null && type.equals("update")) {
-//    		updateTechnician(request, response, technicianService);
+    		try {
+				updateAppointment(request, response);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
     	}
     	else if(type != null && type.equals("delete-specific")) {
 //        	deleteTestType(request, response, testTypeService);
     	}
 		
+	}
+	
+	private void getAllAppointments(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		AppointmentServiceImpl appointmentService = (AppointmentServiceImpl) AppointmentServiceImpl.getAppointmentServiceInstance();
+		String message = "";
+		List<Appointment> appointmentsList;
+		
+		try {
+			appointmentsList = appointmentService.getAllAppointments();
+		} catch (ClassNotFoundException | SQLException e) {
+			message = e.getMessage();
+			appointmentsList = new ArrayList<Appointment>();
+		}
+		
+		request.setAttribute("message", message);
+		request.setAttribute("appointmentsList", appointmentsList);
+		
+    	RequestDispatcher rd = request.getRequestDispatcher("receptionist-all-appointments.jsp");
+    	rd.forward(request, response);
+	}
+	
+	private void getSpecificAppointment(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
+		AppointmentServiceImpl appointmentService = (AppointmentServiceImpl) AppointmentServiceImpl.getAppointmentServiceInstance();
+		AppointmentTestServiceImpl appointmentTestsService = (AppointmentTestServiceImpl) AppointmentTestServiceImpl.getAppointmentTestServiceInstance();
+	
+		Appointment appointment;
+		
+		try {
+			int id = Integer.parseInt(request.getParameter("appointment_id"));
+			appointment = appointmentService.getSpecificAppointment(id);
+			List<AppointmentTest> appointmentTests = appointmentTestsService.getAppointmentTestsByAppointmentId(id);
+			appointment.setAppointmentTests(appointmentTests);
+		} catch (ClassNotFoundException | SQLException e) {
+			message = e.getMessage();
+			appointment = new Appointment();
+		}
+		
+		request.setAttribute("message", message);
+		request.setAttribute("appointment", appointment);
+		
+    	RequestDispatcher rd = request.getRequestDispatcher("receptionist-view-appointment.jsp");
+    	rd.forward(request, response);
 	}
 	
 	private void getTestTypesForCreateAppointment(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
@@ -129,6 +180,40 @@ public class AppointmentsController extends HttpServlet {
 			getTestTypesForCreateAppointment(request, response, "Select Tests You Want To do!");
 			
 		}
+	}
+	
+	private void updateAppointment(HttpServletRequest request, HttpServletResponse response) throws ParseException, ServletException, IOException {
+		AppointmentServiceImpl appointmentService = (AppointmentServiceImpl) AppointmentServiceImpl.getAppointmentServiceInstance();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		int id = Integer.parseInt(request.getParameter("appointment_id"));
+		Date date = dateFormat.parse(request.getParameter("appointment_date"));
+		String status = request.getParameter("appointment_status");
+		Double price = Double.parseDouble(request.getParameter("appointment_price"));
+		
+		Appointment appointment = new Appointment(id, date, status, price);
+		
+		boolean result;
+		
+		String message = "";
+		
+		try {
+			result = appointmentService.updateAppointment(appointment);
+			if(result) {
+				message = "Successfully Updated!";
+			}
+			else {
+				message = "Failed!";
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			message = e.getMessage();
+		}
+		
+		request.setAttribute("message", message);
+		
+		getSpecificAppointment(request,response, message);
+		
+		
 	}
 	
 }

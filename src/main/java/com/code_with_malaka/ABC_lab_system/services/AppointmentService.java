@@ -10,6 +10,6 @@ public interface AppointmentService {
 	public List<Appointment> getAllAppointments() throws ClassNotFoundException, SQLException;
 	public List<Appointment> getAppointmentsByPatient(int id) throws ClassNotFoundException, SQLException;
 	public List<Appointment> getAppointmentsByTechnician(int id) throws ClassNotFoundException, SQLException;
-	public Appointment getSpecificAppointments(int id) throws ClassNotFoundException, SQLException;
-	public boolean updateAppointment(Appointment appointment);
+	public Appointment getSpecificAppointment(int id) throws ClassNotFoundException, SQLException;
+	public boolean updateAppointment(Appointment appointment) throws ClassNotFoundException, SQLException;
 }
