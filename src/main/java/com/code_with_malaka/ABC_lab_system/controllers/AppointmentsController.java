@@ -17,9 +17,11 @@ import javax.servlet.http.HttpSession;
 
 import com.code_with_malaka.ABC_lab_system.models.Appointment;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
+import com.code_with_malaka.ABC_lab_system.models.Message;
 import com.code_with_malaka.ABC_lab_system.models.TestType;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
+import com.code_with_malaka.ABC_lab_system.services.MessageService;
 import com.code_with_malaka.ABC_lab_system.services.TestTypeServiceImpl;
 
 public class AppointmentsController extends HttpServlet {
@@ -54,6 +56,7 @@ public class AppointmentsController extends HttpServlet {
     		createAppointment(request, response);
     	}
     	else if(type != null && type.equals("update")) {
+    		System.out.println(type);
     		try {
 				updateAppointment(request, response);
 			} catch (ParseException e) {
@@ -184,12 +187,14 @@ public class AppointmentsController extends HttpServlet {
 	
 	private void updateAppointment(HttpServletRequest request, HttpServletResponse response) throws ParseException, ServletException, IOException {
 		AppointmentServiceImpl appointmentService = (AppointmentServiceImpl) AppointmentServiceImpl.getAppointmentServiceInstance();
+		MessageService messageService = MessageService.getMessagerServiceInstance();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		int id = Integer.parseInt(request.getParameter("appointment_id"));
 		Date date = dateFormat.parse(request.getParameter("appointment_date"));
 		String status = request.getParameter("appointment_status");
 		Double price = Double.parseDouble(request.getParameter("appointment_price"));
+		String contactNumber = request.getParameter("appointment_contact_number");
 		
 		Appointment appointment = new Appointment(id, date, status, price);
 		
@@ -201,6 +206,12 @@ public class AppointmentsController extends HttpServlet {
 			result = appointmentService.updateAppointment(appointment);
 			if(result) {
 				message = "Successfully Updated!";
+				System.out.println(message);
+				Message messageObj = new Message(contactNumber, "");
+				boolean isMessageSent = messageService.sendMessage(messageObj);
+				if(isMessageSent) {
+					message = "Successfully Updated! Message Sent";
+				}
 			}
 			else {
 				message = "Failed!";

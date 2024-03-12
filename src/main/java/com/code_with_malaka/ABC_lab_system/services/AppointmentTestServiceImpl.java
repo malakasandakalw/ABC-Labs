@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.code_with_malaka.ABC_lab_system.dao.AppointmentTestsManager;
-import com.code_with_malaka.ABC_lab_system.dao.AppointmentsManager;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
 
 public class AppointmentTestServiceImpl implements AppointmentTestService {
@@ -43,11 +42,20 @@ public class AppointmentTestServiceImpl implements AppointmentTestService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public AppointmentTest getSpecificAppointmentTestByAppointmentId(int testTypeId, int testAppointmentId) throws ClassNotFoundException, SQLException {
+		return getAppointmentTestsManager().getSpecificAppointmentTestByAppointmentId(testTypeId, testAppointmentId);
+	}
 
+	
 	@Override
 	public AppointmentTest getSpecificAppointmentTest(int id) throws ClassNotFoundException, SQLException {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean updateAppointmentTest(AppointmentTest appointmentTest) throws ClassNotFoundException, SQLException {
+		return getAppointmentTestsManager().updateSpecificAppointmentTest(appointmentTest);
 	}
 
 }

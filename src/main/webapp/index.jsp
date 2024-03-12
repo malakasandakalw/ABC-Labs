@@ -14,6 +14,9 @@
 			<li class="nav-item">
 				<a class="nav-link" href="receptionist-all-appointments">receptionist dashboard</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="patient-create-appointment">patient create appo dashboard</a>
+			</li>
 		</ul>		
 	</div>
 </body>

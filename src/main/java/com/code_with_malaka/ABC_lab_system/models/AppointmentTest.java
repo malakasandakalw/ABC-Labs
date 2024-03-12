@@ -9,6 +9,13 @@ public class AppointmentTest {
 	private TestResult testResult;
 	private Appointment appointment;
 	
+	public AppointmentTest(int id, Technician technician, String status) {
+		this.id = id;
+		this.technician = technician;
+		this.status = status;
+	}
+	public AppointmentTest() {
+	}
 	public int getId() {
 		return id;
 	}

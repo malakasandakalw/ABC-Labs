@@ -21,6 +21,11 @@ public abstract class User {
 	}
 	
 
+	public User(int id) {
+		// TODO Auto-generated constructor stub
+		this.id = id;
+	}
+
 	public int getId() {
 		return id;
 	}

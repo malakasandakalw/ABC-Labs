@@ -24,6 +24,9 @@ public class Appointment {
 	public Appointment() {
 		// TODO Auto-generated constructor stub
 	}
+	public Appointment(int id) {
+		this.id = id;
+	}
 	public int getId() {
 		return id;
 	}

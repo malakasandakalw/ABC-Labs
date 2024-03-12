@@ -1,13 +1,12 @@
 package com.code_with_malaka.ABC_lab_system.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +102,7 @@ public class AppointmentsManager {
 		Connection connection = getConnection(); 	
 		Double totalPriceDouble = calculateAppointmentPrice(appointment, connection);
 		
-		Date currentDate = new Date(0);
+		Date currentDate = new Date();
 		Timestamp timestamp = new Timestamp(currentDate.getTime());
 		
 		String query = "INSERT INTO appointments (total_price, patient_id, doctor_details, email, contact_number, created_at) VALUES (?, ?, ?, ?, ?, ?)";
@@ -164,9 +163,9 @@ public class AppointmentsManager {
 		String query = "UPDATE appointments SET date = ?, status = ?, total_price = ? WHERE id = ?";
 		PreparedStatement ps = connection.prepareStatement(query);
 		
-		Date sqlDate = new Date(appointment.getDate().getTime());
+		Timestamp timestamp = new Timestamp(appointment.getDate().getTime());
 		
-		ps.setDate(1, sqlDate);
+		ps.setTimestamp(1, timestamp);
 		ps.setString(2, appointment.getStatus());
 		ps.setDouble(3, appointment.getTotalPrice());
 		ps.setInt(4, appointment.getId());

@@ -46,6 +46,12 @@
   	<description></description>
   	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.AppointmentsController</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>AppointmentTests</servlet-name>
+  	<display-name>AppointmentTests</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.AppointmentTests</servlet-class>
+  </servlet>
   
   <servlet-mapping>
   	<servlet-name>ManagersController</servlet-name>
@@ -105,6 +111,11 @@
   <servlet-mapping>
   	<servlet-name>AppointmentsController</servlet-name>
   	<url-pattern>/appointments</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>AppointmentTests</servlet-name>
+  	<url-pattern>/appointmentTest</url-pattern>
   </servlet-mapping>
   
 </web-app>

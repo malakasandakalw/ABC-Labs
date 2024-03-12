@@ -43,9 +43,8 @@ private static TechnicianService technicianServiceObj;
 	}
 
 	@Override
-	public List<Technician> getTechniciansByTestTypeId(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Technician> getTechniciansByTestTypeId(int id) throws ClassNotFoundException, SQLException {
+		return getTechniciansManager().getTechniciansByTestType(id);
 	}
 
 	@Override

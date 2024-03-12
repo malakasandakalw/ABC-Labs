@@ -21,6 +21,10 @@ public class Technician extends User{
 		this.specificTestField = specificTestField;
 	}
 	
+	public Technician(int id) {
+		super(id);
+	}
+
 	public List<TestType> getSpecificTestField() {
 		return specificTestField;
 	}

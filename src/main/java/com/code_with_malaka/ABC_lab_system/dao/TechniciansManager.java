@@ -155,7 +155,6 @@ public class TechniciansManager {
 		ResultSet resultset = statement.executeQuery(query);
 		
 		while (resultset.next()) {
-			
 			Technician technician = new Technician();
 			technician.setId(resultset.getInt("id"));
 			technician.setEmail(resultset.getString("email"));
@@ -192,6 +191,31 @@ public class TechniciansManager {
 		ps.close();
 		connection.close();		
 		return technician;
+	}
+	
+	public List<Technician> getTechniciansByTestType(int id) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		List<Technician> techniciansList = new ArrayList<Technician>();
+
+		String query = "SELECT * FROM technicians WHERE id IN (SELECT technician_id FROM technicians_specific_tests WHERE test_type_id = ?)";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, id);
+
+		ResultSet resultset = ps.executeQuery();
+		
+		while (resultset.next()) {
+			Technician technician = new Technician();
+			technician.setId(resultset.getInt("id"));
+			technician.setEmail(resultset.getString("email"));
+			technician.setName(resultset.getString("name"));
+			techniciansList.add(technician);
+		}
+		
+		ps.close();
+		connection.close();		
+		return techniciansList;
+		
 	}
 	
 }
