@@ -10,7 +10,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	
 	private static AppointmentService appointmentServiceObj;
 	
-	private AppointmentServiceImpl() {
+	public AppointmentServiceImpl() {
 		
 	}
 
@@ -27,8 +27,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean createAppointment(Appointment appointment) throws ClassNotFoundException, SQLException {
-		return getAppointmentManager().createAppointment(appointment);
+	public boolean createAppointment(Appointment appointment, int patientId) throws ClassNotFoundException, SQLException {
+		return getAppointmentManager().createAppointment(appointment, patientId);
 	}
 
 	@Override
@@ -38,8 +38,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	@Override
 	public List<Appointment> getAppointmentsByPatient(int id) throws ClassNotFoundException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getAppointmentManager().getAllAppointmentsByPatient(id);
 	}
 
 	@Override

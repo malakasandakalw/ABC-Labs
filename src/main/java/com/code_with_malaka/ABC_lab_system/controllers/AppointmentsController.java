@@ -15,10 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
 import com.code_with_malaka.ABC_lab_system.models.Appointment;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
 import com.code_with_malaka.ABC_lab_system.models.Message;
+import com.code_with_malaka.ABC_lab_system.models.Patient;
 import com.code_with_malaka.ABC_lab_system.models.TestType;
+import com.code_with_malaka.ABC_lab_system.models.User;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.MessageService;
@@ -40,7 +43,7 @@ public class AppointmentsController extends HttpServlet {
     		getSpecificAppointment(request, response, "");
 		} else if (type != null && type.equals("new-appointment")) {
 			getTestTypesForCreateAppointment(request, response, "");
-		}else if(type != null && type.equals("update-specific")) {
+		}else if(type != null && type.equals("get-by-patient")) {
 //			TestTypeServiceImpl testTypeService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
 //    		getSpecificTechnicianForUpdate(request, response, technicianService, testTypeService, "");
     	} else {
@@ -126,6 +129,21 @@ public class AppointmentsController extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.setAttribute("testTypesList", testTypesList);		
 		session.setAttribute("message", message);
+		
+		String sesssionUserType = request.getParameter("session_id_type");
+		String sessionUserId = request.getParameter("session_id");
+		
+		User user = null;
+		
+		if(sesssionUserType.equals("patient")) {
+			user = new Patient();
+			user.setId(Integer.parseInt(sessionUserId));
+			user.setRole("Patient");
+		}
+		
+		CommonManager commonManager = new CommonManager();
+		commonManager.login(request, user);
+		
 		response.sendRedirect("patient-create-appointment.jsp");
 	
 	}
@@ -161,8 +179,8 @@ public class AppointmentsController extends HttpServlet {
 	    	String message = "";
 	    	
 	    	try {
-	    		
-	    		result = appointmentService.createAppointment(appointment);
+	    		System.out.println(request.getParameter("session_id"));
+	    		result = appointmentService.createAppointment(appointment, Integer.parseInt(request.getParameter("session_id")));
 				if(result) {
 					message = "Successfully Created!";
 				}

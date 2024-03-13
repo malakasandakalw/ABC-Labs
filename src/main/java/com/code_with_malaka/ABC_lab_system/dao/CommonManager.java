@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import com.code_with_malaka.ABC_lab_system.models.User;
 
 public class CommonManager {
@@ -49,6 +52,24 @@ public class CommonManager {
 	    connection.close();
 
 	    return userExists;
+		
+	}
+	
+	public HttpServletRequest login(HttpServletRequest request, User user) {
+        HttpSession session = request.getSession();
+        if(user.getRole() == "Technician") {
+			
+		}else if(user.getRole() == "Manager") {
+			
+		}else if(user.getRole() == "Receptionist") {
+			
+		}else if(user.getRole() == "Patient") {
+	        session.setAttribute("auth_patient_id", user.getId());
+		}
+        return request;
+	}
+	
+	public void logout() {
 		
 	}
 	

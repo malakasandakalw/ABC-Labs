@@ -12,6 +12,11 @@ public abstract class User {
 		
 	}
 	
+	public User(String email, String role) {
+		this.email = email;
+		this.role = role;		
+	}
+	
 	public User(int id, String name, String email, String password, String role) {
 		this.id = id;
 		this.name = name;
@@ -66,10 +71,4 @@ public abstract class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-    public abstract boolean login(String email, String password);
-
-    public abstract void updateAccount(String name, String email);
-
-    public abstract void logout();
 }

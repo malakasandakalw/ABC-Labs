@@ -49,22 +49,4 @@ public class Technician extends User{
 		this.isChangedDefaultPassword = isChangedDefaultPassword;
 	}
 
-	@Override
-	public boolean login(String email, String password) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void updateAccount(String name, String email) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void logout() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

@@ -67,6 +67,31 @@ public class AppointmentsManager {
 		return appointmentsList;
 	}
 	
+	public List<Appointment> getAllAppointmentsByPatient(int id) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		List<Appointment> appointmentsList = new ArrayList<Appointment>();
+		
+		String query = "SELECT * FROM appointments WHERE patient_id = ? ORDER BY created_at DESC";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		
+		ps.setInt(1, id);
+		
+		ResultSet resultset = ps.executeQuery();
+		while (resultset.next()) {
+			Appointment appointment = new Appointment();
+			appointment.setId(resultset.getInt("id"));
+			appointment.setDate(resultset.getDate("date"));
+			appointment.setStatus(resultset.getString("status"));
+			appointment.setCreatedAt(resultset.getTimestamp("created_at"));
+			appointmentsList.add(appointment);
+		}
+		
+		ps.close();
+		connection.close();
+		return appointmentsList;
+	}
+	
 	public Appointment getSpecificAppointment(int id) throws SQLException, ClassNotFoundException {
 		Connection connection = getConnection();
 		AppointmentTestsManager appointmentTestsManager = new AppointmentTestsManager();
@@ -98,7 +123,7 @@ public class AppointmentsManager {
 		return appointment;
 	}
 	
-	public boolean createAppointment(Appointment appointment) throws ClassNotFoundException, SQLException {
+	public boolean createAppointment(Appointment appointment, int patientId) throws ClassNotFoundException, SQLException {
 		Connection connection = getConnection(); 	
 		Double totalPriceDouble = calculateAppointmentPrice(appointment, connection);
 		
@@ -108,7 +133,7 @@ public class AppointmentsManager {
 		String query = "INSERT INTO appointments (total_price, patient_id, doctor_details, email, contact_number, created_at) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		ps.setDouble(1, totalPriceDouble);
-		ps.setInt(2, 3);
+		ps.setInt(2, patientId);
 		ps.setString(3, appointment.getDetails());
 		ps.setString(4, appointment.getEmail());
 		ps.setString(5, appointment.getContactNumber());

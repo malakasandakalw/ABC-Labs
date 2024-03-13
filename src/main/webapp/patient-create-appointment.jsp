@@ -30,6 +30,7 @@
 	</nav>
 	<div class="container">	
 	      <p>${message}</p>
+	      <p>${auth_patient_id}</p>
 	      <div class="d-flex align-items-center mb-3">
 	         <div class="me-auto">
 	            <h3 class="title">Create Appointment</h3>
@@ -59,6 +60,8 @@
 			    <input type="tel" class="form-control" id="contact_number" name="contact_number" required>
 			  </div>			  
 			  <input type="hidden" name="type" value="create"/>
+              <input type="hidden" name="session_id_type" value="patient"/>
+              <input type="hidden" name="session_id" value="${auth_patient_id}"/>
 			  <button type="submit" class="btn btn-primary">Create Appointment</button>
 			</form>
 

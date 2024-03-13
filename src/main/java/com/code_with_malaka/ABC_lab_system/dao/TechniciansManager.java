@@ -183,7 +183,7 @@ public class TechniciansManager {
 			technician.setId(rs.getInt("id"));
 			technician.setName(rs.getString("name"));
 			technician.setEmail(rs.getString("email"));
-			technician.setPassword(passwordManager.passwordVerify(rs.getString("password")));
+			technician.setPassword(passwordManager.passwordUnhash(rs.getString("password")));
 			technician.setIsActive(rs.getInt("is_active"));
 			technician.setIsChangedDefaultPassword(rs.getInt("is_def_pw_changed"));
 		}

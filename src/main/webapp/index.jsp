@@ -17,6 +17,12 @@
 			<li class="nav-item">
 				<a class="nav-link" href="patient-create-appointment">patient create appo dashboard</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="patient-signup.jsp">patient signup</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="patient-login.jsp">patient login</a>
+			</li>
 		</ul>		
 	</div>
 </body>
