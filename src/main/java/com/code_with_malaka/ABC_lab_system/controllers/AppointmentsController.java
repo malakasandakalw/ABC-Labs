@@ -20,11 +20,13 @@ import com.code_with_malaka.ABC_lab_system.models.Appointment;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
 import com.code_with_malaka.ABC_lab_system.models.Message;
 import com.code_with_malaka.ABC_lab_system.models.Patient;
+import com.code_with_malaka.ABC_lab_system.models.PaymentRecipt;
 import com.code_with_malaka.ABC_lab_system.models.TestType;
 import com.code_with_malaka.ABC_lab_system.models.User;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.MessageService;
+import com.code_with_malaka.ABC_lab_system.services.PaymentReciptServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TestTypeServiceImpl;
 
 public class AppointmentsController extends HttpServlet {
@@ -66,8 +68,12 @@ public class AppointmentsController extends HttpServlet {
 				e.printStackTrace();
 			}
     	}
-    	else if(type != null && type.equals("delete-specific")) {
-//        	deleteTestType(request, response, testTypeService);
+    	else if(type != null && type.equals("payment")) {
+        	try {
+				payment(request, response, "");
+			} catch (NumberFormatException | ClassNotFoundException | IOException | SQLException e) {
+				e.printStackTrace();
+			}
     	}
 		
 	}
@@ -224,8 +230,7 @@ public class AppointmentsController extends HttpServlet {
 			result = appointmentService.updateAppointment(appointment);
 			if(result) {
 				message = "Successfully Updated!";
-				System.out.println(message);
-				Message messageObj = new Message(contactNumber, "");
+				Message messageObj = new Message(contactNumber, "Your appointment number " + id + " is" + status);
 				boolean isMessageSent = messageService.sendMessage(messageObj);
 				if(isMessageSent) {
 					message = "Successfully Updated! Message Sent";
@@ -243,6 +248,41 @@ public class AppointmentsController extends HttpServlet {
 		getSpecificAppointment(request,response, message);
 		
 		
+	}
+	
+	private void payment(HttpServletRequest request, HttpServletResponse response, String message) throws NumberFormatException, ClassNotFoundException, IOException, SQLException {
+		AppointmentServiceImpl appointmentService = (AppointmentServiceImpl) AppointmentServiceImpl.getAppointmentServiceInstance();
+		MessageService messageService = MessageService.getMessagerServiceInstance();
+		PaymentReciptServiceImpl paymentReciptService = PaymentReciptServiceImpl.getPaymentReciptServiceInstance();
+		
+		int id = Integer.parseInt(request.getParameter("appointment_id"));
+		String status = "Payment Done";
+		String contactNumber = request.getParameter("appointment_contact_number");
+		Appointment appointment = new Appointment(id, status);
+		PaymentRecipt paymentRecipt = new PaymentRecipt();
+		paymentRecipt.setTotalPrice(Double.parseDouble(request.getParameter("appointment_price")));
+		
+		boolean result;
+		
+		try {
+			result = appointmentService.updateAppointmentStatus(appointment);
+			if(result) {
+				paymentReciptService.createPaymentRecipt(paymentRecipt, id);
+				message = "Paid Successfully!";
+				Message messageObj = new Message(contactNumber, "Your payment for appointment number " + id + " is done.");
+				boolean isMessageSent = messageService.sendMessage(messageObj);
+				if(isMessageSent) {
+					message = "Successfully Updated! Message Sent";
+				}
+			}
+			else {
+				message = "Failed!";
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			message = e.getMessage();
+		}
+
+		request.setAttribute("message", message);
 	}
 	
 }

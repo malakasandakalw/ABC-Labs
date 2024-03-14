@@ -52,6 +52,18 @@
   	<description></description>
   	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.AppointmentTests</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>PaymentReciptController</servlet-name>
+  	<display-name>PaymentReciptController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.PaymentReciptController</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>TestResultsController</servlet-name>
+  	<display-name>TestResultsController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.TestResultsController</servlet-class>
+  </servlet>
   
   <servlet-mapping>
   	<servlet-name>ManagersController</servlet-name>
@@ -109,8 +121,21 @@
   </servlet-mapping>
   
   <servlet-mapping>
+  	<servlet-name>PatientsController</servlet-name>
+  	<url-pattern>/patient-appointments</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
   	<servlet-name>AppointmentTests</servlet-name>
   	<url-pattern>/appointmentTest</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>PaymentReciptController</servlet-name>
+  	<url-pattern>/appointments-payment-recipt</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>TestResultsController</servlet-name>
+  	<url-pattern>/test-result</url-pattern>
   </servlet-mapping>
   
 </web-app>

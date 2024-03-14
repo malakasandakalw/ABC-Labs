@@ -193,6 +193,32 @@ public class TechniciansManager {
 		return technician;
 	}
 	
+	public Technician getSpecificTechnicianByEmail(String email) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		
+		String query = "SELECT * FROM technicians WHERE email = ?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, email);
+		
+		ResultSet rs = ps.executeQuery();
+		Technician technician = new Technician();
+		
+		while(rs.next()) {
+			technician.setId(rs.getInt("id"));
+			technician.setName(rs.getString("name"));
+			technician.setEmail(rs.getString("email"));
+			technician.setPassword(rs.getString("password"));
+			technician.setIsActive(rs.getInt("is_active"));
+			technician.setIsChangedDefaultPassword(rs.getInt("is_def_pw_changed"));
+			technician.setRole("Technician");
+		}
+		
+		ps.close();
+		connection.close();		
+		return technician;
+	}
+	
 	public List<Technician> getTechniciansByTestType(int id) throws ClassNotFoundException, SQLException {
 		Connection connection = getConnection(); 
 		List<Technician> techniciansList = new ArrayList<Technician>();

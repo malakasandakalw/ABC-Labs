@@ -10,9 +10,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
+import com.code_with_malaka.ABC_lab_system.dao.PasswordManager;
+import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
 import com.code_with_malaka.ABC_lab_system.models.Technician;
 import com.code_with_malaka.ABC_lab_system.models.TestType;
+import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.CommonServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TechnicianServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TestTypeServiceImpl;
@@ -30,13 +35,21 @@ public class TechniciansController extends HttpServlet {
 
 		if (type != null && type.equals("specific")) {
 //    		getSpecificProduct(request, response, managerService);
+		}else if(type != null && type.equals("get-tests")) {
+			try {
+				getTechnicianAppointmentTests(request, response, "");
+			} catch (NumberFormatException | ClassNotFoundException | ServletException | IOException | SQLException e) {
+				e.printStackTrace();
+			}
 		} else if (type != null && type.equals("new-technician")) {
 			TestTypeServiceImpl testTypeService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
 			getTestTypesForCreateTechnician(request, response, testTypeService, "");
 		}else if(type != null && type.equals("update-specific")) {
 			TestTypeServiceImpl testTypeService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
     		getSpecificTechnicianForUpdate(request, response, technicianService, testTypeService, "");
-    	} else {
+    	} else if(type != null && type.equals("login")) {
+			login(request, response, "");
+		} else{
 			getAllTechnicians(request, response, technicianService);
 		}
 	}
@@ -58,6 +71,57 @@ public class TechniciansController extends HttpServlet {
 //        	deleteTestType(request, response, testTypeService);
     	}
 		
+	}
+	
+	private void login(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
+		PasswordManager passwordManager = new PasswordManager();
+		TechnicianServiceImpl technicianService = new TechnicianServiceImpl();
+		Technician technician = new Technician();
+		
+		try {
+			
+			String email = request.getParameter("email");
+			String password = request.getParameter("password");
+			
+			technician.setEmail(email);
+			
+			technician = technicianService.getSpecificTechnicianByEmail(email);
+			
+			if(technician.getId() > -1) {
+				if (technician.getPassword().equals(password)) {
+					request.setAttribute("technician", technician);
+					
+					CommonManager commonManager = new CommonManager();
+					commonManager.login(request, technician);
+					response.sendRedirect("technicians?type=get-tests&session_id=" + request.getSession().getAttribute("auth_technician_id"));
+				} else {
+					request.setAttribute("message", "Invalid Credentials");
+					
+			    	RequestDispatcher rd = request.getRequestDispatcher("technician-login.jsp");
+			    	rd.forward(request, response);					
+				}
+			} else {
+				request.setAttribute("message", "User Does Not Exists.");
+				
+		    	RequestDispatcher rd = request.getRequestDispatcher("technician-login.jsp");
+		    	rd.forward(request, response);					
+			}
+			
+		} catch (Exception e) {
+			message = e.getMessage();			
+		}
+		
+	}
+	
+	private void getTechnicianAppointmentTests(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException, NumberFormatException, ClassNotFoundException, SQLException {
+ 		AppointmentTestServiceImpl appointmentTestsService = new AppointmentTestServiceImpl();
+ 		String technicianIdString = request.getSession().getAttribute("auth_technician_id").toString();
+ 		System.out.println(technicianIdString);
+ 		List<AppointmentTest> technicianAppointmentTests = appointmentTestsService.getAppointmentTestsByTechnicianId(Integer.parseInt(technicianIdString));
+ 		HttpSession session = request.getSession();
+ 		session.setAttribute("technicianAppointmentTests", technicianAppointmentTests);
+    	RequestDispatcher rd = request.getRequestDispatcher("technician-all-tests.jsp");
+    	rd.forward(request, response);
 	}
 	
 	private void updateTechnician(HttpServletRequest request, HttpServletResponse response, TechnicianServiceImpl service) throws ServletException, IOException {

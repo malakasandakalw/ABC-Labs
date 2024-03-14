@@ -8,13 +8,13 @@ import com.code_with_malaka.ABC_lab_system.models.Appointment;
 
 public class AppointmentServiceImpl implements AppointmentService {
 	
-	private static AppointmentService appointmentServiceObj;
+	private static AppointmentServiceImpl appointmentServiceObj;
 	
 	public AppointmentServiceImpl() {
 		
 	}
 
-	public static synchronized AppointmentService getAppointmentServiceInstance() {
+	public static synchronized AppointmentServiceImpl getAppointmentServiceInstance() {
 		if (appointmentServiceObj == null) {
 			appointmentServiceObj = new AppointmentServiceImpl();
 		}
@@ -55,6 +55,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public boolean updateAppointment(Appointment appointment) throws ClassNotFoundException, SQLException {
 		return getAppointmentManager().updateAppointment(appointment);
+	}
+	
+	public boolean updateAppointmentStatus(Appointment appointment) throws ClassNotFoundException, SQLException {
+		return getAppointmentManager().updateAppointmentStatus(appointment);
 	}
 
 }

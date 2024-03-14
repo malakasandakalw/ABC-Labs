@@ -2,15 +2,15 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
    pageEncoding="ISO-8859-1" isELIgnored="false"%>
 <%
-   Object sessionAttribute = session.getAttribute("auth_patient_id");
-   
-   if (sessionAttribute != null) {
+
+
+
    	%>
 <!DOCTYPE html>
 <html>
    <head>
       <meta charset="ISO-8859-1">
-      <title>Patient Appointments</title>
+      <title>Technician Tests</title>
       <link
          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
          rel="stylesheet">
@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item"><a class="nav-link active"
-                     href="patient-appointments">Appointments</a>
+                     href="">Tests</a>
                   </li>
                </ul>
             </div>
@@ -34,18 +34,10 @@
       </nav>
       <div class="container">
          <p>${message}</p>
-         <p>${auth_patient_id}</p>
+         <p>${auth_technician_id}</p>
          <div class="d-flex align-items-center mb-3">
             <div class="me-auto">
-               <h3 class="title">Appointments</h3>
-            </div>
-            <div class="ms-auto">
-               <form method="get" action="appointments">
-                  <input type="hidden" name="type" value="new-appointment"/>
-                  <input type="hidden" name="session_id_type" value="patient"/>
-                  <input type="hidden" name="session_id" value="${auth_patient_id}"/>
-                  <button type="submit" class="btn btn-primary">Create Appointment</button>
-               </form>
+               <h3 class="title">Tests</h3>
             </div>
          </div>
          <hr>
@@ -59,7 +51,7 @@
 	               </tr>
 	            </thead>
 	            <tbody>
-	               <tag:forEach var="appointment" items="${patientsAppointmentsList}">
+	               <tag:forEach var="test" items="${technicianTestsList}">
 	                  <tr>
 	                     <td>${appointment.id}</td>
 	                     <td>${appointment.status}</td>
@@ -83,7 +75,6 @@
    </body>
 </html>
 <%
-   } else {
-      response.sendRedirect("patient-login.jsp");
-      }
+
+
    %>

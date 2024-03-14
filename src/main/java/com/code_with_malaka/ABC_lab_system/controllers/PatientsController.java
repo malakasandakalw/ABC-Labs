@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
 import com.code_with_malaka.ABC_lab_system.dao.PasswordManager;
+import com.code_with_malaka.ABC_lab_system.models.Appointment;
 import com.code_with_malaka.ABC_lab_system.models.Patient;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.PatientServiceImpl;
@@ -29,14 +32,20 @@ public class PatientsController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type");
 		
-		System.out.println("here get");
-		System.out.println(type);
-		
 		if(type != null && type.equals("login")) {
 			login(request, response, "");
 		}else if(type != null && type.equals("get-appointments")) {
-			System.out.println("here get 2");
-			getPatientAppointments(request, response, "");
+			try {
+				getPatientAppointments(request, response, "");
+			} catch (NumberFormatException | ClassNotFoundException | ServletException | IOException | SQLException e) {
+				e.printStackTrace();
+			}
+		}else if(type != null && type.equals("get-specific-appointment")) {
+			try {
+				getPatientSpecificAppointment(request, response, "");
+			} catch (NumberFormatException | ClassNotFoundException | IOException | SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -142,10 +151,9 @@ public class PatientsController extends HttpServlet {
 
 					CommonManager commonManager = new CommonManager();
 					commonManager.login(request, patient);
-					
-//			    	RequestDispatcher rd = request.getRequestDispatcher("patient-appointments?type='get-appointments'&session_id=" + request.getSession().getAttribute("auth_patient_id"));
-					RequestDispatcher rd = request.getRequestDispatcher("patients?type=get-appointments&session_id=" + request.getSession().getAttribute("auth_patient_id"));
-			    	rd.forward(request, response);					
+
+					response.sendRedirect("patients?type=get-appointments&session_id=" + request.getSession().getAttribute("auth_patient_id"));
+//			    	rd.forward(request, response);					
 				} else {
 					request.setAttribute("message", "Invalid Credentials");
 					
@@ -165,14 +173,27 @@ public class PatientsController extends HttpServlet {
  		
 	}
 	
-	private void getPatientAppointments(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
-		System.out.println("here");
+	private void getPatientAppointments(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException, NumberFormatException, ClassNotFoundException, SQLException {
  		AppointmentServiceImpl appointmentService = new AppointmentServiceImpl();
-// 		RequestDispatcher rd = request.getRequestDispatcher("patient-appointments.jsp");
-//    	rd.forward(request, response);
+ 		String patientIdString = request.getSession().getAttribute("auth_patient_id").toString();
+ 		List<Appointment> appointmentsList = appointmentService.getAppointmentsByPatient(Integer.parseInt(patientIdString));
  		HttpSession session = request.getSession();
- 		session.setAttribute("message", "test here");
- 		response.sendRedirect("patient-appointments.jsp");
+ 		session.setAttribute("patientsAppointmentsList", appointmentsList);
+    	RequestDispatcher rd = request.getRequestDispatcher("patient-appointments.jsp");
+    	rd.forward(request, response);
+	}
+	
+	public void getPatientSpecificAppointment(HttpServletRequest request, HttpServletResponse response, String message) throws IOException, NumberFormatException, ClassNotFoundException, SQLException, ServletException {
+ 		AppointmentServiceImpl appointmentService = new AppointmentServiceImpl();
+ 		String appointmentId = (String) request.getParameter("appointment_id");
+ 		
+ 		Appointment appointment = appointmentService.getSpecificAppointment(Integer.parseInt(appointmentId));
+ 		
+ 		HttpSession session = request.getSession();
+ 		session.setAttribute("appointment", appointment);
+ 		session.setAttribute("message", message);
+    	RequestDispatcher rd = request.getRequestDispatcher("patient-view-appointments.jsp");
+    	rd.forward(request, response);
 	}
 	
 }

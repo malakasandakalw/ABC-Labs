@@ -68,9 +68,10 @@ public class AppointmentsManager {
 	}
 	
 	public List<Appointment> getAllAppointmentsByPatient(int id) throws ClassNotFoundException, SQLException {
+		
 		Connection connection = getConnection(); 
 		List<Appointment> appointmentsList = new ArrayList<Appointment>();
-		
+		System.out.println(id);
 		String query = "SELECT * FROM appointments WHERE patient_id = ? ORDER BY created_at DESC";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
@@ -194,6 +195,20 @@ public class AppointmentsManager {
 		ps.setString(2, appointment.getStatus());
 		ps.setDouble(3, appointment.getTotalPrice());
 		ps.setInt(4, appointment.getId());
+		
+		int result = ps.executeUpdate();
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
+	public boolean updateAppointmentStatus(Appointment appointment) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection();
+		String query = "UPDATE appointments SET status = ? WHERE id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		
+		ps.setString(1, appointment.getStatus());
+		ps.setInt(2, appointment.getId());
 		
 		int result = ps.executeUpdate();
 		ps.close();

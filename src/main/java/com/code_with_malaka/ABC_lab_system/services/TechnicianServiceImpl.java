@@ -10,7 +10,7 @@ public class TechnicianServiceImpl implements TechnicianService {
 
 private static TechnicianService technicianServiceObj;
 	
-	private TechnicianServiceImpl() {
+	public TechnicianServiceImpl() {
 		
 	}
 	
@@ -40,6 +40,10 @@ private static TechnicianService technicianServiceObj;
 	@Override
 	public Technician getSpecificTechnician(int id) throws ClassNotFoundException, SQLException {
 		return getTechniciansManager().getSpecificTechnician(id);
+	}
+	
+	public Technician getSpecificTechnicianByEmail(String email) throws ClassNotFoundException, SQLException {
+		return getTechniciansManager().getSpecificTechnicianByEmail(email);
 	}
 
 	@Override

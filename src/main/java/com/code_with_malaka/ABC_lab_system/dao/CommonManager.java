@@ -57,8 +57,9 @@ public class CommonManager {
 	
 	public HttpServletRequest login(HttpServletRequest request, User user) {
         HttpSession session = request.getSession();
+        System.out.println(user.getRole());
         if(user.getRole() == "Technician") {
-			
+        	session.setAttribute("auth_technician_id", user.getId());
 		}else if(user.getRole() == "Manager") {
 			
 		}else if(user.getRole() == "Receptionist") {

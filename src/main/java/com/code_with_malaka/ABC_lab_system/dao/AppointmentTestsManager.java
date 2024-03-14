@@ -102,6 +102,49 @@ public class AppointmentTestsManager {
 		return null;
 	}
 	
+	public List<AppointmentTest> getAppointmentTestsByTechnicianId(int id) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection();
+		TechniciansManager techniciansManager = new TechniciansManager();
+		TestTypeManager testTypeManager = new TestTypeManager();
+		
+		List<AppointmentTest> appointmentTestsList = new ArrayList<AppointmentTest>();
+		
+		String query = "SELECT * FROM appointment_tests WHERE technician_id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		
+		while (rs.next()) {
+			AppointmentTest appointmentTest = new AppointmentTest();
+			appointmentTest.setId(rs.getInt("id"));
+			appointmentTest.setStatus(rs.getString("status"));
+			
+			int technicianId = rs.getInt("technician_id");
+			
+			if (rs.wasNull()) {
+				appointmentTest.setTechnician(null); 
+			} else {
+				appointmentTest.setTechnician(techniciansManager.getSpecificTechnician(technicianId));
+			}
+			
+			int testResultId = rs.getInt("result_id");
+			
+			if (rs.wasNull()) {
+				appointmentTest.setTestResult(null);
+			} else {
+//				appointmentTest.setTestResult(testResultManager.getSpecificTechnician(rs.getInt("result_id")));
+			}
+			
+			appointmentTest.setTestType(testTypeManager.getSpecificTestType(rs.getInt("test_type_id")));
+			appointmentTestsList.add(appointmentTest);
+		}
+		
+		ps.close();
+		connection.close();
+		return appointmentTestsList;
+		
+	}
+	
 	public List<AppointmentTest> getAppointmentTestsByAppointmentId(int id) throws ClassNotFoundException, SQLException {
 		Connection connection = getConnection();
 		TechniciansManager techniciansManager = new TechniciansManager();

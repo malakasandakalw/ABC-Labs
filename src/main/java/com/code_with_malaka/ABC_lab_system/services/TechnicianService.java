@@ -10,6 +10,7 @@ public interface TechnicianService {
 	public boolean createTechnician(Technician technician) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException;
 	public List<Technician> getAllTechnicians() throws ClassNotFoundException, SQLException;
 	public Technician getSpecificTechnician(int id) throws ClassNotFoundException, SQLException;
+	public Technician getSpecificTechnicianByEmail(String email) throws ClassNotFoundException, SQLException;
 	public List<Technician> getTechniciansByTestTypeId(int id) throws ClassNotFoundException, SQLException;
 	public boolean updateTechnician(Technician manager) throws ClassNotFoundException, SQLException;
 	public boolean deleteTechnician(int id) throws ClassNotFoundException, SQLException;
