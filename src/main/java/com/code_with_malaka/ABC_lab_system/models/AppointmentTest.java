@@ -8,6 +8,7 @@ public class AppointmentTest {
 	private String status;
 	private TestResult testResult;
 	private Appointment appointment;
+	private Patient patient;
 	
 	public AppointmentTest(int id, Technician technician, String status) {
 		this.id = id;
@@ -51,5 +52,11 @@ public class AppointmentTest {
 	}
 	public void setTestResult(TestResult testResult) {
 		this.testResult = testResult;
+	}
+	public Patient getPatient() {
+		return patient;
+	}
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 }

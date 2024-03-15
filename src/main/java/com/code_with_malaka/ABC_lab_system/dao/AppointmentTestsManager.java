@@ -52,6 +52,60 @@ public class AppointmentTestsManager {
 		return result > 0;
 	}
 	
+	public boolean updateSpecificAppointmentTestByTechnician(AppointmentTest appointmentTest) throws SQLException, ClassNotFoundException {
+		Connection connection = getConnection(); 
+		String query = "UPDATE appointment_tests SET status = ?, result_id = ? WHERE id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		
+		ps.setString(1, appointmentTest.getStatus());
+		System.out.println(appointmentTest.getTestResult().getid());
+		ps.setInt(2, appointmentTest.getTestResult().getid());
+		ps.setInt(3, appointmentTest.getId());
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
+	public AppointmentTest getSpecificAppointmentTestById(int id) throws SQLException, ClassNotFoundException {
+		Connection connection = getConnection();
+		PatientsManager patientsManager = new PatientsManager();
+		AppointmentsManager appointmentsManager = new AppointmentsManager();
+		AppointmentTest appointmentTest = new AppointmentTest();
+		TestTypeManager testTypeManager = new TestTypeManager();
+		
+		String query = "SELECT id, appointment_id, technician_id, status, result_id, test_type_id, (SELECT patient_id FROM appointments WHERE id = appointment_id) AS patient_id FROM appointment_tests WHERE id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, id);
+		
+		ResultSet rs = ps.executeQuery();
+		
+		while (rs.next()) {
+			appointmentTest.setId(rs.getInt("id"));
+			appointmentTest.setAppointment(appointmentsManager.getSpecificAppointment(rs.getInt("appointment_id")));
+			appointmentTest.setStatus(rs.getString("status"));
+			
+			appointmentTest.setPatient(patientsManager.getSpecificPatient(rs.getInt("patient_id")));
+			appointmentTest.setTestType(testTypeManager.getSpecificTestType(rs.getInt("test_type_id")));
+			
+			int testResultId = rs.getInt("result_id");
+			
+			if (rs.wasNull()) {
+				appointmentTest.setTestResult(null);
+			} else {
+//			
+			}
+			
+		}
+		
+		ps.close();
+		connection.close();
+		return appointmentTest;
+		
+	}
+	
 	public AppointmentTest getSpecificAppointmentTestByAppointmentId(int testTypeId, int appointmentId) throws ClassNotFoundException, SQLException {
 		Connection connection = getConnection();
 		TechniciansManager techniciansManager = new TechniciansManager();
@@ -106,6 +160,7 @@ public class AppointmentTestsManager {
 		Connection connection = getConnection();
 		TechniciansManager techniciansManager = new TechniciansManager();
 		TestTypeManager testTypeManager = new TestTypeManager();
+		AppointmentsManager appointmentsManager = new AppointmentsManager();
 		
 		List<AppointmentTest> appointmentTestsList = new ArrayList<AppointmentTest>();
 		
@@ -136,6 +191,7 @@ public class AppointmentTestsManager {
 			}
 			
 			appointmentTest.setTestType(testTypeManager.getSpecificTestType(rs.getInt("test_type_id")));
+			appointmentTest.setAppointment(appointmentsManager.getSpecificAppointment(rs.getInt("appointment_id")));
 			appointmentTestsList.add(appointmentTest);
 		}
 		

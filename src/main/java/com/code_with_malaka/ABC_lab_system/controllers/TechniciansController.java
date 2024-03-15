@@ -7,20 +7,33 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
 import com.code_with_malaka.ABC_lab_system.dao.PasswordManager;
+import com.code_with_malaka.ABC_lab_system.dao.TestResultManager;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
+import com.code_with_malaka.ABC_lab_system.models.CreateResponse;
+import com.code_with_malaka.ABC_lab_system.models.FileUploadResponse;
 import com.code_with_malaka.ABC_lab_system.models.Technician;
+import com.code_with_malaka.ABC_lab_system.models.TestResult;
 import com.code_with_malaka.ABC_lab_system.models.TestType;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.CommonServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TechnicianServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TestTypeServiceImpl;
+
+@MultipartConfig(
+		location = "C:\\Uploads",
+		fileSizeThreshold = 1024 * 1024,
+		maxFileSize = 1024 * 1024 * 10,
+		maxRequestSize = 1024 * 1024 * 11
+		)
 
 public class TechniciansController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -49,6 +62,12 @@ public class TechniciansController extends HttpServlet {
     		getSpecificTechnicianForUpdate(request, response, technicianService, testTypeService, "");
     	} else if(type != null && type.equals("login")) {
 			login(request, response, "");
+		} else if(type != null && type.equals("get-specific-appointment-test")) {
+			try {
+				getSpecificTechnicianAppointmentTest(request, response, "");
+			} catch (NumberFormatException | ClassNotFoundException | SQLException | ServletException | IOException e) {
+				e.printStackTrace();
+			}
 		} else{
 			getAllTechnicians(request, response, technicianService);
 		}
@@ -67,8 +86,12 @@ public class TechniciansController extends HttpServlet {
     	else if(type != null && type.equals("update")) {
     		updateTechnician(request, response, technicianService);
     	}
-    	else if(type != null && type.equals("delete-specific")) {
-//        	deleteTestType(request, response, testTypeService);
+    	else if(type != null && type.equals("update-specific-appointment-test")) {
+        	try {
+				updateSpecificAppointmentTest(request, response, "");
+			} catch (ClassNotFoundException | IOException | ServletException | SQLException e) {
+				e.printStackTrace();
+			}
     	}
 		
 	}
@@ -122,6 +145,61 @@ public class TechniciansController extends HttpServlet {
  		session.setAttribute("technicianAppointmentTests", technicianAppointmentTests);
     	RequestDispatcher rd = request.getRequestDispatcher("technician-all-tests.jsp");
     	rd.forward(request, response);
+	}
+	
+	private void getSpecificTechnicianAppointmentTest(HttpServletRequest request, HttpServletResponse response, String message) throws NumberFormatException, ClassNotFoundException, SQLException, ServletException, IOException {
+		AppointmentTestServiceImpl appointmentTestsService = new AppointmentTestServiceImpl();
+		String appoitmentTestId = request.getParameter("appointment_test_id");
+		AppointmentTest appointmentTest = appointmentTestsService.getSpecificAppointmentTest(Integer.parseInt(appoitmentTestId));
+		HttpSession session = request.getSession();
+		session.setAttribute("appointmentTest", appointmentTest);
+		session.setAttribute("message", message);
+		RequestDispatcher rd = request.getRequestDispatcher("technician-update-appointment-test.jsp");
+    	rd.forward(request, response);
+	}
+	
+	private void updateSpecificAppointmentTest(HttpServletRequest request, HttpServletResponse response, String message) throws IOException, ServletException, ClassNotFoundException, SQLException {
+		TestResultManager testResultManager = new TestResultManager();
+		AppointmentTestServiceImpl appointmentTestsService = new AppointmentTestServiceImpl();
+		
+		Part part = request.getPart("file");
+		String cd = part.getHeader("content-disposition");
+
+		AppointmentTest appointmentTest = new AppointmentTest();
+		appointmentTest.setId(Integer.parseInt(request.getParameter("appointment_test_id")));
+		appointmentTest.setStatus(request.getParameter("appointment_test_status"));
+		
+		if (!cd.contains("filename=")) {
+			appointmentTestsService.updateAppointmentTest(appointmentTest);
+		} else {
+			
+			FileUploadResponse isFileUpoloadedResponse = testResultManager.uploadFile(request);
+			
+			if (isFileUpoloadedResponse.isUploaded()) {
+				
+				TestResult testResult = new TestResult(appointmentTest, isFileUpoloadedResponse.getTestResult().getFileUrl());
+				
+				CreateResponse resultCreatedResponse = testResultManager.createTestResult(testResult);
+				testResult.setId(resultCreatedResponse.getId());
+				
+				appointmentTest.setTestResult(testResult);
+				appointmentTest.setTechnician(new Technician(Integer.parseInt(request.getParameter("appointment_technician_id"))));
+				
+				appointmentTestsService.updateSpecificAppointmentTestByTechnician(appointmentTest);
+				
+				HttpSession session = request.getSession();
+				getSpecificTechnicianAppointmentTest(request, response, "Updated Successfully!");
+				
+				return;
+				
+			} else {
+				message = "File Upload Failed!";
+			}
+			
+		}
+		
+		getSpecificTechnicianAppointmentTest(request, response, "Failed");
+		
 	}
 	
 	private void updateTechnician(HttpServletRequest request, HttpServletResponse response, TechnicianServiceImpl service) throws ServletException, IOException {
@@ -204,7 +282,7 @@ public class TechniciansController extends HttpServlet {
 	    	
 	    	try {
 	    		
-	    		Boolean isEmailExists = commonService.checkUserExists(technician);
+	    		boolean isEmailExists = commonService.checkUserExists(technician);
 	    		
 	    		if(!isEmailExists) {
 	 	    		

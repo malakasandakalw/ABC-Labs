@@ -49,12 +49,17 @@ public class AppointmentTestServiceImpl implements AppointmentTestService {
 	
 	@Override
 	public AppointmentTest getSpecificAppointmentTest(int id) throws ClassNotFoundException, SQLException {
-		return null;
+		return getAppointmentTestsManager().getSpecificAppointmentTestById(id);
 	}
 
 	@Override
 	public boolean updateAppointmentTest(AppointmentTest appointmentTest) throws ClassNotFoundException, SQLException {
 		return getAppointmentTestsManager().updateSpecificAppointmentTest(appointmentTest);
 	}
+	
+	public boolean updateSpecificAppointmentTestByTechnician(AppointmentTest appointmentTest) throws ClassNotFoundException, SQLException {
+		return getAppointmentTestsManager().updateSpecificAppointmentTestByTechnician(appointmentTest);
+	}
+	
 
 }

@@ -46,21 +46,23 @@
 	            <thead>
 	               <tr>
 	                  <th>Appointment Number</th>
-	                  <th>Status</th>
+	                  <th>Appointment Status</th>
+	                  <th>Test Status</th>
 	                  <th>Actions</th>
 	               </tr>
 	            </thead>
 	            <tbody>
-	               <tag:forEach var="test" items="${technicianTestsList}">
+	               <tag:forEach var="technicianAppointmentTest" items="${technicianAppointmentTests}">
 	                  <tr>
-	                     <td>${appointment.id}</td>
-	                     <td>${appointment.status}</td>
+	                     <td>${technicianAppointmentTest.appointment.id}</td>
+	                     <td>${technicianAppointmentTest.appointment.status}</td>
+	                     <td>${technicianAppointmentTest.status}</td>
 	                     <td>
 	                        <div class="d-flex gap-2">
 		                        <div class="action-div">
-			                        <form method="get" action="patients">
-			                           <input type="hidden" name="appointment_id" value="${appointment.id}" required>
-			                           <input type="hidden" name="type" value="get-specific-appointment"/>
+			                        <form method="get" action="technicians">
+			                           <input type="hidden" name="appointment_test_id" value="${technicianAppointmentTest.id}" required>
+			                           <input type="hidden" name="type" value="get-specific-appointment-test"/>
 			                           <button type="submit" class="btn btn-success">View</button>
 			                        </form>
 		                        </div>

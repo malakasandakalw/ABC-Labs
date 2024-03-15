@@ -37,23 +37,10 @@ public class TestResultsController extends HttpServlet {
 		}
 	}
 	
-	private boolean uploadFile(HttpServletRequest request) throws IOException, ServletException {
-		String uploadPath = "C:/Uploads";
-		File uploadDir = new File(uploadPath);
-		if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
-        for (Part part : request.getParts()) {
-            String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
-            InputStream fileContent = part.getInputStream();
-            Files.copy(fileContent, Paths.get(uploadPath, fileName));
-        }
-        return true;
-	}
+
 	
 	private void createTestResult(HttpServletRequest request, HttpServletResponse response, String message) throws IOException, ServletException {
 		System.out.println("here");
-		uploadFile(request);
 	}
 
 }
