@@ -25,14 +25,17 @@
 	   </nav>
 	   <div class="container">
 	      <p>${message}</p>
+	      ${ auth_receptionist_id }
 	      <div class="d-flex align-items-center mb-3">
 	         <div class="me-auto">
-	            <h3 class="title">All Appointments</h3>
+	            <h3 class="title">Appointment</h3>
 	         </div>
 	      </div>
 	      <hr>
 	      <div class="col-md-10 mx-auto">
-	      	<form method="post" action="appointments">
+		    	<h4>Appointment Details</h4>
+		    	<hr>
+	      	<form method="post" action="receptionists">
 	      		<div class="mb-3">
 				    <label class="form-label">Appointment Number</label>
 				    <input type="text" class="form-control" id="appointment_id" name="appointment_id" value="${appointment.id}" required readonly>
@@ -53,17 +56,17 @@
 			    </div>
 			    <div class="mb-3">
 				    <label class="form-label">Doctor Details</label>
-				    <p>${appointment.details}</p>
+				    <textarea rows="" cols="" class="form-control" readonly>${appointment.details}</textarea>
 			    </div>
 			    
 			    <div class="row">
-				    <div class="col-md-6">
+				    <div class="col-md-4">
 					    <div class="mb-3">
 						    <label class="form-label">Appointment Date</label>
 						    <input type="date" class="form-control" id="appointment_date" name="appointment_date" value="${appointment.date}" required>
 					    </div>
 				    </div>
-				    <div class="col-md-6">
+				    <div class="col-md-4">
 					    <div class="mb-3">
 						    <label class="form-label">Appointment Status</label>
 						    <select class="form-select" id="appointment_status" name="appointment_status" required>
@@ -75,28 +78,53 @@
 						    </select>
 					    </div>
 				    </div>
-				    <div class="col-md-6">
+				    <div class="col-md-4">
 					    <div class="mb-3">
 						    <label class="form-label">Total Price</label>
 						    <input type="number" class="form-control" id="appointment_price" name="appointment_price" value="${appointment.totalPrice}" required>
 					    </div>
 				    </div>
-				    <div class="col-md-6 d-flex align-items-center">
-			    		<p>Created at: ${appointment.createdAt}</p>
+				    <div class="col-md-12 align-items-center">
+				    	<label class="form-label">Created at:</label>
+					    <input type="text" class="form-control" value="${appointment.createdAt}" readonly>
 				    </div>
 			    </div>
-			    <input type="hidden" name="type" value="update"/>
-			    <button type="submit" class="btn btn-primary">Update Appointment</button>
+			    <input type="hidden" name="type" value="update-appointment"/>
+			    <button type="submit" class="btn btn-primary mt-3">Update Appointment</button>
 	      	</form>
-	      	<hr/>
-	      	<div class="mb-3 mt-3">
-				    <label class="form-label">Appointment Tests</label>
+	      	
+	      	<div class="d-block mt-5">
+		    	<h4>Payment Details</h4>
+		    	<hr>
+		    	<table class="table table-stripped">
+		    		<thead>
+		               <tr>
+		                  <th>Reference Number</th>
+		                  <th>Amount</th>
+		                  <th>Paid At</th>
+		               </tr>
+		            </thead>
+		            <tbody>
+		               <tr>
+		                  <td>${appointment.paymentRecipt.id}</td>
+		                  <td>${appointment.paymentRecipt.totalPrice}</td>
+		                  <td>${appointment.paymentRecipt.createdAt}</td>
+		               </tr>
+		            </tbody>
+		    	</table>
+			</div>
+	      	
+	      	<div class="mb-3 mt-5">
+				    	<h4>Tests</h4>
+				    	<hr>
 				    
 				    <table class="table table-stripped">
 				    	<thead>
 			               <tr>
 			                  <th>Test</th>
 			                  <th>Status</th>
+			                  <th>Price</th>
+			                  <th>Assigned To</th>
 			                  <th>Actions</th>
 			               </tr>
 			            </thead>
@@ -106,13 +134,14 @@
 						    		<td>${appointmentTest.testType.name}</td>
 						    		<td>${appointmentTest.status}</td>
 						    		<td>${appointmentTest.testType.price}</td>
+						    		<td>${appointmentTest.technician.name}</td>
 						    		<td>
 										<tag:if test='${appointmentTest.status eq "Confirmed, Waiting for payment" || appointmentTest.status eq "Processing"}'>
-										    <form method="get" action="appointmentTest">
+										    <form method="get" action="receptionists">
 										        <input type="hidden" value="${appointmentTest.testType.id}" id="test_type_id" name="test_type_id" required>
 										        <input type="hidden" value="${appointment.id}" id="test_appointment_id" name="test_appointment_id" required>
-										        <input type="hidden" value="get-specific-by-appointment" name="type" required>
-										        <button type="submit" class="btn btn-primary">Update Test</button>
+										        <input type="hidden" value="get-specific-test-by-appointment" name="type" required>
+										        <button type="submit" class="btn btn-primary">Assign Technician</button>
 										    </form>
 										</tag:if>
 						    		</td>

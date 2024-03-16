@@ -1,5 +1,6 @@
 package com.code_with_malaka.ABC_lab_system.dao;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +30,7 @@ public class PatientsManager {
         return period.getYears();
     }
 	
-	public boolean createPatient(Patient patient) throws ClassNotFoundException, SQLException {
+	public boolean createPatient(Patient patient) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
 		String query = "INSERT INTO patients (name, email, password, contact_number, dob) VALUES (?, ?, ?, ?, ?)";
@@ -98,6 +99,37 @@ public class PatientsManager {
 			patient.setContactNumber(rs.getString("contact_number"));
 			patient.setDob(rs.getDate("dob"));
 			patient.setAge(calculateAge(rs.getDate("dob")));
+		}
+		
+		ps.close();
+		connection.close();	
+		
+		return patient;
+		
+	}
+	
+	public Patient getSpecificPatientByEmail(String email) throws ClassNotFoundException, SQLException {
+		PasswordManager passwordManager = new PasswordManager();
+
+		Connection connection = getConnection(); 
+		String query = "SELECT * FROM patients WHERE email = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, email);
+		
+		Patient patient = new Patient();
+		ResultSet rs = ps.executeQuery();
+		
+		if (rs.next()) {
+			patient.setId(rs.getInt("id"));
+			patient.setName(rs.getString("name"));
+			patient.setEmail(rs.getString("email"));
+			patient.setPassword(passwordManager.passwordUnhash(rs.getString("password")));
+			patient.setContactNumber(rs.getString("contact_number"));
+			patient.setDob(rs.getDate("dob"));
+			patient.setAge(calculateAge(rs.getDate("dob")));
+			patient.setRole("Patient");
+		} else {
+			patient.setId(-999);
 		}
 		
 		ps.close();

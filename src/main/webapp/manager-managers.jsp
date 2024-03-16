@@ -25,9 +25,9 @@
 		<div class="container">
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-					<li class="nav-item"><a class="nav-link active"
-						href="manager-dashboard">Dashboard</a></li>
 					<li class="nav-item"><a class="nav-link"
+						href="managers?type=get-dashboard&session_id=${auth_manager_id}">Dashboard</a></li>
+					<li class="nav-item"><a class="nav-link active"
 						href="manager-managers">Managers</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="manager-receptionists">Receptionists</a></li>
@@ -35,13 +35,36 @@
 						href="manager-technicians">Technicians</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="manager-test-types">Test Types</a></li>
+						
+                  <li class="nav-item">
+                  	<form method="post" action="managers">
+                        <input type="hidden" name="auth_manager_id" value="${auth_manager_id}"" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
+                  </li>
 				</ul>
 			</div>
 			</div>
 	</nav>
 	<div class="container">
+		<p>${message}</p>
+         <p>${auth_manager_id}</p>
+         <div class="d-flex align-items-center mb-3">
+            <div class="me-auto">
+               <h3 class="title">Managers</h3>
+            </div>             
+            <div class="ms-auto">
+				<a class="btn btn-primary" href="manager-add-new-manager.jsp">Create Manager</a>
+            </div>
+         </div>
+         <hr>
 		<table class="table table-stripped">
 			<thead>
+				<tr>
+					<th>Name</th>
+					<th>email</th>
+				</tr>
 			</thead>
 			<tbody>
 				<tag:forEach var="manager" items="${managersList}">

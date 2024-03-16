@@ -1,5 +1,6 @@
 package com.code_with_malaka.ABC_lab_system.dao;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,7 +23,7 @@ public class ManagersManager {
 		return connector.getDbConnection();
 	}
 	
-	public boolean addManager(Manager manager) throws ClassNotFoundException, SQLException {
+	public boolean addManager(Manager manager) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
 		String query = "INSERT INTO managers (name, email, password) VALUES (?, ?, ?)";
@@ -63,5 +64,29 @@ public class ManagersManager {
 		return managersList;
 		
 	}
+	
+	public Manager getSpecificManagerByEmail(String email) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		String query = "SELECT * FROM managers WHERE email = ? AND is_active IS TRUE";
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, email);
+		ResultSet rs = ps.executeQuery();
+		Manager manager = new Manager();
+		
+		if(rs.next()) {
+			manager.setId(rs.getInt("id"));
+			manager.setEmail(rs.getString("email"));
+			manager.setName(rs.getString("name"));
+			manager.setPassword(rs.getString("password"));
+			manager.setRole("Manager");
+		}else {
+			manager.setId(-999);
+		}
+		
+		ps.close();
+		connection.close();
+		return manager;
+	}
+	
 
 }

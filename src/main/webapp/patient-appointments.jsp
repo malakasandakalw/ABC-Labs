@@ -48,22 +48,27 @@
                </form>
             </div>
          </div>
-         <hr>
-         <div class="table-container">
-	         <table class="table table-stripped">
+         <div class="table-container mt-3">
+         	<input class="form-control" type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by appointment number.." title="">
+         	
+	         <table class="table table-stripped mt-3" id="myTable">
 	            <thead>
 	               <tr>
 	                  <th>Appointment Number</th>
+	                  <th>Created At</th>
 	                  <th>Status</th>
-	                  <th>Actions</th>
+	                  <th class="text-end pe-5">Price (Rs.)</th>
+	                  <th class="ps-5">Actions</th>
 	               </tr>
 	            </thead>
 	            <tbody>
 	               <tag:forEach var="appointment" items="${patientsAppointmentsList}">
-	                  <tr>
+	                  <tr class="filter">
 	                     <td>${appointment.id}</td>
+	                     <td>${appointment.createdAt}</td>
 	                     <td>${appointment.status}</td>
-	                     <td>
+	                     <td class="text-end pe-5">${appointment.totalPrice}</td>
+	                     <td class="ps-5">
 	                        <div class="d-flex gap-2">
 		                        <div class="action-div">
 			                        <form method="get" action="patients">
@@ -80,6 +85,29 @@
 	         </table>
 	      </div>
       </div>
+      <script>
+		function myFunction() {
+		  var input, filter, table, tr, td, i, txtValue;
+		  
+		  input = document.getElementById("myInput");
+		  filter = input.value.toUpperCase();
+		  table = document.getElementById("myTable");
+		  tr = table.getElementsByClassName("filter");
+		  
+		  for (i = 0; i < tr.length; i++) {
+		    td = tr[i].getElementsByTagName("td")[0];
+		    if (td) {
+		      txtValue = td.textContent || td.innerText;
+		      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+		        tr[i].style.display = "";
+		      } else {
+		        tr[i].style.display = "none";
+		      }
+		    }       
+		  }
+		  
+		}
+		</script>
    </body>
 </html>
 <%

@@ -64,10 +64,22 @@
   	<description></description>
   	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.TestResultsController</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>FileDownloadController</servlet-name>
+  	<display-name>FileDownloadController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.FileDownloadController</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>FileViewerController</servlet-name>
+  	<display-name>FileViewerController</display-name>
+  	<description></description>
+  	<servlet-class>com.code_with_malaka.ABC_lab_system.controllers.FileViewerController</servlet-class>
+  </servlet>
   
   <servlet-mapping>
   	<servlet-name>ManagersController</servlet-name>
-  	<url-pattern>/ManagersController</url-pattern>
+  	<url-pattern>/managers</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>
@@ -83,6 +95,11 @@
   <servlet-mapping>
   	<servlet-name>ReceptionistsController</servlet-name>
   	<url-pattern>/manager-receptionists</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>ReceptionistsController</servlet-name>
+  	<url-pattern>/receptionists</url-pattern>
   </servlet-mapping>
   
    <servlet-mapping>
@@ -136,6 +153,14 @@
   <servlet-mapping>
   	<servlet-name>TestResultsController</servlet-name>
   	<url-pattern>/test-result</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>FileDownloadController</servlet-name>
+  	<url-pattern>/download</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>FileViewerController</servlet-name>
+  	<url-pattern>/view</url-pattern>
   </servlet-mapping>
   
 </web-app>

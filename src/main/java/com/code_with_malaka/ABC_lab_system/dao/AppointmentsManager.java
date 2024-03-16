@@ -82,6 +82,7 @@ public class AppointmentsManager {
 		while (resultset.next()) {
 			Appointment appointment = new Appointment();
 			appointment.setId(resultset.getInt("id"));
+			appointment.setTotalPrice(resultset.getDouble("total_price"));
 			appointment.setDate(resultset.getDate("date"));
 			appointment.setStatus(resultset.getString("status"));
 			appointment.setCreatedAt(resultset.getTimestamp("created_at"));
@@ -96,8 +97,10 @@ public class AppointmentsManager {
 	public Appointment getSpecificAppointment(int id) throws SQLException, ClassNotFoundException {
 		Connection connection = getConnection();
 		AppointmentTestsManager appointmentTestsManager = new AppointmentTestsManager();
+		PaymentReciptsManager paymentReciptsManager = new PaymentReciptsManager();
 		
-		String query = "SELECT * FROM appointments WHERE id = ?";
+		String query = "SELECT id, contact_number, email, created_at, date, doctor_details, status, total_price, (SELECT id FROM payment_recipts WHERE payment_recipts.appointment_id = appointments.id) AS payment_id FROM appointments WHERE id = ?";
+		
 		
 		PreparedStatement ps = connection.prepareStatement(query);
 		
@@ -117,6 +120,15 @@ public class AppointmentsManager {
 			appointment.setStatus(rs.getString("status"));
 			appointment.setTotalPrice(rs.getDouble("total_price"));
 			appointment.setAppointmentTests(appointmentTestsManager.getAppointmentTestsByAppointmentId(id));
+			
+			int paymentId = rs.getInt("payment_id");
+			
+			if (rs.wasNull()) {
+				appointment.setPaymentRecipt(null);
+			} else {
+				appointment.setPaymentRecipt(paymentReciptsManager.getSpecificPaymentRecipt(rs.getInt("id")));
+			}
+			
 		}
 		
 		ps.close();

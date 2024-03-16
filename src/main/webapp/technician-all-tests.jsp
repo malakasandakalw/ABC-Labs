@@ -2,8 +2,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
    pageEncoding="ISO-8859-1" isELIgnored="false"%>
 <%
-
-
+	Object sessionAttribute = session.getAttribute("auth_technician_id");
+	
+	if (sessionAttribute != null) {
 
    	%>
 <!DOCTYPE html>
@@ -24,9 +25,16 @@
       <nav class="navbar navbar-expand-md bg-body-tertiary">
          <div class="container">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item"><a class="nav-link active"
-                     href="">Tests</a>
+                     href="technicians?type=get-tests&session_id=${auth_technician_id}">Appointment Tests</a>
+                  </li>
+                  <li class="nav-item">
+                  	<form method="post" action="technicians">
+                        <input type="hidden" name="auth_technician_id" value="${auth_technician_id}"" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
                   </li>
                </ul>
             </div>
@@ -78,5 +86,8 @@
 </html>
 <%
 
+	   } else {
+	      response.sendRedirect("technician-login.jsp");
+	      }
 
    %>

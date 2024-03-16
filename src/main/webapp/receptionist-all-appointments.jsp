@@ -17,7 +17,7 @@
 	         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 	            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 	               <li class="nav-item">
-	               	<a class="nav-link" href="receptionist-all-appointments">Appointments</a>
+	               	<a class="nav-link" href="receptionists?type=get-appointments&session_id=${ auth_receptionist_id }">Appointments</a>
 	               </li>
 	            </ul>
 	         </div>
@@ -25,6 +25,7 @@
 	   </nav>
 	   <div class="container">
 	      <p>${message}</p>
+	      ${ auth_receptionist_id }
 	      <div class="d-flex align-items-center mb-3">
 	         <div class="me-auto">
 	            <h3 class="title">All Appointments</h3>
@@ -48,9 +49,9 @@
 	                     <td>
 	                        <div class="d-flex gap-2">
 		                        <div class="action-div">
-			                        <form method="get" action="appointments">
+			                        <form method="get" action="receptionists">
 			                           <input type="hidden" name="appointment_id" value="${appointment.id}" required>
-			                           <input type="hidden" name="type" value="get-specific"/>
+			                           <input type="hidden" name="type" value="get-specific-appointment"/>
 			                           <button type="submit" class="btn btn-success">View</button>
 			                        </form>
 		                        </div>

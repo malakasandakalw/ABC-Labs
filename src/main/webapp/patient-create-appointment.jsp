@@ -47,7 +47,7 @@
 			    <label class="form-label">Required Tests</label>
 			    <select class="form-select" id="tests" name="tests" required multiple>
 			    	<tag:forEach var="testType" items="${testTypesList}">	
-					  <option value="${testType.id}">${testType.name}</option>					
+					  <option value="${testType.id}">${testType.name} - Rs. ${testType.price}</option>					
 					</tag:forEach>
 			    </select>
 			  </div>

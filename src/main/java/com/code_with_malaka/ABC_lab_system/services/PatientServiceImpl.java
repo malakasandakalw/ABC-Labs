@@ -1,8 +1,8 @@
 package com.code_with_malaka.ABC_lab_system.services;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
-import com.code_with_malaka.ABC_lab_system.dao.AppointmentsManager;
 import com.code_with_malaka.ABC_lab_system.dao.PatientsManager;
 import com.code_with_malaka.ABC_lab_system.models.Patient;
 
@@ -27,7 +27,7 @@ public class PatientServiceImpl implements PatientService {
 	}
 	
 	@Override
-	public boolean createPatient(Patient patient) throws ClassNotFoundException, SQLException {
+	public boolean createPatient(Patient patient) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		return getPatientsManager().createPatient(patient);
 	}
 
@@ -36,8 +36,8 @@ public class PatientServiceImpl implements PatientService {
 		return null;
 	}
 	
-	public Patient getSpecificPatientByEmail(String email) {
-		return null;
+	public Patient getSpecificPatientByEmail(String email) throws ClassNotFoundException, SQLException {
+		return getPatientsManager().getSpecificPatientByEmail(email);
 	}
 
 	@Override

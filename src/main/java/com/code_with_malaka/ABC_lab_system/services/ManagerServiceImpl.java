@@ -1,5 +1,6 @@
 package com.code_with_malaka.ABC_lab_system.services;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class ManagerServiceImpl implements ManagerService {
 	
 	private static ManagerService managerServiceObj;
 	
-	private ManagerServiceImpl() {
+	public ManagerServiceImpl() {
 		
 	}
 	
@@ -29,9 +30,8 @@ public class ManagerServiceImpl implements ManagerService {
 	
 	
 	@Override
-	public boolean createManager(Manager manager) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean createManager(Manager manager) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
+		return getManagersManager().addManager(manager);
 	}
 
 	@Override
@@ -43,6 +43,10 @@ public class ManagerServiceImpl implements ManagerService {
 	public Manager getSpecificManager(int id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Manager getSpecificManagerByEmail(String email) throws ClassNotFoundException, SQLException {
+		return getManagersManager().getSpecificManagerByEmail(email);
 	}
 
 	@Override

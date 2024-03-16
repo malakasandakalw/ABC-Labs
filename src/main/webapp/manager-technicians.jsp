@@ -24,29 +24,55 @@
 		<div class="container">
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-					<li class="nav-item"><a class="nav-link active"
-						href="manager-dashboard">Dashboard</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="managers?type=get-dashboard&session_id=${auth_manager_id}">Dashboard</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="manager-managers">Managers</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="manager-receptionists">Receptionists</a></li>
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						href="manager-technicians">Technicians</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="manager-test-types">Test Types</a></li>
+						
+                  <li class="nav-item">
+                  	<form method="post" action="managers">
+                        <input type="hidden" name="auth_manager_id" value="${auth_manager_id}"" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
+                  </li>
 				</ul>
 			</div>
 			</div>
 	</nav>
 	<div class="container">
 	
-		<form method="get" action="technicians">
-		  <input type="hidden" name="type" value="new-technician"/>
-		  <button type="submit" class="btn btn-primary">Create Technician</button>
-		</form>
+		<p>${message}</p>
+         <p>${auth_manager_id}</p>
+         <div class="d-flex align-items-center mb-3">
+            <div class="me-auto">
+               <h3 class="title">Technicians</h3>
+            </div>
+            
+             <div class="ms-auto">
+             	<form method="get" action="technicians">
+				  <input type="hidden" name="type" value="new-technician"/>
+				  <button type="submit" class="btn btn-primary">Create Technician</button>
+				</form>
+            </div>
+            
+				
+         </div>
+         <hr>
 	
 		<table class="table table-stripped">
 			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Action</th>
+				</tr>
 			</thead>
 			<tbody>
 				<tag:forEach var="technician" items="${techniciansList}">

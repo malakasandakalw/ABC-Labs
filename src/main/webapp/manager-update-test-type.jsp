@@ -18,7 +18,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                     <a class="nav-link" href="manager-dashboard">Dashboard</a>
+                     <a class="nav-link" href="managers?type=get-dashboard&session_id=${auth_manager_id}">Dashboard</a>
                   </li>
                   <li class="nav-item">
                      <a class="nav-link" href="manager-managers">Managers</a>
@@ -31,6 +31,14 @@
                   </li>
                   <li class="nav-item">
                      <a class="nav-link active" href="manager-test-types">Test Types</a>
+                  </li>
+						
+                  <li class="nav-item">
+                  	<form method="post" action="managers">
+                        <input type="hidden" name="auth_manager_id" value="${auth_manager_id}"" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
                   </li>
                </ul>
             </div>

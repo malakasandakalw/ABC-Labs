@@ -36,44 +36,54 @@
          <p>${message}</p>
          <p>${auth_patient_id}</p>
          <div class="col-md-10 mx-auto">
+		    	<h4>Appointment Details</h4>
+			    	<hr>
 	      		<div class="mb-3">
-				    <label class="form-label">Appointment Number : ${appointment.id}</label>
+				    <label class="form-label">Appointment Number : </label>
+				    <input type="text" value="${appointment.id}" class="form-control" readonly>
 			    </div>
 			    <div class="row">
-			    	<div class="col-md-12">
+			    	<div class="col-md-6">
 					    <div class="mb-3">
-						    <div class="form-label">Contact Number : ${appointment.contactNumber}</div>
+						    <div class="form-label">Contact Number : </div>
+				    		<input type="text" value="${appointment.contactNumber}" class="form-control" readonly>
 					    </div>
 			    	</div>
-			    	<div class="col-md-12">
+			    	<div class="col-md-6">
 					    <div class="mb-3">
-						    <div class="form-label">Email : ${appointment.email}</div>
+						    <div class="form-label">Email : </div>
+				    		<input type="text" value="${appointment.email}" class="form-control" readonly>
 					    </div>
 			    	</div>
 			    </div>
 			    <div class="mb-3">
-				    <div class="form-label">Doctor Details : ${appointment.details}</div>
+				    <div class="form-label">Doctor Details :</div>
+				    <textarea rows="" cols="" class="form-control" readonly>${appointment.details}</textarea>
 			    </div>
 			    
 			    <div class="row">
-				    <div class="col-md-12">
+				    <div class="col-md-4">
 					    <div class="mb-3">
-						    <div class="form-label">Appointment Date : ${appointment.date}</div>
+						    <div class="form-label">Appointment Date :</div>
+						    <input type="text" value="${appointment.date}" class="form-control" readonly>
+					    </div>
+				    </div>
+				    <div class="col-md-4">
+					    <div class="mb-3">
+						    <div class="form-label">Appointment Status : </div>
+						    <input type="text" value="${appointment.status}" class="form-control" readonly>
+					    </div>
+				    </div>
+				    <div class="col-md-4">
+					    <div class="mb-3">
+						    <div class="form-label">Total Price (Rs.) : </div>
+						    <input type="text" value="${appointment.totalPrice}" class="form-control" readonly>
 					    </div>
 				    </div>
 				    <div class="col-md-12">
 					    <div class="mb-3">
-						    <div class="form-label">Appointment Status : ${appointment.status}</div>
-					    </div>
-				    </div>
-				    <div class="col-md-12">
-					    <div class="mb-3">
-						    <div class="form-label">Total Price (Rs.) : ${appointment.totalPrice}</div>
-					    </div>
-				    </div>
-				    <div class="col-md-12">
-					    <div class="mb-3">
-						    <div class="form-label">Created at: ${appointment.createdAt}</div>
+						    <div class="form-label">Created at: </div>
+						    <input type="text" value="${appointment.createdAt}" class="form-control" readonly>
 					    </div>
 				    </div>
 			    </div>
@@ -97,6 +107,8 @@
 					        <h1 class="modal-title fs-5" id="exampleModalLabel">Pay Online</h1>
 					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					      </div>
+					      
+					    <form method="post" action="patients">
 					      <div class="modal-body">
 					      	<div class="mb-3">
 							    <label class="form-label">Card Number</label>
@@ -113,27 +125,50 @@
 					      </div>
 					      <div class="modal-footer">
 					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						    <form method="post" action="appointments">
 						    	<input type="hidden" class="form-control" id="appointment_id" name="appointment_id" value="${appointment.id}" required>
 					   			<input type="hidden" class="form-control" value="${appointment.contactNumber}" name="appointment_contact_number" id="appointment_contact_number" required>
 					   			<input type="hidden" class="form-control" id="appointment_price" name="appointment_price" value="${appointment.totalPrice}" required>
 						        <input type="hidden" value="payment" name="type" required>
 						        <button type="submit" class="btn btn-primary">Pay</button>
-						    </form>
+						    
 					      </div>
+					      </form>
 					    </div>
 					  </div>
 					</div>
 				</tag:if>
-	      	<hr/>
-	      	<div class="mb-3 mt-3">
-				    <label class="form-label">Appointment Tests</label>
+				
+				<div class="d-block mt-5">
+			    	<h4>Payment Details</h4>
+			    	<hr>
+			    	<table class="table table-stripped">
+			    		<thead>
+			               <tr>
+			                  <th>Reference Number</th>
+			                  <th>Amount</th>
+			                  <th>Paid At</th>
+			               </tr>
+			            </thead>
+			            <tbody>
+			               <tr>
+			                  <td>${appointment.paymentRecipt.id}</td>
+			                  <td>${appointment.paymentRecipt.totalPrice}</td>
+			                  <td>${appointment.paymentRecipt.createdAt}</td>
+			               </tr>
+			            </tbody>
+			    	</table>
+				</div>
+				
+	      	<div class="mb-3 mt-5">
+				    	<h4>Tests</h4>
+				    	<hr>
 				    
 				    <table class="table table-stripped">
 				    	<thead>
 			               <tr>
 			                  <th>Test</th>
 			                  <th>Status</th>
+			                  <th>Price</th>
 			                  <th>Actions</th>
 			               </tr>
 			            </thead>
@@ -150,7 +185,7 @@
 										        <input type="hidden" value="${appointment.id}" id="test_appointment_id" name="test_appointment_id" required>
 										        <input type="hidden" value="get-specific-by-appointment" name="type" required>
 										        <tag:if test='${appointmentTest.status eq "Done"}'>
-										        	<button type="submit" class="btn btn-primary">Download Report</button>
+										        	<a href="view?fileName=${ appointmentTest.getTestResult().getFileUrl()}">View Attached File</a>
 										        </tag:if>
 										    </form>
 										</tag:if>

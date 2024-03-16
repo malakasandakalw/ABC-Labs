@@ -1,5 +1,6 @@
 package com.code_with_malaka.ABC_lab_system.services;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 	
 	private static ReceptionistService receptionistServiceObj;
 	
-	private ReceptionistServiceImpl() {
+	public ReceptionistServiceImpl() {
 		
 	}
 
@@ -27,8 +28,8 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 	}
 	
 	@Override
-	public boolean createReceptionist(Receptionist receptionist) {
-		return false;
+	public boolean createReceptionist(Receptionist receptionist) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
+		return getReceptionistsManager().createReceptionist(receptionist);
 	}
 
 	@Override
@@ -39,6 +40,10 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 	@Override
 	public Receptionist getSpecificReceptionist(int id) {
 		return null;
+	}
+	
+	public Receptionist getSpecifcReceptionistByEmail(String email) throws ClassNotFoundException, SQLException {
+		return getReceptionistsManager().getSpecifcReceptionistByEmail(email);
 	}
 
 	@Override

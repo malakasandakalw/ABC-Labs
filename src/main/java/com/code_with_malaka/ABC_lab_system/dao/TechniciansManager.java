@@ -1,5 +1,6 @@
 package com.code_with_malaka.ABC_lab_system.dao;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ public class TechniciansManager {
 		return connector.getDbConnection();
 	}
 	
-	public boolean createTechnician(Technician technician) throws ClassNotFoundException, SQLException {
+	public boolean createTechnician(Technician technician) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
 		String query = "INSERT INTO technicians (name, email, password) VALUES (?, ?, ?)";
@@ -59,7 +60,7 @@ public class TechniciansManager {
 		
 	}
 	
-	public boolean updateTechnician(Technician technician) throws SQLException, ClassNotFoundException {
+	public boolean updateTechnician(Technician technician) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException {
 		
 		PasswordManager passwordManager = new PasswordManager();
 		
@@ -196,23 +197,26 @@ public class TechniciansManager {
 	public Technician getSpecificTechnicianByEmail(String email) throws ClassNotFoundException, SQLException {
 		Connection connection = getConnection(); 
 		
-		String query = "SELECT * FROM technicians WHERE email = ?";
+		String query = "SELECT * FROM technicians WHERE email = ? AND is_active IS TRUE";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setString(1, email);
 		
 		ResultSet rs = ps.executeQuery();
+		
 		Technician technician = new Technician();
 		
-		while(rs.next()) {
-			technician.setId(rs.getInt("id"));
-			technician.setName(rs.getString("name"));
-			technician.setEmail(rs.getString("email"));
-			technician.setPassword(rs.getString("password"));
-			technician.setIsActive(rs.getInt("is_active"));
-			technician.setIsChangedDefaultPassword(rs.getInt("is_def_pw_changed"));
-			technician.setRole("Technician");
-		}
+	    if (rs.next()) {
+	        technician.setId(rs.getInt("id"));
+	        technician.setName(rs.getString("name"));
+	        technician.setEmail(rs.getString("email"));
+	        technician.setPassword(rs.getString("password"));
+	        technician.setIsActive(rs.getInt("is_active"));
+	        technician.setIsChangedDefaultPassword(rs.getInt("is_def_pw_changed"));
+	        technician.setRole("Technician");
+	    } else {
+	        technician.setId(-999);
+	    }
 		
 		ps.close();
 		connection.close();		

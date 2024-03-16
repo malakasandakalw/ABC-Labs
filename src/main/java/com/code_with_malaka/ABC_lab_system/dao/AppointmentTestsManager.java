@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.code_with_malaka.ABC_lab_system.models.Appointment;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
+import com.code_with_malaka.ABC_lab_system.models.TestResult;
 
 public class AppointmentTestsManager {
 	public DbConnector getDbConnector() {
@@ -52,6 +53,21 @@ public class AppointmentTestsManager {
 		return result > 0;
 	}
 	
+	public boolean updateSpecificAppointmentTestStatus(AppointmentTest appointmentTest) throws SQLException, ClassNotFoundException {
+		Connection connection = getConnection(); 
+		String query = "UPDATE appointment_tests SET status = ? WHERE id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		
+		ps.setString(1, appointmentTest.getStatus());
+		ps.setInt(2, appointmentTest.getId());
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
 	public boolean updateSpecificAppointmentTestByTechnician(AppointmentTest appointmentTest) throws SQLException, ClassNotFoundException {
 		Connection connection = getConnection(); 
 		String query = "UPDATE appointment_tests SET status = ?, result_id = ? WHERE id = ?";
@@ -73,6 +89,8 @@ public class AppointmentTestsManager {
 		Connection connection = getConnection();
 		PatientsManager patientsManager = new PatientsManager();
 		AppointmentsManager appointmentsManager = new AppointmentsManager();
+		TestResultManager testResultManager = new TestResultManager();
+		
 		AppointmentTest appointmentTest = new AppointmentTest();
 		TestTypeManager testTypeManager = new TestTypeManager();
 		
@@ -95,7 +113,9 @@ public class AppointmentTestsManager {
 			if (rs.wasNull()) {
 				appointmentTest.setTestResult(null);
 			} else {
-//			
+				TestResult testResult = new TestResult();
+				testResult = testResultManager.getSpecifcTestResultById(testResultId);
+				appointmentTest.setTestResult(testResult);
 			}
 			
 		}
@@ -103,101 +123,6 @@ public class AppointmentTestsManager {
 		ps.close();
 		connection.close();
 		return appointmentTest;
-		
-	}
-	
-	public AppointmentTest getSpecificAppointmentTestByAppointmentId(int testTypeId, int appointmentId) throws ClassNotFoundException, SQLException {
-		Connection connection = getConnection();
-		TechniciansManager techniciansManager = new TechniciansManager();
-		TestResultManager testResultManager = new TestResultManager();
-		TestTypeManager testTypeManager = new TestTypeManager();
-		
-		AppointmentTest appointmentTest = new AppointmentTest();
-		
-		String query = "SELECT * FROM appointment_tests WHERE appointment_id = ? AND test_type_id = ?";
-		PreparedStatement ps = connection.prepareStatement(query);
-		ps.setInt(1, appointmentId);
-		ps.setInt(2, testTypeId);
-		
-		ResultSet rs = ps.executeQuery();
-		
-		while (rs.next()) {
-			appointmentTest.setId(rs.getInt("id"));
-			appointmentTest.setAppointment(new Appointment(rs.getInt("appointment_id")));
-			appointmentTest.setStatus(rs.getString("status"));
-			
-			int technicianId = rs.getInt("technician_id");
-			
-			if (rs.wasNull()) {
-				appointmentTest.setTechnician(null); 
-			} else {
-				appointmentTest.setTechnician(techniciansManager.getSpecificTechnician(technicianId));
-			}
-			
-			int testResultId = rs.getInt("result_id");
-			
-			if (rs.wasNull()) {
-				appointmentTest.setTestResult(null);
-			} else {
-//			
-			}
-			
-			appointmentTest.setTestType(testTypeManager.getSpecificTestType(rs.getInt("test_type_id")));
-			
-		}
-		
-		ps.close();
-		connection.close();
-		return appointmentTest;
-		
-	}
-	
-	public AppointmentTest getSpecificAppointmentTest(int id) throws ClassNotFoundException, SQLException {
-		return null;
-	}
-	
-	public List<AppointmentTest> getAppointmentTestsByTechnicianId(int id) throws ClassNotFoundException, SQLException {
-		Connection connection = getConnection();
-		TechniciansManager techniciansManager = new TechniciansManager();
-		TestTypeManager testTypeManager = new TestTypeManager();
-		AppointmentsManager appointmentsManager = new AppointmentsManager();
-		
-		List<AppointmentTest> appointmentTestsList = new ArrayList<AppointmentTest>();
-		
-		String query = "SELECT * FROM appointment_tests WHERE technician_id = ?";
-		PreparedStatement ps = connection.prepareStatement(query);
-		ps.setInt(1, id);
-		ResultSet rs = ps.executeQuery();
-		
-		while (rs.next()) {
-			AppointmentTest appointmentTest = new AppointmentTest();
-			appointmentTest.setId(rs.getInt("id"));
-			appointmentTest.setStatus(rs.getString("status"));
-			
-			int technicianId = rs.getInt("technician_id");
-			
-			if (rs.wasNull()) {
-				appointmentTest.setTechnician(null); 
-			} else {
-				appointmentTest.setTechnician(techniciansManager.getSpecificTechnician(technicianId));
-			}
-			
-			int testResultId = rs.getInt("result_id");
-			
-			if (rs.wasNull()) {
-				appointmentTest.setTestResult(null);
-			} else {
-//				appointmentTest.setTestResult(testResultManager.getSpecificTechnician(rs.getInt("result_id")));
-			}
-			
-			appointmentTest.setTestType(testTypeManager.getSpecificTestType(rs.getInt("test_type_id")));
-			appointmentTest.setAppointment(appointmentsManager.getSpecificAppointment(rs.getInt("appointment_id")));
-			appointmentTestsList.add(appointmentTest);
-		}
-		
-		ps.close();
-		connection.close();
-		return appointmentTestsList;
 		
 	}
 	

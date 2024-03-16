@@ -1,6 +1,7 @@
 package com.code_with_malaka.ABC_lab_system.controllers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,16 @@ import com.code_with_malaka.ABC_lab_system.dao.TestResultManager;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
 import com.code_with_malaka.ABC_lab_system.models.CreateResponse;
 import com.code_with_malaka.ABC_lab_system.models.FileUploadResponse;
+import com.code_with_malaka.ABC_lab_system.models.Message;
+import com.code_with_malaka.ABC_lab_system.models.Patient;
 import com.code_with_malaka.ABC_lab_system.models.Technician;
 import com.code_with_malaka.ABC_lab_system.models.TestResult;
 import com.code_with_malaka.ABC_lab_system.models.TestType;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.CommonServiceImpl;
+import com.code_with_malaka.ABC_lab_system.services.MessageService;
+import com.code_with_malaka.ABC_lab_system.services.PatientService;
+import com.code_with_malaka.ABC_lab_system.services.PatientServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TechnicianServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TestTypeServiceImpl;
 
@@ -43,33 +49,58 @@ public class TechniciansController extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		HttpSession session = request.getSession();
+		
+		boolean isAuthenticated = isAuthenticated(session);
+		
 		String type = request.getParameter("type");
 		TechnicianServiceImpl technicianService = (TechnicianServiceImpl) TechnicianServiceImpl.getTechnicianServiceInstance();
 
 		if (type != null && type.equals("specific")) {
-//    		getSpecificProduct(request, response, managerService);
+			
 		}else if(type != null && type.equals("get-tests")) {
-			try {
-				getTechnicianAppointmentTests(request, response, "");
-			} catch (NumberFormatException | ClassNotFoundException | ServletException | IOException | SQLException e) {
-				e.printStackTrace();
+			
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+				try {
+					getTechnicianAppointmentTests(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | ServletException | IOException | SQLException e) {
+					e.printStackTrace();
+				}
 			}
+			
 		} else if (type != null && type.equals("new-technician")) {
+			
 			TestTypeServiceImpl testTypeService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
 			getTestTypesForCreateTechnician(request, response, testTypeService, "");
+			
 		}else if(type != null && type.equals("update-specific")) {
+			
 			TestTypeServiceImpl testTypeService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
     		getSpecificTechnicianForUpdate(request, response, technicianService, testTypeService, "");
+    		
     	} else if(type != null && type.equals("login")) {
+    		
 			login(request, response, "");
+			
 		} else if(type != null && type.equals("get-specific-appointment-test")) {
-			try {
-				getSpecificTechnicianAppointmentTest(request, response, "");
-			} catch (NumberFormatException | ClassNotFoundException | SQLException | ServletException | IOException e) {
-				e.printStackTrace();
+			
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+				try {
+					getSpecificTechnicianAppointmentTest(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | SQLException | ServletException | IOException e) {
+					e.printStackTrace();
+				}				
 			}
+			
 		} else{
+			
 			getAllTechnicians(request, response, technicianService);
+			
 		}
 	}
 
@@ -85,7 +116,9 @@ public class TechniciansController extends HttpServlet {
     	}
     	else if(type != null && type.equals("update")) {
     		updateTechnician(request, response, technicianService);
-    	}
+    	} else if (type != null && type.equals("logout")){
+    		logout(request,response,"");
+		}
     	else if(type != null && type.equals("update-specific-appointment-test")) {
         	try {
 				updateSpecificAppointmentTest(request, response, "");
@@ -94,6 +127,24 @@ public class TechniciansController extends HttpServlet {
 			}
     	}
 		
+	}
+	
+	private boolean isAuthenticated(HttpSession session) {
+		System.out.println(session.getAttribute("auth_technician_id"));
+		if (session.getAttribute("auth_technician_id") != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void logout(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
+		Technician technician = new Technician();
+		technician.setRole("Technician");
+		CommonManager commonManager = new CommonManager();
+		commonManager.logout(request, technician);
+		request.setAttribute(message, "Logged out successfully!");
+    	response.sendRedirect("technician-login.jsp");	
 	}
 	
 	private void login(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
@@ -141,8 +192,7 @@ public class TechniciansController extends HttpServlet {
  		String technicianIdString = request.getSession().getAttribute("auth_technician_id").toString();
  		System.out.println(technicianIdString);
  		List<AppointmentTest> technicianAppointmentTests = appointmentTestsService.getAppointmentTestsByTechnicianId(Integer.parseInt(technicianIdString));
- 		HttpSession session = request.getSession();
- 		session.setAttribute("technicianAppointmentTests", technicianAppointmentTests);
+ 		request.setAttribute("technicianAppointmentTests", technicianAppointmentTests);
     	RequestDispatcher rd = request.getRequestDispatcher("technician-all-tests.jsp");
     	rd.forward(request, response);
 	}
@@ -151,13 +201,13 @@ public class TechniciansController extends HttpServlet {
 		AppointmentTestServiceImpl appointmentTestsService = new AppointmentTestServiceImpl();
 		String appoitmentTestId = request.getParameter("appointment_test_id");
 		AppointmentTest appointmentTest = appointmentTestsService.getSpecificAppointmentTest(Integer.parseInt(appoitmentTestId));
-		HttpSession session = request.getSession();
-		session.setAttribute("appointmentTest", appointmentTest);
-		session.setAttribute("message", message);
+		request.setAttribute("appointmentTest", appointmentTest);
+		request.setAttribute("message", request.getAttribute("message"));
 		RequestDispatcher rd = request.getRequestDispatcher("technician-update-appointment-test.jsp");
     	rd.forward(request, response);
 	}
 	
+	@SuppressWarnings("unused")
 	private void updateSpecificAppointmentTest(HttpServletRequest request, HttpServletResponse response, String message) throws IOException, ServletException, ClassNotFoundException, SQLException {
 		TestResultManager testResultManager = new TestResultManager();
 		AppointmentTestServiceImpl appointmentTestsService = new AppointmentTestServiceImpl();
@@ -169,36 +219,99 @@ public class TechniciansController extends HttpServlet {
 		appointmentTest.setId(Integer.parseInt(request.getParameter("appointment_test_id")));
 		appointmentTest.setStatus(request.getParameter("appointment_test_status"));
 		
-		if (!cd.contains("filename=")) {
-			appointmentTestsService.updateAppointmentTest(appointmentTest);
-		} else {
+		String appointmentTestResultId = request.getParameter("appointment_test_result_id");
+		String appointmentTestResultFileUrl = request.getParameter("appointment_test_result_file_url");
+		
+		message = "";
+		
+		if(appointmentTestResultId.equals("") && appointmentTestResultFileUrl.equals("")) {
 			
-			FileUploadResponse isFileUpoloadedResponse = testResultManager.uploadFile(request);
-			
-			if (isFileUpoloadedResponse.isUploaded()) {
+			if (part.getSize() == 0) {
 				
-				TestResult testResult = new TestResult(appointmentTest, isFileUpoloadedResponse.getTestResult().getFileUrl());
+				boolean isUpdated = appointmentTestsService.updateSpecificAppointmentTestStatus(appointmentTest);
 				
-				CreateResponse resultCreatedResponse = testResultManager.createTestResult(testResult);
-				testResult.setId(resultCreatedResponse.getId());
+				if(isUpdated) {
+					message = "Updated Successfully!";					
+				} else {
+					message = "Update Failed!";					
+				}
 				
-				appointmentTest.setTestResult(testResult);
-				appointmentTest.setTechnician(new Technician(Integer.parseInt(request.getParameter("appointment_technician_id"))));
-				
-				appointmentTestsService.updateSpecificAppointmentTestByTechnician(appointmentTest);
-				
-				HttpSession session = request.getSession();
-				getSpecificTechnicianAppointmentTest(request, response, "Updated Successfully!");
-				
-				return;
 				
 			} else {
-				message = "File Upload Failed!";
+				
+				FileUploadResponse isFileUpoloadedResponse = testResultManager.uploadFile(request);
+				
+				if (isFileUpoloadedResponse.isUploaded()) {
+					
+					TestResult testResult = new TestResult(appointmentTest, isFileUpoloadedResponse.getTestResult().getFileUrl());
+					
+					CreateResponse resultCreatedResponse = testResultManager.createTestResult(testResult);
+					testResult.setId(resultCreatedResponse.getId());
+					
+					appointmentTest.setTestResult(testResult);
+					appointmentTest.setTechnician(new Technician(Integer.parseInt(request.getParameter("appointment_technician_id"))));
+					
+					boolean isUpdated = appointmentTestsService.updateSpecificAppointmentTestByTechnician(appointmentTest);
+					
+					if(resultCreatedResponse.isResult() && isUpdated) {
+						message = "File Uploaded & Updated Successfully!";	
+						
+						MessageService messageService = MessageService.getMessagerServiceInstance();
+						Message messageObj = new Message(request.getParameter("patient_contact_number"), "Result of Test " + request.getParameter("appointment_test_id") + " has now available.");
+						messageService.sendMessage(messageObj);	
+						
+					} else {
+						message = "Update Failed!";	
+					}
+					
+				} else {
+					message = "File Upload Failed!";
+				}
+				
 			}
+		} else {
+			// check if file already in table
+			TestResult testResult = new TestResult();
+			testResult.setId(Integer.parseInt(request.getParameter("appointment_test_result_id")));
+			testResult.setFileUrl(request.getParameter("appointment_test_result_file_url"));
 			
+			
+			appointmentTestsService.updateSpecificAppointmentTestStatus(appointmentTest);
+			
+			String fileUrl = testResultManager.getFileName(part);
+
+			
+			if(fileUrl.equals(request.getParameter("appointment_test_result_file_url"))) {
+				message = "Updated Successfully!";
+			} else {
+				FileUploadResponse isFileUpoloadedResponse = testResultManager.uploadFile(request);
+				if (isFileUpoloadedResponse.isUploaded()) {
+					testResult.setFileUrl(isFileUpoloadedResponse.getTestResult().getFileUrl());
+					
+					CreateResponse resultUpdatedResponse = testResultManager.updateTestResult(testResult);
+					
+					appointmentTest.setTestResult(testResult);
+					appointmentTest.setTechnician(new Technician(Integer.parseInt(request.getParameter("appointment_technician_id"))));
+					
+					boolean isUpdated = appointmentTestsService.updateSpecificAppointmentTestByTechnician(appointmentTest);
+					
+					if(resultUpdatedResponse.isResult() && isUpdated) {
+						message = "File Uploaded & Updated Successfully!";	
+						MessageService messageService = MessageService.getMessagerServiceInstance();
+						Message messageObj = new Message(request.getParameter("patient_contact_number"), "Result of Test " + request.getParameter("appointment_test_id") + " has now available.");
+						messageService.sendMessage(messageObj);						
+					} else {
+						message = "Update Failed!";	
+					}					
+				} else {
+					message = "File Upload Failed!";
+				}
+			}
 		}
 		
-		getSpecificTechnicianAppointmentTest(request, response, "Failed");
+		request.setAttribute("message", message);
+		
+		getSpecificTechnicianAppointmentTest(request, response, message);
 		
 	}
 	
@@ -239,7 +352,7 @@ public class TechniciansController extends HttpServlet {
 				else {
 					message = "Failed!";
 				}
-			} catch (ClassNotFoundException | SQLException e) {
+			} catch (ClassNotFoundException | SQLException | NoSuchAlgorithmException e) {
 				message = e.getMessage();
 			}
 
@@ -297,7 +410,7 @@ public class TechniciansController extends HttpServlet {
 	    		} else {
 					message = "User already exists";
 				}
-			} catch (ClassNotFoundException | SQLException e) {
+			} catch (ClassNotFoundException | SQLException | NoSuchAlgorithmException e) {
 				message = e.getMessage();
 			}
 

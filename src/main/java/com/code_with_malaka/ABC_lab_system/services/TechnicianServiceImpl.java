@@ -1,5 +1,6 @@
 package com.code_with_malaka.ABC_lab_system.services;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -28,7 +29,7 @@ private static TechnicianService technicianServiceObj;
 	}
 	
 	@Override
-	public boolean createTechnician(Technician technician) throws ClassNotFoundException, SQLException {
+	public boolean createTechnician(Technician technician) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		return getTechniciansManager().createTechnician(technician);
 	}
 
@@ -52,7 +53,7 @@ private static TechnicianService technicianServiceObj;
 	}
 
 	@Override
-	public boolean updateTechnician(Technician technician) throws ClassNotFoundException, SQLException {
+	public boolean updateTechnician(Technician technician) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		return getTechniciansManager().updateTechnician(technician);
 	}
 

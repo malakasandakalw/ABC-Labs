@@ -32,7 +32,7 @@
 	      </div>
 	      <hr>
 	      <div class="col-md-5 mx-auto">
-	      	<form method="post" action="appointmentTest">
+	      	<form method="post" action="receptionists">
 	      		<div class="mb-3">
 				    <label class="form-label">Test Number</label>
 				    <input type="text" class="form-control" id="appointment_test_id" name="appointment_test_id" value="${appointmentTest.id}" required readonly>
@@ -68,7 +68,7 @@
 		
 			    <input type="hidden" name="test_type_id" value="${appointmentTest.testType.id}"/>
 			    <input type="hidden" name="test_appointment_id" value="${appointmentTest.appointment.id}"/>
-			    <input type="hidden" name="type" value="update"/>
+			    <input type="hidden" name="type" value="update-appointment-test"/>
 			    <button type="submit" class="btn btn-primary">Update Appointment Test</button>
 	      	</form>
 	      </div>

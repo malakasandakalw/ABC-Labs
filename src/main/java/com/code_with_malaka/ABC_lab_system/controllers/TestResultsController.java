@@ -30,17 +30,7 @@ public class TestResultsController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type");
-		
-		if (type != null && type.equals("create")) {
-			System.out.println("here");
-			createTestResult(request, response, "");
-		}
 	}
 	
-
-	
-	private void createTestResult(HttpServletRequest request, HttpServletResponse response, String message) throws IOException, ServletException {
-		System.out.println("here");
-	}
 
 }

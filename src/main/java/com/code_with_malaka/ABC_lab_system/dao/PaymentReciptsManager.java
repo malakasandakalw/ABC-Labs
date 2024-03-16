@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.code_with_malaka.ABC_lab_system.models.PaymentRecipt;
-import com.code_with_malaka.ABC_lab_system.models.TestType;
 
 public class PaymentReciptsManager {
 	public DbConnector getDbConnector() {
@@ -36,7 +35,7 @@ public class PaymentReciptsManager {
 	
 	public PaymentRecipt getSpecificPaymentRecipt(int appointmentId) throws SQLException, ClassNotFoundException {
 		Connection connection = getConnection(); 
-		
+		System.out.println("int appointment id" + appointmentId);
 		String query = "SELECT * FROM payment_recipts WHERE appointment_id = ?";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
@@ -46,8 +45,12 @@ public class PaymentReciptsManager {
 		PaymentRecipt paymentRecipt = new PaymentRecipt();
 		
 		while(rs.next()) {
+			System.out.println(rs.getInt("id"));
+			System.out.println(rs.getDouble("total_price"));
+			System.out.println(rs.getTimestamp("created_at"));
 			paymentRecipt.setId(rs.getInt("id"));
 			paymentRecipt.setTotalPrice(rs.getDouble("total_price"));
+			paymentRecipt.setCreatedAt(rs.getTimestamp("created_at"));
 		}
 		
 		ps.close();

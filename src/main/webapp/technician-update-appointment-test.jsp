@@ -21,7 +21,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item"><a class="nav-link active"
-                     href="">Appointment Tests</a>
+                     href="technicians?type=get-tests&session_id=${auth_technician_id}">Appointment Tests</a>
                   </li>
                </ul>
             </div>
@@ -78,19 +78,38 @@
 						    <select class="form-select" id="appointment_test_status" name="appointment_test_status" required>
 						    	<option value="Cancel" ${appointmentTest.status eq 'Cancel' ? 'selected' : ''}>Cancel</option>
 						    	<option value="Processing" ${appointmentTest.status eq 'Processing' ? 'selected' : ''}>Processing</option>
-						    	<option value="Confirmed" ${appointmentTest.status eq 'Confirmed' ? 'selected' : ''}>Confirmed</option>
 						    	<option value="Conducted" ${appointmentTest.status eq 'Conducted' ? 'selected' : ''}>Conducted</option>
 						    </select>
 					    </div>
+				    	
+						<div class="mb-3">
+						    <label class="form-label">Already Uploaded File</label>
+						    <div class="">
+						    
+						    <tag:if test="${not empty appointmentTest.getTestResult().getFileUrl()}">
+					        	<a href="view?fileName=${ appointmentTest.getTestResult().getFileUrl()}">View Attached File</a>
+					        </tag:if>
+
+								<input type="hidden" name="appointment_test_result_file_url" value="${appointmentTest.testResult.fileUrl}" readonly/>
+						    </div>
+					    </div>
+				    	
 				    	<div class="mb-3">
 						    <label class="form-label">Test Result</label>
 						    <div class="">
-		        				<input type="file" name="file">
+		        				<input type="file" name="file" accept="image/png, image/gif, image/jpeg">
 						    </div>
 					    </div>
+					    
+					    
 						<input type="hidden" name="appointment_test_id" value="${appointmentTest.id}"/>
 						<input type="hidden" name="appointment_technician_id" value="${auth_technician_id}"/>
 						
+						
+						<input type="hidden" name="patient_contact_number" value="${appointmentTest.patient.contactNumber}"/>
+						
+						
+						<input type="hidden" name="appointment_test_result_id" value="${appointmentTest.testResult.id}"/>
 						
 						<input type="hidden" name="type" value="update-specific-appointment-test"/>
 				        <button type="submit" class="btn btn-primary">Update</button>

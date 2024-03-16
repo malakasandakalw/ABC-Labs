@@ -39,11 +39,11 @@ public class AppointmentTestServiceImpl implements AppointmentTestService {
 
 	@Override
 	public List<AppointmentTest> getAppointmentTestsByTechnicianId(int id) throws ClassNotFoundException, SQLException {
-		return getAppointmentTestsManager().getAppointmentTestsByTechnicianId(id);
+		return null;
 	}
 	
 	public AppointmentTest getSpecificAppointmentTestByAppointmentId(int testTypeId, int testAppointmentId) throws ClassNotFoundException, SQLException {
-		return getAppointmentTestsManager().getSpecificAppointmentTestByAppointmentId(testTypeId, testAppointmentId);
+		return null;
 	}
 
 	
@@ -61,5 +61,8 @@ public class AppointmentTestServiceImpl implements AppointmentTestService {
 		return getAppointmentTestsManager().updateSpecificAppointmentTestByTechnician(appointmentTest);
 	}
 	
+	public boolean updateSpecificAppointmentTestStatus(AppointmentTest appointmentTest) throws ClassNotFoundException, SQLException {
+		return getAppointmentTestsManager().updateSpecificAppointmentTestStatus(appointmentTest);
+	}
 
 }

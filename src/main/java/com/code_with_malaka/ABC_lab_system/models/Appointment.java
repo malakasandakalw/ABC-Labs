@@ -14,6 +14,7 @@ public class Appointment {
 	private String contactNumber;
 	private String email;
 	private Timestamp createdAt;
+	private PaymentRecipt paymentRecipt;
 	
 	public Appointment(int id, Date date, String status, Double totalPrice) {
 		this.id = id;
@@ -96,6 +97,13 @@ public class Appointment {
 	}
 	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
+	}
+	
+	public PaymentRecipt getPaymentRecipt() {
+		return paymentRecipt;
+	}
+	public void setPaymentRecipt(PaymentRecipt paymentRecipt) {
+		this.paymentRecipt = paymentRecipt;
 	}
 	
 	

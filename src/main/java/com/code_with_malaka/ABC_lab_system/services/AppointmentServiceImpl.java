@@ -60,5 +60,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public boolean updateAppointmentStatus(Appointment appointment) throws ClassNotFoundException, SQLException {
 		return getAppointmentManager().updateAppointmentStatus(appointment);
 	}
+	
 
 }

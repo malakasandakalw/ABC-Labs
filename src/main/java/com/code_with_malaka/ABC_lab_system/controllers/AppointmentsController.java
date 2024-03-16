@@ -61,7 +61,6 @@ public class AppointmentsController extends HttpServlet {
     		createAppointment(request, response);
     	}
     	else if(type != null && type.equals("update")) {
-    		System.out.println(type);
     		try {
 				updateAppointment(request, response);
 			} catch (ParseException e) {
@@ -230,6 +229,7 @@ public class AppointmentsController extends HttpServlet {
 			result = appointmentService.updateAppointment(appointment);
 			if(result) {
 				message = "Successfully Updated!";
+				
 				Message messageObj = new Message(contactNumber, "Your appointment number " + id + " is" + status);
 				boolean isMessageSent = messageService.sendMessage(messageObj);
 				if(isMessageSent) {
@@ -283,6 +283,8 @@ public class AppointmentsController extends HttpServlet {
 		}
 
 		request.setAttribute("message", message);
+		
+		
 	}
 	
 }

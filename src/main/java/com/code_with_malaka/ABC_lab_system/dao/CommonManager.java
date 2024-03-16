@@ -57,21 +57,30 @@ public class CommonManager {
 	
 	public HttpServletRequest login(HttpServletRequest request, User user) {
         HttpSession session = request.getSession();
-        System.out.println(user.getRole());
         if(user.getRole() == "Technician") {
         	session.setAttribute("auth_technician_id", user.getId());
 		}else if(user.getRole() == "Manager") {
-			
+			session.setAttribute("auth_manager_id", user.getId());
 		}else if(user.getRole() == "Receptionist") {
-			
+			session.setAttribute("auth_receptionist_id", user.getId());
 		}else if(user.getRole() == "Patient") {
 	        session.setAttribute("auth_patient_id", user.getId());
 		}
         return request;
 	}
 	
-	public void logout() {
-		
+	public HttpServletRequest logout(HttpServletRequest request, User user) {
+        HttpSession session = request.getSession();
+        if(user.getRole() == "Technician") {
+        	session.setAttribute("auth_technician_id", null);
+		}else if(user.getRole() == "Manager") {
+			session.setAttribute("auth_manager_id", null);
+		}else if(user.getRole() == "Receptionist") {
+			session.setAttribute("auth_receptionist_id", null);
+		}else if(user.getRole() == "Patient") {
+	        session.setAttribute("auth_patient_id", null);
+		}
+        return request;
 	}
 	
 }

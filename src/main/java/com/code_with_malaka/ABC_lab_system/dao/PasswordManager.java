@@ -1,16 +1,12 @@
 package com.code_with_malaka.ABC_lab_system.dao;
 
-import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Base64.Encoder;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 public class PasswordManager {
 	
 	public String passwordHash(String password) {
-//		Encoder encoder = Base64.getEncoder();
-//		String hashedPassword = encoder.encodeToString(password.getBytes());
-//		return hashedPassword;
-		return password;
+		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 	
 	public String passwordUnhash(String password) {
@@ -19,5 +15,9 @@ public class PasswordManager {
 //		String unhashedPassword = new String(bytes);
 //		return unhashedPassword;
 		return password;
+	}
+	
+	public boolean verify(String password, String hashedPassword) {
+		return BCrypt.checkpw(password, hashedPassword);
 	}
 }
