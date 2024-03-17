@@ -106,6 +106,31 @@ public class TestTypeManager {
 		
 	}
 	
+	public List<TestType> getAllActiveTestTypes() throws ClassNotFoundException, SQLException{
+		
+		Connection connection = getConnection(); 
+		List<TestType> testTypesList = new ArrayList<TestType>();
+		
+		String query = "SELECT * FROM test_types WHERE is_active IS TRUE";
+		
+		Statement statement = connection.createStatement();
+		ResultSet resultset = statement.executeQuery(query);
+		
+		while (resultset.next()) {
+			
+			TestType testType = new TestType();
+			testType.setId(resultset.getInt("id"));
+			testType.setName(resultset.getString("name"));
+			testType.setPrice(resultset.getDouble("price"));
+			testType.setisActive(resultset.getInt("is_active"));
+			testTypesList.add(testType);
+		}
+		statement.close();
+		connection.close();
+		return testTypesList;
+		
+	}
+	
 	public List<TestType> getTestTypesByTechnicianId(int id) throws ClassNotFoundException, SQLException {
 		Connection connection = getConnection(); 
 		

@@ -21,13 +21,11 @@ import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
 import com.code_with_malaka.ABC_lab_system.dao.PasswordManager;
 import com.code_with_malaka.ABC_lab_system.models.Appointment;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
-import com.code_with_malaka.ABC_lab_system.models.Manager;
 import com.code_with_malaka.ABC_lab_system.models.Message;
 import com.code_with_malaka.ABC_lab_system.models.Receptionist;
 import com.code_with_malaka.ABC_lab_system.models.Technician;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
-import com.code_with_malaka.ABC_lab_system.services.ManagerServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.MessageService;
 import com.code_with_malaka.ABC_lab_system.services.ReceptionistServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TechnicianServiceImpl;
@@ -52,15 +50,33 @@ public class ReceptionistsController extends HttpServlet {
     	if(type != null && type.equals("login")) {
     		login(request, response, "");
     	} else if (type != null && type.equals("get-appointments")) {
-			try {
-				getAppointments(request, response, "");
-			} catch (ClassNotFoundException | SQLException | ServletException | IOException e) {
-				e.printStackTrace();
+    		
+    		if(!isAuthenticated) {
+    			logout(request, response, "");
+    		} else {
+    			try {
+    				getAppointments(request, response, "");
+    			} catch (ClassNotFoundException | SQLException | ServletException | IOException e) {
+    				e.printStackTrace();
+    			}
 			}
 		} else if (type != null && type.equals("get-specific-appointment")) {
-    		getSpecificAppointment(request, response, "");
+			
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+	    		getSpecificAppointment(request, response, "");
+			}
+			
 		} else if (type != null && type.equals("get-specific-test-by-appointment")){
-			getSpecificAppointmentTestByAppointmentId(request, response, "");
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+				getSpecificAppointmentTestByAppointmentId(request, response, "");				
+			}
+			
+		} else if (type != null && type.equals("update-specific")) {
+			getReceptionistForUpdate(request, response, receptionistService,"");
 		}
     	else {
         	getAllReceptionists(request, response, receptionistService);
@@ -70,17 +86,44 @@ public class ReceptionistsController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type");
+		HttpSession session = request.getSession();
+		
+		boolean isAuthenticated = isAuthenticated(session);	
 		
 		if(type != null && type.equals("update-appointment")) {
-    		try {
-				updateAppointment(request, response);
-			} catch (ParseException e) {
+			
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+	    		try {
+					updateAppointment(request, response);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}	
+			}
+			
+    	}else if (type != null && type.equals("update-appointment-test")) {
+    		if(!isAuthenticated) {
+				logout(request, response, "");    			
+    		} else {
+    			updateSpecificAppointmentTest(request, response, "");
+			}
+			
+		} else if (type != null && type.equals("create-receptionist")) {
+			try {
+				createReceptionist(request, response, "");
+			} catch (ClassNotFoundException | NoSuchAlgorithmException | SQLException | ServletException
+					| IOException e) {
 				e.printStackTrace();
 			}
-    	}else if (type != null && type.equals("update-appointment-test")) {
-			updateSpecificAppointmentTest(request, response, "");
-		} else if (type != null && type.equals("create-receptionist")) {
-			
+		} else if (type != null && type.equals("update-receptionist")) {
+			try {
+				updateReceptionist(request, response, "");
+			} catch (ClassNotFoundException | ServletException | IOException | SQLException e) {
+				e.printStackTrace();
+			}
+		}else if (type != null && type.equals("logout")) {
+			logout(request, response, "");
 		}
 	}
 	
@@ -92,8 +135,16 @@ public class ReceptionistsController extends HttpServlet {
 		}
 	}
 	
+	private void logout(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
+		Receptionist receptionist = new Receptionist();
+		receptionist.setRole("Receptionist");
+		CommonManager commonManager = new CommonManager();
+		commonManager.logout(request, receptionist);
+		request.setAttribute(message, "Logged out successfully!");
+    	response.sendRedirect("receptionist-login.jsp");	
+	}
+	
 	private void login(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
-		PasswordManager passwordManager = new PasswordManager();
 		Receptionist receptionist = new Receptionist();
 		ReceptionistServiceImpl receptionistService = new ReceptionistServiceImpl();
 		
@@ -167,6 +218,36 @@ public class ReceptionistsController extends HttpServlet {
 			
 		}
 		
+	}
+	
+	private void updateReceptionist(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException, ClassNotFoundException, SQLException {
+		int id = Integer.parseInt(request.getParameter("receptionist_id"));
+		String name = request.getParameter("receptionist_name");
+		String email = request.getParameter("receptionist_email");
+		String password = request.getParameter("receptionist_password");
+		int isActive = Integer.parseInt(request.getParameter("receptionist_is_active"));	
+		
+		Receptionist receptionist = new Receptionist();
+		receptionist.setId(id);
+		receptionist.setEmail(email);
+		receptionist.setName(name);
+		receptionist.setPassword(password);
+		receptionist.setIsActive(isActive);
+		
+    	boolean result;
+    	message = "";
+		
+    	ReceptionistServiceImpl receptionistService = new ReceptionistServiceImpl();
+    	result = receptionistService.updateReceptionist(receptionist);
+		if(result) {
+			message = "Successfully Updated!";
+		}
+		else {
+			message = "Failed!";
+		}
+		
+		getReceptionistForUpdate(request, response, receptionistService, message);
+    	
 	}
 	
 	private void getAllReceptionists(HttpServletRequest request, HttpServletResponse response, ReceptionistServiceImpl service) throws ServletException, IOException {
@@ -269,10 +350,10 @@ public class ReceptionistsController extends HttpServlet {
 		List<Technician> techniciansList;
 		
 		int testTypeId = Integer.parseInt(request.getParameter("test_type_id"));
-		int testAppointmentId = Integer.parseInt(request.getParameter("test_appointment_id"));
+		int appointmentTestId = Integer.parseInt(request.getParameter("appointment_test_id"));
 		
 		try {
-			appointmentTest = appointmentTestsService.getSpecificAppointmentTestByAppointmentId(testTypeId, testAppointmentId);
+			appointmentTest = appointmentTestsService.getSpecificAppointmentTest(appointmentTestId);
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			message = e.getMessage();
@@ -281,6 +362,7 @@ public class ReceptionistsController extends HttpServlet {
 		
 		
 		try {
+			System.out.println("000000000000000000000----------" + testTypeId);
 			techniciansList = technicianService.getTechniciansByTestTypeId(testTypeId);
 		} catch (Exception e) {
 			message = e.getMessage();
@@ -303,6 +385,8 @@ public class ReceptionistsController extends HttpServlet {
 		Technician technician = new Technician(Integer.parseInt(request.getParameter("appointment_test_technicians")));
 		String status = request.getParameter("appointment_test_status"); 
 		
+		
+		
 		AppointmentTest appointmentTest = new AppointmentTest(id, technician, status);
 		boolean result;
 		
@@ -321,6 +405,21 @@ public class ReceptionistsController extends HttpServlet {
 		request.setAttribute("message", message);
 		getSpecificAppointmentTestByAppointmentId(request, response, message);
 		
+	}
+	
+	private void getReceptionistForUpdate(HttpServletRequest request, HttpServletResponse response, ReceptionistServiceImpl service,String message) throws ServletException, IOException {
+		Receptionist receptionist = new Receptionist();
+		try {
+			int id = Integer.parseInt(request.getParameter("receptionist_id"));
+			receptionist = service.getSpecificReceptionist(id);
+		} catch (Exception e) {
+			message = e.getMessage();
+			receptionist = new Receptionist();
+		}
+		request.setAttribute("message", message);
+		request.setAttribute("receptionist", receptionist);
+    	RequestDispatcher rd = request.getRequestDispatcher("manager-update-receptionist.jsp");
+    	rd.forward(request, response);
 	}
 
 }

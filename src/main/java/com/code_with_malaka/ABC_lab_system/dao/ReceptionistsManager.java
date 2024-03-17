@@ -41,6 +41,25 @@ public class ReceptionistsManager {
 		return result > 0;
 	}
 	
+	public boolean updateReceptionist(Receptionist receptionist) throws ClassNotFoundException, SQLException {
+		PasswordManager passwordManager = new PasswordManager();
+		Connection connection = getConnection(); 
+		String query = "UPDATE receptionists SET name= ?, email= ?, password= ?, is_active= ? WHERE id = ?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, receptionist.getName());
+		ps.setString(2, receptionist.getEmail());
+		ps.setString(3, passwordManager.passwordHash(receptionist.getPassword()));
+		ps.setInt(4, receptionist.getIsActive());
+		ps.setInt(5, receptionist.getId());
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
 	public List<Receptionist> getAllReceptionists() throws ClassNotFoundException, SQLException{
 		
 		Connection connection = getConnection(); 
@@ -58,6 +77,7 @@ public class ReceptionistsManager {
 			receptionist.setEmail(resultset.getString("email"));
 			receptionist.setName(resultset.getString("name"));
 			receptionist.setPassword(resultset.getString("password"));
+			receptionist.setIsActive(resultset.getInt("is_active"));
 			receptionistsList.add(receptionist);
 		}
 		statement.close();
@@ -89,13 +109,42 @@ public class ReceptionistsManager {
 	    } else {
 	    	receptionist.setId(-999);
 	    }
-	    
-	    System.out.println("select : " + receptionist.getId());
 		
 		ps.close();
 		connection.close();		
 		return receptionist;
 		
 	}
+	
+	public Receptionist getSpecifcReceptionistById(int id) throws SQLException, ClassNotFoundException {
+		Connection connection = getConnection(); 
+		
+		String query = "SELECT * FROM receptionists WHERE id = ?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, id);
+		
+		ResultSet rs = ps.executeQuery();
+		
+		Receptionist receptionist = new Receptionist();
+		
+	    if (rs.next()) {
+	    	receptionist.setId(rs.getInt("id"));
+	    	receptionist.setName(rs.getString("name"));
+	    	receptionist.setEmail(rs.getString("email"));
+	    	receptionist.setPassword(rs.getString("password"));
+	    	receptionist.setIsActive(rs.getInt("is_active"));
+	    	receptionist.setIsChangedDefaultPassword(rs.getInt("is_def_pw_changed"));
+	    	receptionist.setRole("Receptionist");
+	    } else {
+	    	receptionist.setId(-999);
+	    }
+		
+		ps.close();
+		connection.close();		
+		return receptionist;
+		
+	}
+	
 	
 }

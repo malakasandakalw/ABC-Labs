@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -36,20 +35,30 @@ public class PatientsController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type");
+    	HttpSession session = request.getSession();
+    	boolean isAuthenticated = isAuthenticated(session);
 		
 		if(type != null && type.equals("login")) {
 			login(request, response, "");
 		}else if(type != null && type.equals("get-appointments")) {
-			try {
-				getPatientAppointments(request, response, "");
-			} catch (NumberFormatException | ClassNotFoundException | ServletException | IOException | SQLException e) {
-				e.printStackTrace();
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+				try {
+					getPatientAppointments(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | ServletException | IOException | SQLException e) {
+					e.printStackTrace();
+				}				
 			}
 		}else if(type != null && type.equals("get-specific-appointment")) {
-			try {
-				getPatientSpecificAppointment(request, response, "");
-			} catch (NumberFormatException | ClassNotFoundException | IOException | SQLException e) {
-				e.printStackTrace();
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+				try {
+					getPatientSpecificAppointment(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | IOException | SQLException e) {
+					e.printStackTrace();
+				}				
 			}
 		}
 		
@@ -58,6 +67,8 @@ public class PatientsController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type");
+    	HttpSession session = request.getSession();
+    	boolean isAuthenticated = isAuthenticated(session);
 		
 		if(type != null && type.equals("create")) {
     		try {
@@ -65,15 +76,29 @@ public class PatientsController extends HttpServlet {
 			} catch (ClassNotFoundException | ServletException | IOException | SQLException | ParseException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}
-    	}else if(type != null && type.equals("payment")) {
-        	try {
-				payment(request, response, "");
-			} catch (NumberFormatException | ClassNotFoundException | IOException | SQLException e) {
-				e.printStackTrace();
+    	} else if (type != null && type.equals("logout")){
+    		logout(request,response,"");
+		} else if(type != null && type.equals("payment")) {
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+	        	try {
+					payment(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | IOException | SQLException e) {
+					e.printStackTrace();
+				}
 			}
     	}
 	}
 
+	private boolean isAuthenticated(HttpSession session) {
+		if (session.getAttribute("auth_patient_id") != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	private boolean passswordMatcher(String passsword, String confirmPassword) {
 		if (passsword.equals(confirmPassword)) {
 			return true;
@@ -93,7 +118,7 @@ public class PatientsController extends HttpServlet {
 			
 			CommonManager commonManager = new CommonManager();
 			Patient patient = new Patient(request.getParameter("email"));
-		 	Boolean isUserExists =  commonManager.checkIfUserExists(patient);
+		 	boolean isUserExists =  commonManager.checkIfUserExists(patient);
 			
 		 	if(isUserExists) {
 				request.setAttribute("message", "Email already exists.");	
@@ -109,6 +134,7 @@ public class PatientsController extends HttpServlet {
 		 		patient.setEmail(request.getParameter("email"));
 		 		patient.setContactNumber(request.getParameter("contact_number"));
 		 		patient.setDob(dateFormat.parse(request.getParameter("dob")));
+		 		patient.setGender(request.getParameter("gender"));
 		 		patient.setPassword(passwordManager.passwordHash(password));
 		 		
 		 		boolean result;
@@ -140,8 +166,16 @@ public class PatientsController extends HttpServlet {
 		
 	}
 	
+	private void logout(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
+		Patient patient = new Patient();
+		patient.setRole("Patient");
+		CommonManager commonManager = new CommonManager();
+		commonManager.logout(request, patient);
+		request.setAttribute(message, "Logged out successfully!");
+    	response.sendRedirect("patient-login.jsp");	
+	}
+	
 	private void login(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
- 		PasswordManager passwordManager = new PasswordManager();
  		PatientServiceImpl patientService = new PatientServiceImpl();
  		Patient patient = new Patient();
  		

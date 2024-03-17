@@ -38,8 +38,8 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 	}
 
 	@Override
-	public Receptionist getSpecificReceptionist(int id) {
-		return null;
+	public Receptionist getSpecificReceptionist(int id) throws ClassNotFoundException, SQLException {
+		return getReceptionistsManager().getSpecifcReceptionistById(id);
 	}
 	
 	public Receptionist getSpecifcReceptionistByEmail(String email) throws ClassNotFoundException, SQLException {
@@ -47,8 +47,8 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 	}
 
 	@Override
-	public boolean updateReceptionist(Receptionist receptionist) {
-		return false;
+	public boolean updateReceptionist(Receptionist receptionist) throws ClassNotFoundException, SQLException {
+		return getReceptionistsManager().updateReceptionist(receptionist);
 	}
 
 	@Override

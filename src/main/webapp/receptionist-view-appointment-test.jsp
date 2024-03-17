@@ -1,5 +1,10 @@
 <%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" isELIgnored="false"%>
+<%
+   Object sessionAttribute = session.getAttribute("auth_receptionist_id");
+   
+   if (sessionAttribute != null) {
+   	%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -17,8 +22,15 @@
 	         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 	            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 	               <li class="nav-item">
-	               	<a class="nav-link" href="receptionist-all-appointments">Appointments</a>
+	               	<a class="nav-link" href="receptionists?type=get-appointments&session_id=${ auth_receptionist_id }">Appointments</a>
 	               </li>
+                  <li class="nav-item">
+                  	<form method="post" action="receptionists">
+                        <input type="hidden" name="auth_receptionist_id" value="${auth_receptionist_id}" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
+                  </li>
 	            </ul>
 	         </div>
 	      </div>
@@ -31,7 +43,7 @@
 	         </div>
 	      </div>
 	      <hr>
-	      <div class="col-md-5 mx-auto">
+	      <div class="col-md-5 mx-auto bg-white p-5">
 	      	<form method="post" action="receptionists">
 	      		<div class="mb-3">
 				    <label class="form-label">Test Number</label>
@@ -53,7 +65,7 @@
 			    <div class="mb-3">
 				    <label class="form-label">Specified Technicians</label>
 				    
-				    <select class="form-select" id="appointment_test_technicians" name="appointment_test_technicians" required>
+				    <select class="form-select" id="appointment_test_technicians" name="appointment_test_technicians">
 						<tag:forEach var="technician" items="${TestTypeTechnicians}">
 							<option value="${technician.id}" ${technician.id eq appointmentTest.technician.id ? 'selected' : ''}>${technician.name}</option>
 						</tag:forEach>
@@ -66,12 +78,18 @@
 				    <input type="number" class="form-control"value="${appointmentTest.testType.price}" required readonly>
 			    </div>
 		
-			    <input type="hidden" name="test_type_id" value="${appointmentTest.testType.id}"/>
-			    <input type="hidden" name="test_appointment_id" value="${appointmentTest.appointment.id}"/>
+			    <input type="hidden" id="test_type_id" name="test_type_id" value="${appointmentTest.testType.id}"/>
+			    <input type="hidden" id="appointment_test_id" name="appointment_test_id" value="${appointmentTest.id}"/>
 			    <input type="hidden" name="type" value="update-appointment-test"/>
+			    
 			    <button type="submit" class="btn btn-primary">Update Appointment Test</button>
 	      	</form>
 	      </div>
 	   </div>
 	</body>
 </html>
+<%
+   } else {
+      response.sendRedirect("receptionist-login.jsp");
+      }
+   %>

@@ -40,9 +40,9 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@Override
-	public Manager getSpecificManager(int id) {
+	public Manager getSpecificManager(int id) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
-		return null;
+		return getManagersManager().getSpecificManagerById(id);
 	}
 	
 	public Manager getSpecificManagerByEmail(String email) throws ClassNotFoundException, SQLException {
@@ -50,9 +50,8 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@Override
-	public boolean updateManager(Manager manager) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateManager(Manager manager) throws ClassNotFoundException, SQLException {
+		return getManagersManager().updateManager(manager);
 	}
 
 	@Override

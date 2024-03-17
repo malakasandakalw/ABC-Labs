@@ -1,6 +1,12 @@
 <%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" isELIgnored="false"%>
+<%
+Object sessionAttribute = session.getAttribute("auth_manager_id");
+
+if (sessionAttribute != null) {
+
+  	%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,7 +55,11 @@
 	</nav>
 	<div class="container">	
 	<p>${message}</p>
-		<div class="col-md-5 mx-auto">
+            <div class="me-auto">
+               <h3 class="title">Create Technician</h3>
+            </div>
+            <hr>
+		<div class="col-md-5 mx-auto bg-white p-5">
 
 			<form method="post" action="technicians">
 			  <div class="mb-3">
@@ -68,7 +78,7 @@
 			    <label class="form-label">Specified Tests</label>
 			    <select class="form-select" id="technician_test_types" name="technician_test_types" required multiple>
 			    	<tag:forEach var="testType" items="${testTypesList}">	
-					  <option value="${testType.id}">${testType.name}</option>					
+					  <option value="${testType.id}">${testType.name} - ${testType.isActive == 1 ? 'Active' : 'Inactive'}</option>					
 					</tag:forEach>
 			    </select>
 			  </div>			  
@@ -80,3 +90,10 @@
 	</div>
 </body>
 </html>
+<%
+
+	   } else {
+	      response.sendRedirect("manager-login.jsp");
+	      }
+
+   %>

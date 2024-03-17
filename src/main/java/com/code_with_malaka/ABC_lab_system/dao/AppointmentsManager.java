@@ -59,6 +59,7 @@ public class AppointmentsManager {
 			appointment.setId(resultset.getInt("id"));
 			appointment.setDate(resultset.getDate("date"));
 			appointment.setStatus(resultset.getString("status"));
+			appointment.setTotalPrice(resultset.getDouble("total_price"));
 			appointment.setCreatedAt(resultset.getTimestamp("created_at"));
 			appointmentsList.add(appointment);
 		}

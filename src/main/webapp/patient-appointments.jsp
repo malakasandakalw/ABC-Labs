@@ -26,7 +26,14 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item"><a class="nav-link active"
-                     href="patient-appointments">Appointments</a>
+                     href="patients?type=get-appointments&session_id=${auth_patient_id}">Appointments</a>
+                  </li>
+                  <li class="nav-item">
+                  	<form method="post" action="patients">
+                        <input type="hidden" name="auth_patient_id" value="${auth_patient_id}" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
                   </li>
                </ul>
             </div>
@@ -34,7 +41,6 @@
       </nav>
       <div class="container">
          <p>${message}</p>
-         <p>${auth_patient_id}</p>
          <div class="d-flex align-items-center mb-3">
             <div class="me-auto">
                <h3 class="title">Appointments</h3>
@@ -49,9 +55,9 @@
             </div>
          </div>
          <div class="table-container mt-3">
-         	<input class="form-control" type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by appointment number.." title="">
+         	<input class="form-control" type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search by appointment number.." title="">
          	
-	         <table class="table table-stripped mt-3" id="myTable">
+	         <table class="table table-stripped mt-3" id="dataTable">
 	            <thead>
 	               <tr>
 	                  <th>Appointment Number</th>
@@ -86,12 +92,12 @@
 	      </div>
       </div>
       <script>
-		function myFunction() {
+		function searchFunction() {
 		  var input, filter, table, tr, td, i, txtValue;
 		  
-		  input = document.getElementById("myInput");
+		  input = document.getElementById("searchInput");
 		  filter = input.value.toUpperCase();
-		  table = document.getElementById("myTable");
+		  table = document.getElementById("dataTable");
 		  tr = table.getElementsByClassName("filter");
 		  
 		  for (i = 0; i < tr.length; i++) {

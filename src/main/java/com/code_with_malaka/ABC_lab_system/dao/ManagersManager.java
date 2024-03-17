@@ -40,6 +40,25 @@ public class ManagersManager {
 		return result > 0;
 	}
 	
+	public boolean updateManager(Manager manager) throws ClassNotFoundException, SQLException {
+		PasswordManager passwordManager = new PasswordManager();
+		Connection connection = getConnection(); 
+		String query = "UPDATE managers SET name = ?, email = ?, password = ?, is_active = ? WHERE id = ?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, manager.getName());
+		ps.setString(2, manager.getEmail());
+		ps.setString(3, passwordManager.passwordHash(manager.getPassword()));
+		ps.setInt(4, manager.getIsActive());
+		ps.setInt(5, manager.getId());
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
 	public List<Manager> getAllManagers() throws ClassNotFoundException, SQLException{
 		
 		Connection connection = getConnection(); 
@@ -57,6 +76,7 @@ public class ManagersManager {
 			manager.setEmail(resultset.getString("email"));
 			manager.setName(resultset.getString("name"));
 			manager.setPassword(resultset.getString("password"));
+			manager.setIsActive(resultset.getInt("is_active"));
 			managersList.add(manager);
 		}
 		statement.close();
@@ -78,6 +98,31 @@ public class ManagersManager {
 			manager.setEmail(rs.getString("email"));
 			manager.setName(rs.getString("name"));
 			manager.setPassword(rs.getString("password"));
+			manager.setRole("Manager");
+		}else {
+			manager.setId(-999);
+		}
+		
+		ps.close();
+		connection.close();
+		return manager;
+	}
+	
+	public Manager getSpecificManagerById(int id) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		String query = "SELECT * FROM managers WHERE id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		System.out.println("id ---- " + id);
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		Manager manager = new Manager();
+		
+		if(rs.next()) {
+			manager.setId(rs.getInt("id"));
+			manager.setEmail(rs.getString("email"));
+			manager.setName(rs.getString("name"));
+			manager.setPassword(rs.getString("password"));
+			manager.setIsActive(rs.getInt("is_active"));
 			manager.setRole("Manager");
 		}else {
 			manager.setId(-999);

@@ -160,6 +160,7 @@ public class TechniciansManager {
 			technician.setId(resultset.getInt("id"));
 			technician.setEmail(resultset.getString("email"));
 			technician.setName(resultset.getString("name"));
+			technician.setIsActive(resultset.getInt("is_active"));
 			techniciansList.add(technician);
 		}
 		statement.close();
@@ -169,7 +170,6 @@ public class TechniciansManager {
 	} 
 	
 	public Technician getSpecificTechnician(int id) throws ClassNotFoundException, SQLException {
-		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
 		
 		String query = "SELECT * FROM technicians WHERE id = ?";
@@ -184,7 +184,7 @@ public class TechniciansManager {
 			technician.setId(rs.getInt("id"));
 			technician.setName(rs.getString("name"));
 			technician.setEmail(rs.getString("email"));
-			technician.setPassword(passwordManager.passwordUnhash(rs.getString("password")));
+			technician.setPassword(rs.getString("password"));
 			technician.setIsActive(rs.getInt("is_active"));
 			technician.setIsChangedDefaultPassword(rs.getInt("is_def_pw_changed"));
 		}

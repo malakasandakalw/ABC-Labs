@@ -1,6 +1,12 @@
 <%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" isELIgnored="false"%>
+	
+	<%
+   Object sessionAttribute = session.getAttribute("auth_patient_id");
+   
+   if (sessionAttribute != null) {
+   	%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,22 +28,28 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
-						href="patient-appointments">Appointments</a>
-					</li>
+	                     href="patients?type=get-appointments&session_id=${auth_patient_id}">Appointments</a>
+	                  </li>
+                  <li class="nav-item">
+                  	<form method="post" action="patients">
+                        <input type="hidden" name="auth_patient_id" value="${auth_patient_id}" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
+                  </li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 	<div class="container">	
 	      <p>${message}</p>
-	      <p>${auth_patient_id}</p>
 	      <div class="d-flex align-items-center mb-3">
 	         <div class="me-auto">
 	            <h3 class="title">Create Appointment</h3>
 	         </div>
 	      </div>
 	      <hr>
-		<div class="col-md-5 mx-auto">
+		<div class="col-md-5 mx-auto bg-white p-5">
 			<form method="post" action="appointments">
 			  <div class="mb-3">
 			    <label class="form-label">Recommended Doctor details</label>
@@ -69,3 +81,8 @@
 	</div>
 </body>
 </html>
+<%
+   } else {
+      response.sendRedirect("patient-login.jsp");
+      }
+   %>

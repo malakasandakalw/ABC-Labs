@@ -35,6 +35,11 @@ public class TestTypeServiceImpl implements TestTypeService {
 	public List<TestType> getAllTestTypes() throws ClassNotFoundException, SQLException {
 		return getTestTypeManager().getAllTestTypes();
 	}
+	
+	public List<TestType> getAllActiveTestTypes() throws ClassNotFoundException, SQLException {
+		return getTestTypeManager().getAllActiveTestTypes();
+	}
+	
 
 	@Override
 	public TestType getSpecificTestType(int id) throws ClassNotFoundException, SQLException {

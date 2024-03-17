@@ -29,46 +29,88 @@
       </nav>
       <div class="container">
          <p>${message}</p>
-         <p>${auth_technician_id}</p>
-         <div class="col-md-10 mx-auto">
-	      		<div class="mb-3">
-				    <label class="form-label">Appointment Number : ${appointmentTest.appointment.id}</label>
+         <div class="d-flex align-items-center mb-3">
+            <div class="me-auto">
+               <h3 class="title">Appointment Tests</h3>
+            </div>
+         </div>
+         <hr>
+         <div class="col-md-10 mx-auto bg-white p-5">
+         <div class="row">
+				    	<h4>Major Details</h4>
+				    	<hr>
+          	<div class="col-md-4">
+          		<div class="mb-3">
+				    <label class="form-label">Appointment Number : </label>
+				    <input type="text" class="form-control" value="${appointmentTest.appointment.id}" required readonly>
 			    </div>
-			    <div class="row">
-			    	<div class="col-md-12">
-					    <div class="mb-3">
-						    <div class="form-label">Test Number : ${appointmentTest.id}</div>
-					    </div>
-			    	</div>
-			    	<div class="col-md-12">
-					    <div class="mb-3">
-						    <div class="form-label">Test : ${appointmentTest.testType.name}</div>
-					    </div>
-			    	</div>
-				    <div class="col-md-12">
-					    <div class="mb-3">
-						    <div class="form-label">Appointment Date : ${appointmentTest.appointment.date}</div>
-					    </div>
-				    </div>
-				    <div class="col-md-12">
-					    <div class="mb-3">
-						    <div class="form-label">Appointment Status : ${appointmentTest.appointment.status}</div>
-					    </div>
-				    </div>
+          	</div>
+          	<div class="col-md-4">
+          		<div class="mb-3">
+				    <label class="form-label">Test Number :</label>
+				    <input type="text" class="form-control" value="${appointmentTest.id}" required readonly>
+			    </div>
+          	</div>
+          	<div class="col-md-4">
+          		<div class="mb-3">
+				    <label class="form-label">Test : </label>
+				    <input type="text" class="form-control" value="${appointmentTest.testType.name}" required readonly>
+			    </div>
+          	</div>
+          	<div class="col-md-4">
+          		<div class="mb-3">
+				    <label class="form-label">Appointment Date : </label>
+				    <input type="text" class="form-control" value="${appointmentTest.appointment.date}" required readonly>
+			    </div>
+          	</div>
+          	<div class="col-md-4">
+          		<div class="mb-3">
+				    <label class="form-label">Appointment Status : </label>
+				    <input type="text" class="form-control" value="${appointmentTest.appointment.status}" required readonly>
+			    </div>
+          	</div>
+         </div>
+	      		
+			    <div class="row mt-5">
 				    <div class="col-md-12">
 				    	<h4>Patient Details</h4>
 				    	<hr>
-					    <div class="mb-3">
-						    <div class="form-label">Name : ${appointmentTest.patient.name}</div>
-					    </div>
-					    <div class="mb-3">
-						    <div class="form-label">Contact Number : ${appointmentTest.patient.contactNumber}</div>
-					    </div>
-					    <div class="mb-3">
-						    <div class="form-label">Doctor Details : ${appointmentTest.appointment.details}</div>
-					    </div>
+				    	<div class="row">
+				    		<div class="col-md-4">
+							    <div class="mb-3">
+								    <label class="form-label">Name : </label>
+								    <input type="text" class="form-control" value="${appointmentTest.patient.name}" required readonly>
+							    </div>
+				    		</div>
+				    		<div class="col-md-4">
+							    <div class="mb-3">
+								    <label class="form-label">Contact Number :</label>
+								    <input type="text" class="form-control" value="${appointmentTest.appointment.contactNumber}" required readonly>
+							    </div>
+				    		</div>
+				    		<div class="col-md-4">
+							    <div class="mb-3">
+								    <label class="form-label">Age :</label>
+								    <input type="text" class="form-control" value="${appointmentTest.patient.age}" required readonly>
+							    </div>
+				    		</div>
+				    		<div class="col-md-4">
+							    <div class="mb-3">
+								    <label class="form-label">Gender :</label>
+								    <input type="text" class="form-control" value="${appointmentTest.patient.gender}" required readonly>
+							    </div>
+				    		</div>
+				    		<div class="col-md-12">
+							    <div class="mb-3">
+							    	<label class="form-label">Doctor Details :</label>
+							    	<textarea class="form-control" required readonly>
+							    		${appointmentTest.appointment.details}
+							    	</textarea>
+							    </div>				    		
+				    		</div>
+				    	</div>
 				    </div>
-				    <div class="col-md-12">
+				    <div class="col-md-12 mt-5">
 				    	<h4>Test Details</h4>
 				    	<hr>
 				    

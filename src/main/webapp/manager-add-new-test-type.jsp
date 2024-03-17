@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" isELIgnored="false"%>
+<%
+	Object sessionAttribute = session.getAttribute("auth_manager_id");
+	
+	if (sessionAttribute != null) {
+
+   	%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -57,7 +63,7 @@
 	               <input type="text" class="form-control" id="test_name" name="test_name" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Price</label>
+	               <label class="form-label">Price (Rs.)</label>
 	               <input type="number" class="form-control" id="test_price" name="test_price" required>
 	            </div>
 	            <input type="hidden" name="type" value="create"/>
@@ -67,3 +73,10 @@
 	   </div>
 	</body>
 </html>
+<%
+
+	   } else {
+	      response.sendRedirect("manager-login.jsp");
+	      }
+
+   %>

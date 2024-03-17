@@ -34,35 +34,57 @@ public class ManagersController extends HttpServlet {
     	HttpSession session = request.getSession();
     	boolean isAuthenticated = isAuthenticated(session);
     	
-    	if(type != null && type.equals("specific")) {
-//    		getSpecificProduct(request, response, managerService);
+    	if(type != null && type.equals("update-specific")) {
+    		getSpecificManagerForUpdate(request, response, managerService, "");
     	}else if(type != null && type.equals("login")) {
     		
 			login(request, response, "");
 			
 		}else if(type != null && type.equals("get-dashboard")) {
-    		
-			try {
-				dashboard(request, response, "");
-			} catch (ClassNotFoundException | SQLException | ServletException | IOException e) {
-				e.printStackTrace();
+			if(!isAuthenticated) { 
+				logout(request, response, "");
+			}else {
+				try {
+					dashboard(request, response, "");
+				} catch (ClassNotFoundException | SQLException | ServletException | IOException e) {
+					e.printStackTrace();
+				}				
 			}
 			
 		}
     	else {
-        	getAllManagers(request, response, managerService);
+    		if(!isAuthenticated) {
+    			logout(request, response, "");
+    		} else {
+            	getAllManagers(request, response, managerService);				
+			}
     	}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String type = request.getParameter("type");
+    	HttpSession session = request.getSession();
+    	boolean isAuthenticated = isAuthenticated(session);
+    	
 		if(type != null && type.equals("create-manager")) {
+			if(!isAuthenticated) { 
+    			logout(request, response, "");				
+			}else {
+	    		try {
+					createManager(request, response, "");
+				} catch (ClassNotFoundException | SQLException | ServletException | IOException | NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}				
+			}
+    	} else if (type != null && type.equals("logout")){
+    		logout(request,response,"");
+		} else if(type != null && type.equals("update")) {
     		try {
-				createManager(request, response, "");
-			} catch (ClassNotFoundException | SQLException | ServletException | IOException | NoSuchAlgorithmException e) {
+				updateManager(request, response, "");
+			} catch (ClassNotFoundException | ServletException | IOException | SQLException e) {
 				e.printStackTrace();
 			}
-    	}
+		}
 		
 	}
 
@@ -120,6 +142,25 @@ public class ManagersController extends HttpServlet {
     	response.sendRedirect("manager-login.jsp");	
 	}
 	
+	private void getSpecificManagerForUpdate(HttpServletRequest request, HttpServletResponse response, ManagerServiceImpl service, String message) throws ServletException, IOException {
+		Manager manager = new Manager();
+		try {
+			int id = Integer.parseInt(request.getParameter("manager_id"));
+			manager = service.getSpecificManager(id);
+		} catch (Exception e) {
+			message = e.getMessage();
+			manager = new Manager();
+		}
+		
+		System.out.println(manager.getEmail());
+		
+		request.setAttribute("message", message);
+		request.setAttribute("manager", manager);
+		
+    	RequestDispatcher rd = request.getRequestDispatcher("manager-update-manager.jsp");
+    	rd.forward(request, response);
+	}
+	
 	private void createManager(HttpServletRequest request, HttpServletResponse response, String message) throws ClassNotFoundException, SQLException, ServletException, IOException, NoSuchAlgorithmException {
 		CommonManager commonManager = new CommonManager();
 		Manager manager = new Manager(request.getParameter("email"));
@@ -157,6 +198,37 @@ public class ManagersController extends HttpServlet {
 			rd.forward(request, response);
 			
 		}
+		
+	}
+	
+	private void updateManager(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException, ClassNotFoundException, SQLException {
+		int id = Integer.parseInt(request.getParameter("manager_id"));
+		String name = request.getParameter("manager_name");
+		String email = request.getParameter("manager_email");
+		String password = request.getParameter("manager_password");
+		int isActive = Integer.parseInt(request.getParameter("manager_is_active"));
+		
+		Manager manager = new Manager();
+		manager.setId(id);
+		manager.setName(name);
+		manager.setEmail(email);
+		manager.setPassword(password);
+		manager.setIsActive(isActive);
+		
+    	boolean result;
+    	message = "";
+    	
+    	ManagerServiceImpl managerService = new ManagerServiceImpl();
+    	
+    	result = managerService.updateManager(manager);
+		if(result) {
+			message = "Successfully Updated!";
+		}
+		else {
+			message = "Failed!";
+		}
+		
+		getSpecificManagerForUpdate(request, response, managerService, message);
 		
 	}
 	

@@ -26,7 +26,14 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item"><a class="nav-link active"
-                     href="patient-appointments">Appointments</a>
+                     href="patients?type=get-appointments&session_id=${auth_patient_id}">Appointments</a>
+                  </li>
+                  <li class="nav-item">
+                  	<form method="post" action="patients">
+                        <input type="hidden" name="auth_patient_id" value="${auth_patient_id}" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
                   </li>
                </ul>
             </div>
@@ -34,8 +41,7 @@
       </nav>
       <div class="container">
          <p>${message}</p>
-         <p>${auth_patient_id}</p>
-         <div class="col-md-10 mx-auto">
+         <div class="col-md-10 mx-auto bg-white p-5">
 		    	<h4>Appointment Details</h4>
 			    	<hr>
 	      		<div class="mb-3">

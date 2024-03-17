@@ -42,10 +42,9 @@
       </nav>
       <div class="container">
          <p>${message}</p>
-         <p>${auth_technician_id}</p>
          <div class="d-flex align-items-center mb-3">
             <div class="me-auto">
-               <h3 class="title">Tests</h3>
+               <h3 class="title">Appointment Tests</h3>
             </div>
          </div>
          <hr>

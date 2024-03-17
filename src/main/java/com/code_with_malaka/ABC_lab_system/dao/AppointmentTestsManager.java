@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.code_with_malaka.ABC_lab_system.models.Appointment;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
+import com.code_with_malaka.ABC_lab_system.models.Technician;
 import com.code_with_malaka.ABC_lab_system.models.TestResult;
 
 public class AppointmentTestsManager {
@@ -90,6 +90,7 @@ public class AppointmentTestsManager {
 		PatientsManager patientsManager = new PatientsManager();
 		AppointmentsManager appointmentsManager = new AppointmentsManager();
 		TestResultManager testResultManager = new TestResultManager();
+		TechniciansManager techniciansManager = new TechniciansManager();
 		
 		AppointmentTest appointmentTest = new AppointmentTest();
 		TestTypeManager testTypeManager = new TestTypeManager();
@@ -116,6 +117,16 @@ public class AppointmentTestsManager {
 				TestResult testResult = new TestResult();
 				testResult = testResultManager.getSpecifcTestResultById(testResultId);
 				appointmentTest.setTestResult(testResult);
+			}
+			
+			int technicianId = rs.getInt("technician_id");
+			
+			if (rs.wasNull()) {
+				appointmentTest.setTechnician(null);
+			} else {
+				Technician technician = new Technician();
+				technician = techniciansManager.getSpecificTechnician(technicianId);
+				appointmentTest.setTechnician(technician);
 			}
 			
 		}
@@ -167,6 +178,35 @@ public class AppointmentTestsManager {
 		connection.close();
 		return appointmentTestsList;
 		
+	}
+	
+	public List<AppointmentTest> getAppointmentTestsByTechnicianId(int technicianId) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection();
+		
+		TechniciansManager techniciansManager = new TechniciansManager();
+		TestTypeManager testTypeManager = new TestTypeManager();
+		AppointmentsManager appointmentsManager = new AppointmentsManager();
+		
+		List<AppointmentTest> appointmentTestsList = new ArrayList<AppointmentTest>();
+		
+		String query = "SELECT * FROM appointment_tests WHERE technician_id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setInt(1, technicianId);
+		ResultSet rs = ps.executeQuery();
+		
+		while (rs.next()) {
+			AppointmentTest appointmentTest = new AppointmentTest();
+			appointmentTest.setId(rs.getInt("id"));
+			appointmentTest.setStatus(rs.getString("status"));
+			appointmentTest.setTechnician(techniciansManager.getSpecificTechnician(technicianId));
+			appointmentTest.setTestType(testTypeManager.getSpecificTestType(rs.getInt("test_type_id")));
+			appointmentTest.setAppointment(appointmentsManager.getSpecificAppointment(rs.getInt("appointment_id")));
+			appointmentTestsList.add(appointmentTest);
+		}
+		
+		ps.close();
+		connection.close();
+		return appointmentTestsList;
 	}
 	
 }

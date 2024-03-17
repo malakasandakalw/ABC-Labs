@@ -1,4 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" isELIgnored="false"%>
+
+	<%
+	Object sessionAttribute = session.getAttribute("auth_manager_id");
+	
+	if (sessionAttribute != null) {
+
+   	%>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -65,9 +73,17 @@
 	               <input type="password" class="form-control" id="password" name="password" required>
 	            </div>
 	            <input type="hidden" name="type" value="create-receptionist"/>
-	            <button type="submit" class="btn btn-primary">Create Manager</button>
+	            <button type="submit" class="btn btn-primary">Create Receptionist</button>
 	         </form>
 	      </div>
 	   </div>
 	</body>
 </html>
+
+<%
+
+	   } else {
+	      response.sendRedirect("manager-login.jsp");
+	      }
+
+   %>

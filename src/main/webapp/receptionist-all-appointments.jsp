@@ -1,5 +1,12 @@
 <%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" isELIgnored="false"%>
+
+<%
+   Object sessionAttribute = session.getAttribute("auth_receptionist_id");
+   
+   if (sessionAttribute != null) {
+   	%>
+   	
 <!DOCTYPE html>
 <html>
 	<head>
@@ -19,13 +26,19 @@
 	               <li class="nav-item">
 	               	<a class="nav-link" href="receptionists?type=get-appointments&session_id=${ auth_receptionist_id }">Appointments</a>
 	               </li>
+                  <li class="nav-item">
+                  	<form method="post" action="receptionists">
+                        <input type="hidden" name="auth_receptionist_id" value="${auth_receptionist_id}" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
+                  </li>
 	            </ul>
 	         </div>
 	      </div>
 	   </nav>
 	   <div class="container">
 	      <p>${message}</p>
-	      ${ auth_receptionist_id }
 	      <div class="d-flex align-items-center mb-3">
 	         <div class="me-auto">
 	            <h3 class="title">All Appointments</h3>
@@ -33,18 +46,23 @@
 	      </div>
 	      <hr>
 	      <div class="table-container">
-	         <table class="table table-stripped">
+	      <input class="form-control" type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search by appointment number.." title="">
+	         <table class="table table-stripped" id="dataTable">
 	            <thead>
 	               <tr>
 	                  <th>Appointment Number</th>
+	                  <th>Created At</th>
+	                  <th>Price (Rs.)</th>
 	                  <th>Status</th>
 	                  <th>Actions</th>
 	               </tr>
 	            </thead>
 	            <tbody>
 	               <tag:forEach var="appointment" items="${appointmentsList}">
-	                  <tr>
+	                  <tr class="filter">
 	                     <td>${appointment.id}</td>
+	                     <td>${appointment.createdAt}</td>
+	                     <td>${appointment.totalPrice}</td>
 	                     <td>${appointment.status}</td>
 	                     <td>
 	                        <div class="d-flex gap-2">
@@ -63,5 +81,33 @@
 	         </table>
 	      </div>
 	   </div>
+	   <script>
+	function searchFunction() {
+	  var input, filter, table, tr, td, i, txtValue;
+	  
+	  input = document.getElementById("searchInput");
+	  filter = input.value.toUpperCase();
+	  table = document.getElementById("dataTable");
+	  tr = table.getElementsByClassName("filter");
+	  
+	  for (i = 0; i < tr.length; i++) {
+		td = tr[i].getElementsByTagName("td")[0];
+		if (td) {
+		  txtValue = td.textContent || td.innerText;
+		  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		  } else {
+			tr[i].style.display = "none";
+		  }
+		}       
+	  }
+	  
+	}
+	</script>
 	</body>
 </html>
+<%
+   } else {
+      response.sendRedirect("receptionist-login.jsp");
+      }
+   %>

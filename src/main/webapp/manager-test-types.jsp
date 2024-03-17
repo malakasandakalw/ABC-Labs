@@ -1,5 +1,11 @@
 <%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" isELIgnored="false"%>
+<%
+	Object sessionAttribute = session.getAttribute("auth_manager_id");
+	
+	if (sessionAttribute != null) {
+
+   	%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -34,7 +40,7 @@
 						
                   <li class="nav-item">
                   	<form method="post" action="managers">
-                        <input type="hidden" name="auth_manager_id" value="${auth_manager_id}"" required>
+                        <input type="hidden" name="auth_manager_id" value="${auth_manager_id}" required>
                         <input type="hidden" name="type" value="logout"/>
                         <button type="submit" class="btn btn-danger">Logout</button>
                      </form>
@@ -50,24 +56,27 @@
 	            <h3 class="title">Test types</h3>
 	         </div>
 	         <div class="ms-auto">
-	            <a class="btn btn-primary" href="manager-add-new-test-type.jsp">Create New Test</a>
+	            <a class="btn btn-primary" href="manager-add-new-test-type.jsp">Create Test Type</a>
 	         </div>
 	      </div>
 	      <hr>
 	      <div class="table-container">
-	         <table class="table table-stripped">
+	      <input class="form-control" type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search by name.." title="">
+	         <table class="table table-stripped" id="dataTable">
 	            <thead>
 	               <tr>
 	                  <th>Test Type</th>
 	                  <th>Price</th>
+	                  <th>Active Status</th>
 	                  <th>Actions</th>
 	               </tr>
 	            </thead>
 	            <tbody>
 	               <tag:forEach var="testType" items="${testTypesList}">
-	                  <tr>
+	                  <tr class="filter">
 	                     <td>${testType.name}</td>
 	                     <td>${testType.price}</td>
+	                     <td>${testType.isActive == 1 ? 'Active' : 'Inactive'}</td>
 	                     <td>
 	                        <div class="d-flex gap-2">
 		                        <div class="action-div">
@@ -77,31 +86,6 @@
 			                           <button type="submit" class="btn btn-success">Update</button>
 			                        </form>
 		                        </div>
-		                        <div class="action-div">
-		                           <tag:choose>
-		                              <tag:when test="${testType.isActive == 1}">
-		                                 <form method="post" action="testType">
-		                                    <input type="hidden" name="test_type_id" value="${testType.id}" required>
-		                                    <input type="hidden" name="type" value="deactivate-specific"/>
-		                                    <button type="submit" class="btn btn-danger">Deactivate</button>
-		                                 </form>
-		                              </tag:when>
-		                              <tag:otherwise>
-		                                 <form method="post" action="testType">
-		                                    <input type="hidden" name="test_type_id" value="${testType.id}" required>
-		                                    <input type="hidden" name="type" value="activate-specific"/>
-		                                    <button type="submit" class="btn btn-success">Activate</button>
-		                                 </form>
-		                              </tag:otherwise>
-		                           </tag:choose>
-		                        </div>
-		                        <div class="action-div">
-		                           <form method="post" action="testType">
-		                              <input type="hidden" name="test_type_id" value="${testType.id}" required>
-		                              <input type="hidden" name="type" value="delete-specific"/>
-		                              <button type="submit" class="btn btn-danger">Delete</button>
-		                           </form>
-		                        </div>
 	                        </div>
 	                     </td>
 	                  </tr>
@@ -110,5 +94,35 @@
 	         </table>
 	      </div>
 	   </div>
+	   <script>
+	function searchFunction() {
+	  var input, filter, table, tr, td, i, txtValue;
+	  
+	  input = document.getElementById("searchInput");
+	  filter = input.value.toUpperCase();
+	  table = document.getElementById("dataTable");
+	  tr = table.getElementsByClassName("filter");
+	  
+	  for (i = 0; i < tr.length; i++) {
+		td = tr[i].getElementsByTagName("td")[0];
+		if (td) {
+		  txtValue = td.textContent || td.innerText;
+		  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		  } else {
+			tr[i].style.display = "none";
+		  }
+		}       
+	  }
+	  
+	}
+	</script>
 	</body>
 </html>
+<%
+
+	   } else {
+	      response.sendRedirect("manager-login.jsp");
+	      }
+
+   %>

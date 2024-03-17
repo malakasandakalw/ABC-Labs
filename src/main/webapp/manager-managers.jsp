@@ -1,6 +1,12 @@
 <%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" isELIgnored="false"%>
+	<%
+	Object sessionAttribute = session.getAttribute("auth_manager_id");
+	
+	if (sessionAttribute != null) {
+
+   	%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,7 +55,6 @@
 	</nav>
 	<div class="container">
 		<p>${message}</p>
-         <p>${auth_manager_id}</p>
          <div class="d-flex align-items-center mb-3">
             <div class="me-auto">
                <h3 class="title">Managers</h3>
@@ -59,23 +64,66 @@
             </div>
          </div>
          <hr>
-		<table class="table table-stripped">
+         <input class="form-control" type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search by name.." title="">
+		<table class="table table-stripped" id="dataTable">
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>email</th>
+					<th>Email</th>
+					<th>Active Status</th>
+					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tag:forEach var="manager" items="${managersList}">
-					<tr>
+					<tr class="filter">
 						<td>${manager.name}</td>
 						<td>${manager.email}</td>
+						<td>${manager.isActive == 1 ? 'Active' : 'Inactive'}</td>
+						<td>
+							<div class="action-div">
+		                        <form method="get" action="managers">
+		                           <input type="hidden" name="manager_id" value="${manager.id}" required>
+		                           <input type="hidden" name="type" value="update-specific"/>
+		                           <button type="submit" class="btn btn-success">Update</button>
+		                        </form>
+	                        </div>
+						</td>
 					</tr>
 				</tag:forEach>
 			</tbody>
 
 		</table>
 	</div>
+	<script>
+	function searchFunction() {
+	  var input, filter, table, tr, td, i, txtValue;
+	  
+	  input = document.getElementById("searchInput");
+	  filter = input.value.toUpperCase();
+	  table = document.getElementById("dataTable");
+	  tr = table.getElementsByClassName("filter");
+	  
+	  for (i = 0; i < tr.length; i++) {
+		td = tr[i].getElementsByTagName("td")[0];
+		if (td) {
+		  txtValue = td.textContent || td.innerText;
+		  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		  } else {
+			tr[i].style.display = "none";
+		  }
+		}       
+	  }
+	  
+	}
+	</script>
 </body>
 </html>
+<%
+
+	   } else {
+	      response.sendRedirect("manager-login.jsp");
+	      }
+
+   %>

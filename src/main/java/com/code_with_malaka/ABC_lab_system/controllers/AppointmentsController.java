@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
 import com.code_with_malaka.ABC_lab_system.models.Appointment;
@@ -125,15 +124,14 @@ public class AppointmentsController extends HttpServlet {
 		List<TestType> testTypesList;
 
 		try {
-			testTypesList = testTypeService.getAllTestTypes();
+			testTypesList = testTypeService.getAllActiveTestTypes();
 		} catch (ClassNotFoundException | SQLException e) {
 			message = e.getMessage();
 			testTypesList = new ArrayList<TestType>();
 		}
 		
-		HttpSession session = request.getSession();
-		session.setAttribute("testTypesList", testTypesList);		
-		session.setAttribute("message", message);
+		request.setAttribute("testTypesList", testTypesList);		
+		request.setAttribute("message", message);
 		
 		String sesssionUserType = request.getParameter("session_id_type");
 		String sessionUserId = request.getParameter("session_id");
@@ -149,8 +147,10 @@ public class AppointmentsController extends HttpServlet {
 		CommonManager commonManager = new CommonManager();
 		commonManager.login(request, user);
 		
-		response.sendRedirect("patient-create-appointment.jsp");
-	
+		
+//		response.sendRedirect("patient-create-appointment.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("patient-create-appointment.jsp");
+    	rd.forward(request, response);
 	}
 
 	private void createAppointment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -184,7 +184,6 @@ public class AppointmentsController extends HttpServlet {
 	    	String message = "";
 	    	
 	    	try {
-	    		System.out.println(request.getParameter("session_id"));
 	    		result = appointmentService.createAppointment(appointment, Integer.parseInt(request.getParameter("session_id")));
 				if(result) {
 					message = "Successfully Created!";

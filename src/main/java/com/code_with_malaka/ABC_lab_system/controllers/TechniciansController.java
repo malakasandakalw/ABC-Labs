@@ -16,21 +16,17 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
-import com.code_with_malaka.ABC_lab_system.dao.PasswordManager;
 import com.code_with_malaka.ABC_lab_system.dao.TestResultManager;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
 import com.code_with_malaka.ABC_lab_system.models.CreateResponse;
 import com.code_with_malaka.ABC_lab_system.models.FileUploadResponse;
 import com.code_with_malaka.ABC_lab_system.models.Message;
-import com.code_with_malaka.ABC_lab_system.models.Patient;
 import com.code_with_malaka.ABC_lab_system.models.Technician;
 import com.code_with_malaka.ABC_lab_system.models.TestResult;
 import com.code_with_malaka.ABC_lab_system.models.TestType;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentTestServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.CommonServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.MessageService;
-import com.code_with_malaka.ABC_lab_system.services.PatientService;
-import com.code_with_malaka.ABC_lab_system.services.PatientServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TechnicianServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.TestTypeServiceImpl;
 
@@ -148,7 +144,6 @@ public class TechniciansController extends HttpServlet {
 	}
 	
 	private void login(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
-		PasswordManager passwordManager = new PasswordManager();
 		TechnicianServiceImpl technicianService = new TechnicianServiceImpl();
 		Technician technician = new Technician();
 		
@@ -190,7 +185,6 @@ public class TechniciansController extends HttpServlet {
 	private void getTechnicianAppointmentTests(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException, NumberFormatException, ClassNotFoundException, SQLException {
  		AppointmentTestServiceImpl appointmentTestsService = new AppointmentTestServiceImpl();
  		String technicianIdString = request.getSession().getAttribute("auth_technician_id").toString();
- 		System.out.println(technicianIdString);
  		List<AppointmentTest> technicianAppointmentTests = appointmentTestsService.getAppointmentTestsByTechnicianId(Integer.parseInt(technicianIdString));
  		request.setAttribute("technicianAppointmentTests", technicianAppointmentTests);
     	RequestDispatcher rd = request.getRequestDispatcher("technician-all-tests.jsp");
@@ -408,7 +402,7 @@ public class TechniciansController extends HttpServlet {
 					}
 	    			
 	    		} else {
-					message = "User already exists";
+					message = "Technician already exists";
 				}
 			} catch (ClassNotFoundException | SQLException | NoSuchAlgorithmException e) {
 				message = e.getMessage();
@@ -452,7 +446,7 @@ public class TechniciansController extends HttpServlet {
 		List<TestType> testTypesList;
 
 		try {
-			testTypesList = testTypeService.getAllTestTypes();
+			testTypesList = testTypeService.getAllActiveTestTypes();
 		} catch (ClassNotFoundException | SQLException e) {
 			message = e.getMessage();
 			testTypesList = new ArrayList<TestType>();

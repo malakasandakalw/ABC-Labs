@@ -10,8 +10,8 @@ import com.code_with_malaka.ABC_lab_system.models.Receptionist;
 public interface ReceptionistService {
 	public boolean createReceptionist(Receptionist receptionist) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException;
 	public List<Receptionist> getAllReceptionists() throws ClassNotFoundException, SQLException;
-	public Receptionist getSpecificReceptionist(int id);
+	public Receptionist getSpecificReceptionist(int id) throws ClassNotFoundException, SQLException;
 	public Receptionist getSpecifcReceptionistByEmail(String email) throws ClassNotFoundException, SQLException;
-	public boolean updateReceptionist(Receptionist receptionist);
+	public boolean updateReceptionist(Receptionist receptionist) throws ClassNotFoundException, SQLException;
 	public boolean deleteReceptionist(int id);
 }
