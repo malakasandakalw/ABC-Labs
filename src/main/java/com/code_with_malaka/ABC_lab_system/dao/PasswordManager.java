@@ -1,5 +1,6 @@
 package com.code_with_malaka.ABC_lab_system.dao;
 
+import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordManager {
 	
@@ -19,10 +20,11 @@ public class PasswordManager {
 	
 	
 	public String passwordHash(String password) {
-		return password;
+		String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt(12));
+		return passwordHash;
 	}
 	
 	public boolean verify(String password, String hashedPassword) {
-		return password.equals(hashedPassword);
+		return BCrypt.checkpw(password, hashedPassword);
 	}
 }

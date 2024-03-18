@@ -96,8 +96,13 @@ public class ManagersController extends HttpServlet {
 		}
 	}
 	
+	public static PasswordManager getPasswordManager() {
+		PasswordManager passwordManager = PasswordManager.getPasswordManagerInstance();
+		return passwordManager;
+	}
+	
 	private void login(HttpServletRequest request, HttpServletResponse response, String message) {
-		PasswordManager passwordManager = new PasswordManager();
+ 		PasswordManager passwordManager = getPasswordManager();
 		ManagerServiceImpl managerService = new ManagerServiceImpl();
 		Manager manager = new Manager();
 		try {
@@ -171,7 +176,7 @@ public class ManagersController extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("manager-add-new-manager.jsp");
 			rd.forward(request, response);			
 		} else {
-			PasswordManager passwordManager = new PasswordManager();
+	 		PasswordManager passwordManager = getPasswordManager();
 			ManagerServiceImpl managerService = new ManagerServiceImpl();
 			
 			manager.setName(request.getParameter("name"));

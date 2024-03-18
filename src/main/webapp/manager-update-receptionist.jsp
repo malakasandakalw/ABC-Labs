@@ -30,13 +30,13 @@
                      <a class="nav-link" href="manager-managers">Managers</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" href="manager-receptionists">Receptionists</a>
+                     <a class="nav-link active" href="manager-receptionists">Receptionists</a>
                   </li>
                   <li class="nav-item">
                      <a class="nav-link" href="manager-technicians">Technicians</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link active" href="manager-test-types">Test Types</a>
+                     <a class="nav-link" href="manager-test-types">Test Types</a>
                   </li>
 						
                   <li class="nav-item">
@@ -62,15 +62,15 @@
             <form method="post" action="receptionists">
 			  <div class="mb-3">
 			    <label class="form-label">Receptionist Name</label>
-			    <input type="text" class="form-control" id="receptionist_name" name="receptionist_name" value="${receptionist.name}" required ${receptionist.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="text" class="form-control" id="receptionist_name" name="receptionist_name" value="${receptionist.name}" required readonly>
 			  </div>
 			  <div class="mb-3">
 			    <label class="form-label">Email</label>
-			    <input type="email" class="form-control" id="receptionist_email" name="receptionist_email" value="${receptionist.email}" required ${receptionist.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="email" class="form-control" id="receptionist_email" name="receptionist_email" value="${receptionist.email}" required readonly>
 			  </div>
 			  <div class="mb-3">
 			    <label class="form-label">Password (default password)</label>
-			    <input type="password" class="form-control" id="receptionist_password" name="receptionist_password" value="${receptionist.password}" required ${receptionist.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="password" class="form-control" id="receptionist_password" name="receptionist_password" value="${receptionist.password}" required readonly>
 			  </div>
                <div class="mb-3">
                   <tag:set var="isActive" value="${receptionist.isActive}" />

@@ -24,14 +24,13 @@ public class ManagersManager {
 	}
 	
 	public boolean addManager(Manager manager) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
-		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
 		String query = "INSERT INTO managers (name, email, password) VALUES (?, ?, ?)";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setString(1, manager.getName());
 		ps.setString(2, manager.getEmail());
-		ps.setString(3, passwordManager.passwordHash(manager.getPassword()));
+		ps.setString(3, manager.getPassword());
 		
 		int result = ps.executeUpdate();
 		
@@ -41,16 +40,12 @@ public class ManagersManager {
 	}
 	
 	public boolean updateManager(Manager manager) throws ClassNotFoundException, SQLException {
-		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
-		String query = "UPDATE managers SET name = ?, email = ?, password = ?, is_active = ? WHERE id = ?";
+		String query = "UPDATE managers SET is_active = ? WHERE id = ?";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
-		ps.setString(1, manager.getName());
-		ps.setString(2, manager.getEmail());
-		ps.setString(3, passwordManager.passwordHash(manager.getPassword()));
-		ps.setInt(4, manager.getIsActive());
-		ps.setInt(5, manager.getId());
+		ps.setInt(1, manager.getIsActive());
+		ps.setInt(2, manager.getId());
 		
 		int result = ps.executeUpdate();
 		

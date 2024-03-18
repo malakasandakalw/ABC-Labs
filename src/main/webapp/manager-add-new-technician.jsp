@@ -31,13 +31,13 @@ if (sessionAttribute != null) {
 		<div class="container">
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-					<li class="nav-item"><a class="nav-link active"
+					<li class="nav-item"><a class="nav-link"
 						href="managers?type=get-dashboard&session_id=${auth_manager_id}">Dashboard</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="manager-managers">Managers</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="manager-receptionists">Receptionists</a></li>
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						href="manager-technicians">Technicians</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="manager-test-types">Test Types</a></li>

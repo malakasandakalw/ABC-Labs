@@ -107,6 +107,11 @@ public class PatientsController extends HttpServlet {
 		}
 	}
 	
+	public static PasswordManager getPasswordManager() {
+		PasswordManager passwordManager = PasswordManager.getPasswordManagerInstance();
+		return passwordManager;
+	}
+	
 	private void createPatient(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException, ClassNotFoundException, SQLException, ParseException, NoSuchAlgorithmException{
 		
 		String password = request.getParameter("password");
@@ -127,7 +132,7 @@ public class PatientsController extends HttpServlet {
 		 	} else {
 				
 		 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		 		PasswordManager passwordManager = new PasswordManager();
+		 		PasswordManager passwordManager = getPasswordManager();
 		 		PatientServiceImpl patientService = new PatientServiceImpl();
 		 		
 		 		patient.setName(request.getParameter("name"));
@@ -178,6 +183,7 @@ public class PatientsController extends HttpServlet {
 	private void login(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
  		PatientServiceImpl patientService = new PatientServiceImpl();
  		Patient patient = new Patient();
+ 		PasswordManager passwordManager = getPasswordManager();
  		
 		try {
 			
@@ -190,7 +196,9 @@ public class PatientsController extends HttpServlet {
 			patient = patientService.getSpecificPatientByEmail(email);
 			
 			if(patient.getId() > -1) {
-				if (patient.getPassword().equals(password)) {
+				if (passwordManager.verify(password, patient.getPassword())) {
+					
+					
 					request.setAttribute("patient", patient);
 
 					CommonManager commonManager = new CommonManager();

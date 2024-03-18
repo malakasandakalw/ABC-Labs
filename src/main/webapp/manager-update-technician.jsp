@@ -33,10 +33,10 @@
                      <a class="nav-link" href="manager-receptionists">Receptionists</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" href="manager-technicians">Technicians</a>
+                     <a class="nav-link active" href="manager-technicians">Technicians</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link active" href="manager-test-types">Test Types</a>
+                     <a class="nav-link" href="manager-test-types">Test Types</a>
                   </li>
 						
                   <li class="nav-item">
@@ -63,15 +63,15 @@
          <form method="post" action="technicians">
 			  <div class="mb-3">
 			    <label class="form-label">Technician Name</label>
-			    <input type="text" class="form-control" id="technician_name" name="technician_name" value="${technician.name}" required ${technician.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="text" class="form-control" id="technician_name" name="technician_name" value="${technician.name}" required readonly>
 			  </div>
 			  <div class="mb-3">
 			    <label class="form-label">Email</label>
-			    <input type="email" class="form-control" id="technician_email" name="technician_email" value="${technician.email}" required ${technician.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="email" class="form-control" id="technician_email" name="technician_email" value="${technician.email}" required readonly>
 			  </div>
 			  <div class="mb-3">
 			    <label class="form-label">Password (default password)</label>
-			    <input type="password" class="form-control" id="technician_password" name="technician_password" value="${technician.password}" required ${technician.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="password" class="form-control" id="technician_password" name="technician_password" value="${technician.password}" required readonly>
 			  </div>
 			  <div class="mb-3">
 			    <label class="form-label">Specified Tests</label>

@@ -31,14 +31,14 @@ public class PatientsManager {
     }
 	
 	public boolean createPatient(Patient patient) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
-		PasswordManager passwordManager = new PasswordManager();
+		
 		Connection connection = getConnection(); 
 		String query = "INSERT INTO patients (name, email, password, contact_number, dob, gender) VALUES (?, ?, ?, ?, ?, ?)";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setString(1, patient.getName());
 		ps.setString(2, patient.getEmail());
-		ps.setString(3, passwordManager.passwordHash(patient.getPassword()));
+		ps.setString(3, patient.getPassword());
 		ps.setString(4, patient.getContactNumber());
 		
 	    long millis = patient.getDob().getTime();

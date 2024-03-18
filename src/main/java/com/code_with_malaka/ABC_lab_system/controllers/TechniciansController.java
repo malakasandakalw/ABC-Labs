@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
+import com.code_with_malaka.ABC_lab_system.dao.PasswordManager;
 import com.code_with_malaka.ABC_lab_system.dao.TestResultManager;
 import com.code_with_malaka.ABC_lab_system.models.AppointmentTest;
 import com.code_with_malaka.ABC_lab_system.models.CreateResponse;
@@ -126,7 +127,6 @@ public class TechniciansController extends HttpServlet {
 	}
 	
 	private boolean isAuthenticated(HttpSession session) {
-		System.out.println(session.getAttribute("auth_technician_id"));
 		if (session.getAttribute("auth_technician_id") != null) {
 			return true;
 		} else {
@@ -143,9 +143,15 @@ public class TechniciansController extends HttpServlet {
     	response.sendRedirect("technician-login.jsp");	
 	}
 	
+	public static PasswordManager getPasswordManager() {
+		PasswordManager passwordManager = PasswordManager.getPasswordManagerInstance();
+		return passwordManager;
+	}
+	
 	private void login(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
 		TechnicianServiceImpl technicianService = new TechnicianServiceImpl();
 		Technician technician = new Technician();
+		PasswordManager passwordManager = getPasswordManager();
 		
 		try {
 			
@@ -157,7 +163,7 @@ public class TechniciansController extends HttpServlet {
 			technician = technicianService.getSpecificTechnicianByEmail(email);
 			
 			if(technician.getId() > -1) {
-				if (technician.getPassword().equals(password)) {
+				if (passwordManager.verify(password, technician.getPassword())) {
 					request.setAttribute("technician", technician);
 					
 					CommonManager commonManager = new CommonManager();
@@ -365,6 +371,7 @@ public class TechniciansController extends HttpServlet {
 		String name = request.getParameter("technician_name");
 		String email = request.getParameter("technician_email");
 		String password = request.getParameter("technician_password");
+		PasswordManager passwordManager = getPasswordManager();
 		
 		String[] testTypes = request.getParameterValues("technician_test_types");
 		
@@ -380,7 +387,7 @@ public class TechniciansController extends HttpServlet {
 	    	Technician technician = new Technician();
 	    	technician.setEmail(email);
 	    	technician.setName(name);
-	    	technician.setPassword(password);
+	    	technician.setPassword(passwordManager.passwordHash(password));
 	    	technician.setSpecificTestField(specifiedTestTypes);
 	    	technician.setRole("Technician");
 	    	

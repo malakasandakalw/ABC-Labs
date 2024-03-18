@@ -24,14 +24,13 @@ public class TechniciansManager {
 	}
 	
 	public boolean createTechnician(Technician technician) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
-		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
 		String query = "INSERT INTO technicians (name, email, password) VALUES (?, ?, ?)";
 		
 		PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, technician.getName());
 		ps.setString(2, technician.getEmail());
-		ps.setString(3, passwordManager.passwordHash(technician.getPassword()));
+		ps.setString(3, technician.getPassword());
 		
 		int result = ps.executeUpdate();
 		
@@ -62,18 +61,13 @@ public class TechniciansManager {
 	
 	public boolean updateTechnician(Technician technician) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException {
 		
-		PasswordManager passwordManager = new PasswordManager();
-		
 		Connection connection = getConnection();
 		
-		String query = "UPDATE technicians SET name=?, email=?, password=?, is_active=?, is_def_pw_changed=0 WHERE id=?";
+		String query = "UPDATE technicians SET is_active=? WHERE id=?";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
-		ps.setString(1, technician.getName());
-		ps.setString(2, technician.getEmail());
-		ps.setString(3, passwordManager.passwordHash(technician.getPassword()));
-		ps.setInt(4, technician.getIsActive());
-		ps.setInt(5, technician.getId());
+		ps.setInt(1, technician.getIsActive());
+		ps.setInt(2, technician.getId());
 		
 		int result = ps.executeUpdate();
 		

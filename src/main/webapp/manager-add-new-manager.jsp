@@ -28,7 +28,7 @@
 	                  <a class="nav-link" href="managers?type=get-dashboard&session_id=${auth_manager_id}">Dashboard</a>
 	               </li>
 	               <li class="nav-item">
-	                  <a class="nav-link" href="manager-managers">Managers</a>
+	                  <a class="nav-link active" href="manager-managers">Managers</a>
 	               </li>
 	               <li class="nav-item">
 	                  <a class="nav-link" href="manager-receptionists">Receptionists</a>
@@ -37,7 +37,7 @@
 	                  <a class="nav-link" href="manager-technicians">Technicians</a>
 	               </li>
 	               <li class="nav-item">
-	                  <a class="nav-link active" href="manager-test-types">Test Types</a>
+	                  <a class="nav-link" href="manager-test-types">Test Types</a>
 	               </li>
 						
                   <li class="nav-item">

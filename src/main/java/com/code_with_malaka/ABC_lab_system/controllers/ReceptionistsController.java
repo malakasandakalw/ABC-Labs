@@ -144,9 +144,16 @@ public class ReceptionistsController extends HttpServlet {
     	response.sendRedirect("receptionist-login.jsp");	
 	}
 	
+	public static PasswordManager getPasswordManager() {
+		PasswordManager passwordManager = PasswordManager.getPasswordManagerInstance();
+		return passwordManager;
+	}
+	
+	
 	private void login(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
 		Receptionist receptionist = new Receptionist();
 		ReceptionistServiceImpl receptionistService = new ReceptionistServiceImpl();
+		PasswordManager passwordManager = getPasswordManager();
 		
 		try {
 			String email = request.getParameter("email");
@@ -155,7 +162,7 @@ public class ReceptionistsController extends HttpServlet {
 			receptionist = receptionistService.getSpecifcReceptionistByEmail(email);
 			
 			if(receptionist.getId() > -1) {
-				if (receptionist.getPassword().equals(password)) {
+				if (passwordManager.verify(password, receptionist.getPassword())) {
 					request.setAttribute("receptionist", receptionist);
 					
 					CommonManager commonManager = new CommonManager();
@@ -190,7 +197,7 @@ public class ReceptionistsController extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("manager-add-new-receptionist.jsp");
 			rd.forward(request, response);			
 		} else {
-			PasswordManager passwordManager = new PasswordManager();
+	 		PasswordManager passwordManager = getPasswordManager();
 			ReceptionistServiceImpl receptionistService = new ReceptionistServiceImpl();
 			
 			receptionist.setName(request.getParameter("name"));

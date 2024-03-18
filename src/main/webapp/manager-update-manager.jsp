@@ -27,7 +27,7 @@
                      <a class="nav-link" href="managers?type=get-dashboard&session_id=${auth_manager_id}">Dashboard</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" href="manager-managers">Managers</a>
+                     <a class="nav-link active" href="manager-managers">Managers</a>
                   </li>
                   <li class="nav-item">
                      <a class="nav-link" href="manager-receptionists">Receptionists</a>
@@ -36,7 +36,7 @@
                      <a class="nav-link" href="manager-technicians">Technicians</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link active" href="manager-test-types">Test Types</a>
+                     <a class="nav-link" href="manager-test-types">Test Types</a>
                   </li>
 						
                   <li class="nav-item">
@@ -62,15 +62,15 @@
             <form method="post" action="managers">
 			  <div class="mb-3">
 			    <label class="form-label">Manager Name</label>
-			    <input type="text" class="form-control" id="manager_name" name="manager_name" value="${manager.name}" required ${manager.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="text" class="form-control" id="manager_name" name="manager_name" value="${manager.name}" required readonly>
 			  </div>
 			  <div class="mb-3">
 			    <label class="form-label">Email</label>
-			    <input type="email" class="form-control" id="manager_email" name="manager_email" value="${manager.email}" required ${manager.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="email" class="form-control" id="manager_email" name="manager_email" value="${manager.email}" required readonly}>
 			  </div>
 			  <div class="mb-3">
 			    <label class="form-label">Password (default password)</label>
-			    <input type="password" class="form-control" id="manager_password" name="manager_password" value="${manager.password}" required ${manager.isChangedDefaultPassword == 1 ? 'readonly' : ''}>
+			    <input type="password" class="form-control" id="manager_password" name="manager_password" value="${manager.password}" required readonly>
 			  </div>
                <div class="mb-3">
                   <tag:set var="isActive" value="${manager.isActive}" />

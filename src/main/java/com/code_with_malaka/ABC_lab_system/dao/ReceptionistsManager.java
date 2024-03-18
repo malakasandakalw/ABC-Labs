@@ -25,14 +25,13 @@ public class ReceptionistsManager {
 	}
 	
 	public boolean createReceptionist(Receptionist receptionist) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
-		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
 		String query = "INSERT INTO receptionists (name, email, password) VALUES (?, ?, ?)";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setString(1, receptionist.getName());
 		ps.setString(2, receptionist.getEmail());
-		ps.setString(3, passwordManager.passwordHash(receptionist.getPassword()));
+		ps.setString(3, receptionist.getPassword());
 		
 		int result = ps.executeUpdate();
 		
@@ -42,16 +41,12 @@ public class ReceptionistsManager {
 	}
 	
 	public boolean updateReceptionist(Receptionist receptionist) throws ClassNotFoundException, SQLException {
-		PasswordManager passwordManager = new PasswordManager();
 		Connection connection = getConnection(); 
-		String query = "UPDATE receptionists SET name= ?, email= ?, password= ?, is_active= ? WHERE id = ?";
+		String query = "UPDATE receptionists SET is_active= ? WHERE id = ?";
 		
 		PreparedStatement ps = connection.prepareStatement(query);
-		ps.setString(1, receptionist.getName());
-		ps.setString(2, receptionist.getEmail());
-		ps.setString(3, passwordManager.passwordHash(receptionist.getPassword()));
-		ps.setInt(4, receptionist.getIsActive());
-		ps.setInt(5, receptionist.getId());
+		ps.setInt(1, receptionist.getIsActive());
+		ps.setInt(2, receptionist.getId());
 		
 		int result = ps.executeUpdate();
 		
