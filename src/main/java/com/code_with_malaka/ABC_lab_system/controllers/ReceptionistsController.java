@@ -124,6 +124,18 @@ public class ReceptionistsController extends HttpServlet {
 			}
 		}else if (type != null && type.equals("logout")) {
 			logout(request, response, "");
+		} else if (type != null && type.equals("update-password")) {
+			if(!isAuthenticated) {
+				logout(request, response, "");    			
+    		} else {
+    			try {
+					updatePassword(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | SQLException | ServletException
+						| IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
@@ -255,6 +267,64 @@ public class ReceptionistsController extends HttpServlet {
 		
 		getReceptionistForUpdate(request, response, receptionistService, message);
     	
+	}
+	
+	private boolean passswordMatcher(String passsword, String confirmPassword) {
+		if (passsword.equals(confirmPassword)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void updatePassword(HttpServletRequest request, HttpServletResponse response, String message) throws NumberFormatException, ClassNotFoundException, SQLException, ServletException, IOException {
+		String currentPassword = request.getParameter("current_password");
+		String receptionistId = request.getSession().getAttribute("auth_receptionist_id").toString();
+		PasswordManager passwordManager = getPasswordManager();
+		ReceptionistServiceImpl receptionistServiceImpl = new ReceptionistServiceImpl();
+		
+		Receptionist receptionist = new Receptionist();
+		receptionist = receptionistServiceImpl.getSpecificReceptionist(Integer.parseInt(receptionistId));
+		
+		if(passwordManager.verify(currentPassword, receptionist.getPassword())) {
+			String password = request.getParameter("password");
+			String confirmPassword = request.getParameter("confirm_password");
+			
+			boolean isPasswordsMatch = passswordMatcher(password, confirmPassword);
+					
+			if(isPasswordsMatch) {
+				boolean result;
+				
+				try {
+					
+					String hashedPassword = passwordManager.passwordHash(password); 
+					result = receptionistServiceImpl.updatePassword(Integer.parseInt(receptionistId), hashedPassword);
+					
+					if(result) {
+						message = "Successfully Changed";
+					}
+					else {
+						message = "Failed!";
+					}
+					
+				} catch (Exception e) {
+					message = e.getMessage();
+				}
+
+				request.setAttribute("message", message);
+				RequestDispatcher rd = request.getRequestDispatcher("receptionist-update-password.jsp");
+				rd.forward(request, response);
+			} else {
+				request.setAttribute("message", "Password Confirmation Mismatch");
+				RequestDispatcher rd = request.getRequestDispatcher("receptionist-update-password.jsp");
+				rd.forward(request, response);
+			}
+		} else {
+			request.setAttribute("message", "Current password is wrong!");
+			RequestDispatcher rd = request.getRequestDispatcher("receptionist-update-password.jsp");
+			rd.forward(request, response);
+		}
+		
 	}
 	
 	private void getAllReceptionists(HttpServletRequest request, HttpServletResponse response, ReceptionistServiceImpl service) throws ServletException, IOException {

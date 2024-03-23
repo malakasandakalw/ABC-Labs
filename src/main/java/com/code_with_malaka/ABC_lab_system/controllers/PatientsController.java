@@ -22,6 +22,7 @@ import com.code_with_malaka.ABC_lab_system.models.Patient;
 import com.code_with_malaka.ABC_lab_system.models.PaymentRecipt;
 import com.code_with_malaka.ABC_lab_system.services.AppointmentServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.MessageService;
+import com.code_with_malaka.ABC_lab_system.services.PatientService;
 import com.code_with_malaka.ABC_lab_system.services.PatientServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.PaymentReciptServiceImpl;
 
@@ -60,6 +61,16 @@ public class PatientsController extends HttpServlet {
 					e.printStackTrace();
 				}				
 			}
+		} else if(type != null && type.equals("get-specific-patient-for-update")) {
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+				try {
+					getPatientForUpdate(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | IOException | SQLException e) {
+					e.printStackTrace();
+				}				
+			}
 		}
 		
 	}
@@ -75,6 +86,16 @@ public class PatientsController extends HttpServlet {
 				createPatient(request, response, "");
 			} catch (ClassNotFoundException | ServletException | IOException | SQLException | ParseException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
+			}
+    	} else if (type != null && type.equals("update")){
+    		if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+	        	try {
+					updatePatient(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | IOException | SQLException | ParseException e) {
+					e.printStackTrace();
+				}
 			}
     	} else if (type != null && type.equals("logout")){
     		logout(request,response,"");
@@ -171,6 +192,61 @@ public class PatientsController extends HttpServlet {
 		
 	}
 	
+	private void updatePatient(HttpServletRequest request, HttpServletResponse response, String message) throws IOException, NumberFormatException, ClassNotFoundException, SQLException, ParseException, ServletException {
+		String currentPassword = request.getParameter("current_password");
+		String patientId = request.getParameter("patient_id");
+		PasswordManager passwordManager = getPasswordManager();
+		PatientServiceImpl patientServiceImpl = new PatientServiceImpl();
+		
+		Patient patient = new Patient();
+		patient = patientServiceImpl.getSpecificPatientById(Integer.parseInt(patientId));
+		
+		if(passwordManager.verify(currentPassword, patient.getPassword())) {
+			String password = request.getParameter("password");
+			String confirmPassword = request.getParameter("confirm_password");
+			
+			boolean isPasswordsMatch = passswordMatcher(password, confirmPassword);
+			
+			if(isPasswordsMatch) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		 		
+		 		patient.setName(request.getParameter("name"));
+		 		patient.setEmail(request.getParameter("email"));
+		 		patient.setContactNumber(request.getParameter("contact_number"));
+		 		patient.setDob(dateFormat.parse(request.getParameter("dob")));
+		 		patient.setGender(request.getParameter("gender"));
+		 		patient.setPassword(passwordManager.passwordHash(password));
+		 		
+		 		boolean result;
+		 		
+		 		try {
+					result = patientServiceImpl.updatePatient(patient);
+					if(result) {
+						message = "Successfully updated";
+						request.setAttribute("message", message);
+					} else {
+						message = "Update failed";
+					}
+				} catch (Exception e) {
+					message = e.getMessage();
+				}
+		 		
+				request.setAttribute("patient", patient);
+
+				getPatientForUpdate(request, response, message);		
+		 	
+			} else {
+				request.setAttribute("patient", patient);
+				getPatientForUpdate(request, response, "Password confirmation mismatch. Try again");		
+			}
+			
+		} else {
+			request.setAttribute("patient", patient);			
+			getPatientForUpdate(request, response, "Current password is wrong!");		
+		}
+		
+	}
+	
 	private void logout(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
 		Patient patient = new Patient();
 		patient.setRole("Patient");
@@ -232,6 +308,18 @@ public class PatientsController extends HttpServlet {
 
  		request.setAttribute("patientsAppointmentsList", appointmentsList);
     	RequestDispatcher rd = request.getRequestDispatcher("patient-appointments.jsp");
+    	rd.forward(request, response);
+	}
+	
+	private void getPatientForUpdate(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException, ClassNotFoundException, SQLException {
+		PatientServiceImpl patientServiceImpl = new PatientServiceImpl();
+		String patientIdString = request.getSession().getAttribute("auth_patient_id").toString();
+		Patient patient = new Patient();
+		patient = patientServiceImpl.getSpecificPatientById(Integer.parseInt(patientIdString));
+		
+ 		request.setAttribute("patient", patient);
+ 		request.setAttribute("message", message);
+    	RequestDispatcher rd = request.getRequestDispatcher("patient-update-profile.jsp");
     	rd.forward(request, response);
 	}
 	

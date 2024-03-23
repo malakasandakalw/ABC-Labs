@@ -53,6 +53,22 @@ public class ReceptionistsManager {
 		return result > 0;
 	}
 	
+	public boolean updatePassword(int id, String password) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection();
+		
+		String query = "UPDATE receptionists SET password=? WHERE id=?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, password);
+		ps.setInt(2, id);
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
 	public List<Receptionist> getAllReceptionists() throws ClassNotFoundException, SQLException{
 		
 		Connection connection = getConnection(); 

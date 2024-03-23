@@ -28,6 +28,9 @@
                   <li class="nav-item"><a class="nav-link active"
                      href="patients?type=get-appointments&session_id=${auth_patient_id}">Appointments</a>
                   </li>
+                  <li class="nav-item"><a class="nav-link"
+                     href="patients?type=get-specific-patient-for-update&session_id=${auth_patient_id}">Update Profile</a>
+                  </li>
                   <li class="nav-item">
                   	<form method="post" action="patients">
                         <input type="hidden" name="auth_patient_id" value="${auth_patient_id}" required>

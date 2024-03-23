@@ -32,8 +32,8 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	public Patient getSpecificPatientById(int id) {
-		return null;
+	public Patient getSpecificPatientById(int id) throws ClassNotFoundException, SQLException {
+		return getPatientsManager().getSpecificPatient(id);
 	}
 	
 	public Patient getSpecificPatientByEmail(String email) throws ClassNotFoundException, SQLException {
@@ -41,14 +41,8 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	public boolean updateManager(Patient patient) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Patient getSpecificPatient(Patient patient) throws ClassNotFoundException, SQLException {
-		return getPatientsManager().getSpecificPatient(patient);
+	public boolean updatePatient(Patient patient) throws ClassNotFoundException, SQLException {
+		return getPatientsManager().updatePatient(patient);
 	}
 
 }

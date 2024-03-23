@@ -29,6 +29,9 @@
                   <li class="nav-item"><a class="nav-link active"
                      href="technicians?type=get-tests&session_id=${auth_technician_id}">Appointment Tests</a>
                   </li>
+                  <li class="nav-item"><a class="nav-link"
+                     href="technician-update-password.jsp">Change Password</a>
+                  </li>
                   <li class="nav-item">
                   	<form method="post" action="technicians">
                         <input type="hidden" name="auth_technician_id" value="${auth_technician_id}" required>

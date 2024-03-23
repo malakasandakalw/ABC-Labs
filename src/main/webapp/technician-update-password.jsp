@@ -1,6 +1,6 @@
 <%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-   pageEncoding="ISO-8859-1" isELIgnored="false"%>
+	pageEncoding="ISO-8859-1" isELIgnored="false"%>
 <%
 	Object sessionAttribute = session.getAttribute("auth_technician_id");
 	
@@ -11,7 +11,7 @@
 <html>
    <head>
       <meta charset="ISO-8859-1">
-      <title>Technician Tests</title>
+      <title>Technician - Change Password</title>
       <link
          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
          rel="stylesheet">
@@ -26,10 +26,10 @@
          <div class="container">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                  <li class="nav-item"><a class="nav-link active"
+                  <li class="nav-item"><a class="nav-link"
                      href="technicians?type=get-tests&session_id=${auth_technician_id}">Appointment Tests</a>
                   </li>
-                  <li class="nav-item"><a class="nav-link"
+                  <li class="nav-item"><a class="nav-link active"
                      href="technician-update-password.jsp">Change Password</a>
                   </li>
                   <li class="nav-item">
@@ -45,44 +45,34 @@
       </nav>
       <div class="container">
          <p>${message}</p>
+         
          <div class="d-flex align-items-center mb-3">
-            <div class="me-auto">
-               <h3 class="title">Appointment Tests</h3>
-            </div>
-         </div>
-         <hr>
-         <div class="table-container">
-	         <table class="table table-stripped">
-	            <thead>
-	               <tr>
-	                  <th>Appointment Number</th>
-	                  <th>Appointment Status</th>
-	                  <th>Test Status</th>
-	                  <th>Actions</th>
-	               </tr>
-	            </thead>
-	            <tbody>
-	               <tag:forEach var="technicianAppointmentTest" items="${technicianAppointmentTests}">
-	                  <tr>
-	                     <td>${technicianAppointmentTest.appointment.id}</td>
-	                     <td>${technicianAppointmentTest.appointment.status}</td>
-	                     <td>${technicianAppointmentTest.status}</td>
-	                     <td>
-	                        <div class="d-flex gap-2">
-		                        <div class="action-div">
-			                        <form method="get" action="technicians">
-			                           <input type="hidden" name="appointment_test_id" value="${technicianAppointmentTest.id}" required>
-			                           <input type="hidden" name="type" value="get-specific-appointment-test"/>
-			                           <button type="submit" class="btn btn-success">View</button>
-			                        </form>
-		                        </div>
-	                        </div>
-	                     </td>
-	                  </tr>
-	               </tag:forEach>
-	            </tbody>
-	         </table>
+	         <div class="me-auto">
+	            <h3 class="title">Change Password</h3>
+	         </div>
 	      </div>
+	      <hr>
+		<div class="col-md-5 mx-auto bg-white p-5">
+			<form method="post" action="technicians">            
+	            <div class="mb-3">
+	               <label class="form-label">Current Password <small class="text-danger">(* required)</small></label>
+	               <input type="password" class="form-control" id="current_password" name="current_password" required>
+	            </div>
+	            <div class="mb-3">
+	               <label class="form-label">New Password<small class="text-danger">(* required)</small></label>
+	               <input type="password" class="form-control" id="password" name="password" required>
+	            </div>
+	            <div class="mb-3">
+	               <label class="form-label">Confirm New Password<small class="text-danger">(* required)</small></label>
+	               <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+	            </div>			  
+			  <input type="hidden" name="type" value="update-password"/>
+              <input type="hidden" name="session_id" value="${auth_technician_id}"/>
+			  <button type="submit" class="btn btn-primary">Change Password</button>
+			</form>
+
+		</div>
+         
       </div>
    </body>
 </html>

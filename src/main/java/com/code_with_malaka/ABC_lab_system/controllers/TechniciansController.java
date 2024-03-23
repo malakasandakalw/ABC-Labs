@@ -108,6 +108,10 @@ public class TechniciansController extends HttpServlet {
 		
 		TechnicianServiceImpl technicianService = (TechnicianServiceImpl) TechnicianServiceImpl.getTechnicianServiceInstance();
 		CommonServiceImpl commonServiceImpl = (CommonServiceImpl) CommonServiceImpl.getCommonServiceInstance();
+		HttpSession session = request.getSession();
+		
+		boolean isAuthenticated = isAuthenticated(session);
+		
 		if(type != null && type.equals("create")) {
     		createTechnician(request, response, technicianService, commonServiceImpl);
     	}
@@ -115,19 +119,39 @@ public class TechniciansController extends HttpServlet {
     		updateTechnician(request, response, technicianService);
     	} else if (type != null && type.equals("logout")){
     		logout(request,response,"");
+		} else if (type != null && type.equals("update-password")) {
+			if(!isAuthenticated) {
+				logout(request, response, "");
+			} else {
+				try {
+					updatePassword(request, response, "");
+				} catch (NumberFormatException | ClassNotFoundException | SQLException | ServletException | IOException e) {
+					e.printStackTrace();
+				}				
+			}
 		}
     	else if(type != null && type.equals("update-specific-appointment-test")) {
-        	try {
+    		
+    		try {
 				updateSpecificAppointmentTest(request, response, "");
 			} catch (ClassNotFoundException | IOException | ServletException | SQLException e) {
 				e.printStackTrace();
-			}
+			}	
+        	
     	}
 		
 	}
 	
 	private boolean isAuthenticated(HttpSession session) {
 		if (session.getAttribute("auth_technician_id") != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean passswordMatcher(String passsword, String confirmPassword) {
+		if (passsword.equals(confirmPassword)) {
 			return true;
 		} else {
 			return false;
@@ -364,6 +388,57 @@ public class TechniciansController extends HttpServlet {
 	    	TestTypeServiceImpl technicianService = (TestTypeServiceImpl) TestTypeServiceImpl.getTestTypeServiceInstance();
 	    	getSpecificTechnicianForUpdate(request, response, service, technicianService, "Please Select Test Types!");
 	    }
+		
+	}
+	
+	private void updatePassword(HttpServletRequest request, HttpServletResponse response, String message) throws NumberFormatException, ClassNotFoundException, SQLException, ServletException, IOException {
+		String currentPassword = request.getParameter("current_password");
+		String technicianId = request.getSession().getAttribute("auth_technician_id").toString();
+		PasswordManager passwordManager = getPasswordManager();
+		TechnicianServiceImpl technicianServiceImpl = new TechnicianServiceImpl();
+		
+		Technician technician = new Technician();
+		technician = technicianServiceImpl.getSpecificTechnician(Integer.parseInt(technicianId));
+		
+		if(passwordManager.verify(currentPassword, technician.getPassword())) {
+			String password = request.getParameter("password");
+			String confirmPassword = request.getParameter("confirm_password");
+			
+			boolean isPasswordsMatch = passswordMatcher(password, confirmPassword);
+			
+			if(isPasswordsMatch) {
+			
+				boolean result;
+				
+				try {
+					String hashedPassword = passwordManager.passwordHash(password); 
+					result = technicianServiceImpl.updatePassword(Integer.parseInt(technicianId), hashedPassword);
+					if(result) {
+						message = "Successfully Changed";
+					}
+					else {
+						message = "Failed!";
+					}
+					
+				} catch (Exception e) {
+					message = e.getMessage();
+				}
+				
+				request.setAttribute("message", message);
+				RequestDispatcher rd = request.getRequestDispatcher("technician-update-password.jsp");
+				rd.forward(request, response);
+				
+			} else {
+				request.setAttribute("message", "Password Confirmation Mismatch");
+				RequestDispatcher rd = request.getRequestDispatcher("technician-update-password.jsp");
+				rd.forward(request, response);
+			}
+			
+		} else {
+			request.setAttribute("message", "Current password is wrong!");
+			RequestDispatcher rd = request.getRequestDispatcher("technician-update-password.jsp");
+			rd.forward(request, response);
+		}
 		
 	}
 	

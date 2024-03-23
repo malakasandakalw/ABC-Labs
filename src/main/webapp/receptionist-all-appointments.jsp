@@ -26,6 +26,9 @@
 	               <li class="nav-item">
 	               	<a class="nav-link active" href="receptionists?type=get-appointments&session_id=${ auth_receptionist_id }">Appointments</a>
 	               </li>
+	               <li class="nav-item">
+	               	<a class="nav-link" href="receptionist-update-password.jsp">Change Password</a>
+	               </li>
                   <li class="nav-item">
                   	<form method="post" action="receptionists">
                         <input type="hidden" name="auth_receptionist_id" value="${auth_receptionist_id}" required>

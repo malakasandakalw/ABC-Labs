@@ -63,7 +63,7 @@
 				               <input type="password" class="form-control" id="password" name="password" required>
 				            </div>
 				            <input type="hidden" name="type" value="login"/>
-				            <button type="submit" class="btn btn-primary">Login</button>
+				            <button type="submit" class="btn btn-primary w-100">Login</button>
 				         </form>
 	                </div>
 	            </div>

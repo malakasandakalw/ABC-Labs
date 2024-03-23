@@ -54,6 +54,29 @@ public class PatientsManager {
 		return result > 0;
 	}
 	
+	public boolean updatePatient(Patient patient) throws ClassNotFoundException, SQLException {
+		Connection connection = getConnection(); 
+		String query = "UPDATE patients SET name = ?, password = ?, contact_number = ?, dob = ?, gender = ? WHERE id = ?";
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, patient.getName());
+		ps.setString(2, patient.getPassword());
+		ps.setString(3, patient.getContactNumber());
+		
+	    long millis = patient.getDob().getTime();
+	    java.sql.Date dob = new java.sql.Date(millis);
+	    ps.setDate(4, dob);
+
+		ps.setString(5, patient.getGender());
+		ps.setInt(6, patient.getId());
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	    
+	}
+	
 	public Patient getSpecificPatient(int id) throws ClassNotFoundException, SQLException {
 		
 		Connection connection = getConnection(); 
@@ -80,33 +103,6 @@ public class PatientsManager {
 		connection.close();	
 		
 		return patient;
-	}
-	
-	public Patient getSpecificPatient(Patient patient) throws ClassNotFoundException, SQLException {
-
-		Connection connection = getConnection(); 
-		String query = "SELECT * FROM patients WHERE email = ?";
-		PreparedStatement ps = connection.prepareStatement(query);
-		ps.setString(1, patient.getEmail());
-		
-		ResultSet rs = ps.executeQuery();
-		
-		while (rs.next()) {
-			patient.setId(rs.getInt("id"));
-			patient.setName(rs.getString("name"));
-			patient.setEmail(rs.getString("email"));
-			patient.setPassword(rs.getString("password"));
-			patient.setContactNumber(rs.getString("contact_number"));
-			patient.setDob(rs.getDate("dob"));
-			patient.setGender(rs.getString("gender"));
-			patient.setAge(calculateAge(rs.getDate("dob")));
-		}
-		
-		ps.close();
-		connection.close();	
-		
-		return patient;
-		
 	}
 	
 	public Patient getSpecificPatientByEmail(String email) throws ClassNotFoundException, SQLException {

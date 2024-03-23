@@ -56,6 +56,10 @@ private static TechnicianService technicianServiceObj;
 	public boolean updateTechnician(Technician technician) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		return getTechniciansManager().updateTechnician(technician);
 	}
+	
+	public boolean updatePassword(int id, String password) throws ClassNotFoundException, SQLException {
+		return getTechniciansManager().updatePassword(id, password);
+	}
 
 	@Override
 	public boolean deleteTechnician(int id) {

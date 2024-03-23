@@ -89,6 +89,22 @@ public class TechniciansManager {
 		
 	}
 	
+	public boolean updatePassword(int id, String password) throws SQLException, ClassNotFoundException {
+		Connection connection = getConnection();
+		
+		String query = "UPDATE technicians SET password=? WHERE id=?";
+		
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, password);
+		ps.setInt(2, id);
+		
+		int result = ps.executeUpdate();
+		
+		ps.close();
+		connection.close();		
+		return result > 0;
+	}
+	
 	private boolean createTechniciansTestTypes(int technicianId, Technician technician, Connection connection) throws SQLException {
 		String query = "INSERT INTO technicians_specific_tests (test_type_id, technician_id) VALUES (?, ?)";
 		PreparedStatement ps = connection.prepareStatement(query);
