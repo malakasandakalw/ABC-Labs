@@ -1,6 +1,12 @@
 <%@ taglib prefix="tag" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" isELIgnored="false"%>
+<%
+	Object sessionAttribute = session.getAttribute("auth_technician_id");
+	
+	if (sessionAttribute != null) {
+
+   	%>
 <!DOCTYPE html>
 <html>
    <head>
@@ -19,9 +25,16 @@
       <nav class="navbar navbar-expand-md bg-body-tertiary">
          <div class="container">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                   <li class="nav-item"><a class="nav-link active"
                      href="technicians?type=get-tests&session_id=${auth_technician_id}">Appointment Tests</a>
+                  </li>
+                  <li class="nav-item">
+                  	<form method="post" action="technicians">
+                        <input type="hidden" name="auth_technician_id" value="${auth_technician_id}" required>
+                        <input type="hidden" name="type" value="logout"/>
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                     </form>
                   </li>
                </ul>
             </div>
@@ -116,7 +129,7 @@
 				    
 					<form action="technicians" method="post" enctype="multipart/form-data">
 					    <div class="mb-3">
-						    <label class="form-label">Test Status</label>
+						    <label class="form-label">Test Status <small class="text-danger">(* required)</small></label>
 						    <select class="form-select" id="appointment_test_status" name="appointment_test_status" required>
 						    	<option value="Cancel" ${appointmentTest.status eq 'Cancel' ? 'selected' : ''}>Cancel</option>
 						    	<option value="Processing" ${appointmentTest.status eq 'Processing' ? 'selected' : ''}>Processing</option>
@@ -143,16 +156,10 @@
 						    </div>
 					    </div>
 					    
-					    
 						<input type="hidden" name="appointment_test_id" value="${appointmentTest.id}"/>
 						<input type="hidden" name="appointment_technician_id" value="${auth_technician_id}"/>
-						
-						
 						<input type="hidden" name="patient_contact_number" value="${appointmentTest.patient.contactNumber}"/>
-						
-						
 						<input type="hidden" name="appointment_test_result_id" value="${appointmentTest.testResult.id}"/>
-						
 						<input type="hidden" name="type" value="update-specific-appointment-test"/>
 				        <button type="submit" class="btn btn-primary">Update</button>
 				    </form>
@@ -163,3 +170,10 @@
       </div>
    </body>
 </html>
+<%
+
+	   } else {
+	      response.sendRedirect("technician-login.jsp");
+	      }
+
+   %>

@@ -59,11 +59,11 @@
 	      <div class="col-md-5 mx-auto bg-white p-5">
 	         <form method="post" action="testType">
 	            <div class="mb-3">
-	               <label class="form-label">Test Name</label>
+	               <label class="form-label">Test Name <small class="text-danger">(* required)</small></label>
 	               <input type="text" class="form-control" id="test_name" name="test_name" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Price (Rs.)</label>
+	               <label class="form-label">Price (Rs.) <small class="text-danger">(* required)</small></label>
 	               <input type="number" class="form-control" id="test_price" name="test_price" required>
 	            </div>
 	            <input type="hidden" name="type" value="create"/>

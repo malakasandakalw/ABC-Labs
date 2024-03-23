@@ -70,11 +70,7 @@
 			    <input type="email" class="form-control" id="technician_email" name="technician_email" value="${technician.email}" required readonly>
 			  </div>
 			  <div class="mb-3">
-			    <label class="form-label">Password (default password)</label>
-			    <input type="password" class="form-control" id="technician_password" name="technician_password" value="${technician.password}" required readonly>
-			  </div>
-			  <div class="mb-3">
-			    <label class="form-label">Specified Tests</label>
+			    <label class="form-label">Specified Tests <small class="text-danger">(* required)</small></label>
 			    <select class="form-select" id="technician_test_types" name="technician_test_types" required multiple>
 			    <tag:forEach var="testType" items="${testTypesList}">
 				    <tag:set var="isSelected" value="false" />
@@ -89,7 +85,7 @@
 			  </div>
                <div class="mb-3">
                   <tag:set var="isActive" value="${technician.isActive}" />
-                  <label class="form-label">Active Status</label>			
+                  <label class="form-label">Active Status <small class="text-danger">(* required)</small></label>			
                   <select class="form-select" id="technician_is_active" name="technician_is_active" >
                   <option value="1" ${isActive == 1 ? 'selected' : ''}>Active</option>
                   <option value="0" ${isActive == 0 ? 'selected' : ''}>Inactive</option>

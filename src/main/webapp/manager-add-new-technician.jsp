@@ -63,19 +63,19 @@ if (sessionAttribute != null) {
 
 			<form method="post" action="technicians">
 			  <div class="mb-3">
-			    <label class="form-label">Technician Name</label>
+			    <label class="form-label">Technician Name <small class="text-danger">(* required)</small></label>
 			    <input type="text" class="form-control" id="technician_name" name="technician_name" required>
 			  </div>
 			  <div class="mb-3">
-			    <label class="form-label">Email</label>
+			    <label class="form-label">Email <small class="text-danger">(* required)</small></label>
 			    <input type="email" class="form-control" id="technician_email" name="technician_email" required>
 			  </div>
 			  <div class="mb-3">
-			    <label class="form-label">Password (default password)</label>
+			    <label class="form-label">Password (default password) <small class="text-danger">(* required)</small></label>
 			    <input type="password" class="form-control" id="technician_password" name="technician_password" required>
 			  </div>
 			  <div class="mb-3">
-			    <label class="form-label">Specified Tests</label>
+			    <label class="form-label">Specified Tests <small class="text-danger">(* required)</small></label>
 			    <select class="form-select" id="technician_test_types" name="technician_test_types" required multiple>
 			    	<tag:forEach var="testType" items="${testTypesList}">	
 					  <option value="${testType.id}">${testType.name} - ${testType.isActive == 1 ? 'Active' : 'Inactive'}</option>					

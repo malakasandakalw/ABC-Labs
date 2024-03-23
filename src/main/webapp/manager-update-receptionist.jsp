@@ -68,13 +68,9 @@
 			    <label class="form-label">Email</label>
 			    <input type="email" class="form-control" id="receptionist_email" name="receptionist_email" value="${receptionist.email}" required readonly>
 			  </div>
-			  <div class="mb-3">
-			    <label class="form-label">Password (default password)</label>
-			    <input type="password" class="form-control" id="receptionist_password" name="receptionist_password" value="${receptionist.password}" required readonly>
-			  </div>
                <div class="mb-3">
                   <tag:set var="isActive" value="${receptionist.isActive}" />
-                  <label class="form-label">Active Status</label>			
+                  <label class="form-label">Active Status <small class="text-danger">(* required)</small></label>			
                   <select class="form-select" id="receptionist_is_active" name="receptionist_is_active" >
                   <option value="1" ${isActive == 1 ? 'selected' : ''}>Active</option>
                   <option value="0" ${isActive == 0 ? 'selected' : ''}>Inactive</option>

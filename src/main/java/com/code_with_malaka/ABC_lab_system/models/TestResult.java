@@ -1,10 +1,13 @@
 package com.code_with_malaka.ABC_lab_system.models;
 
+import com.google.protobuf.Timestamp;
+
 public class TestResult {
 	int id;
 	AppointmentTest appointmentTest;
 	String fileUrl;
-	
+	Timestamp createdAt;
+
 	public TestResult() {
 		super();
 	}
@@ -49,6 +52,14 @@ public class TestResult {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 }

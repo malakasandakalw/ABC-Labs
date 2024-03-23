@@ -2,7 +2,10 @@ package com.code_with_malaka.ABC_lab_system.controllers;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import com.code_with_malaka.ABC_lab_system.dao.CommonManager;
 import com.code_with_malaka.ABC_lab_system.dao.PasswordManager;
 import com.code_with_malaka.ABC_lab_system.models.Dashboard;
+import com.code_with_malaka.ABC_lab_system.models.DurationFilter;
 import com.code_with_malaka.ABC_lab_system.models.Manager;
 import com.code_with_malaka.ABC_lab_system.services.DashboardServiceImpl;
 import com.code_with_malaka.ABC_lab_system.services.ManagerServiceImpl;
@@ -51,6 +55,16 @@ public class ManagersController extends HttpServlet {
 				}				
 			}
 			
+		} else if(type != null && type.equals("filter-by-dates")){
+			if(!isAuthenticated) { 
+				logout(request, response, "");
+			}else {
+				try {
+					dashboardFilter(request, response, "");
+				} catch (ClassNotFoundException | SQLException | ServletException | IOException e) {
+					e.printStackTrace();
+				}				
+			}
 		}
     	else {
     		if(!isAuthenticated) {
@@ -157,8 +171,6 @@ public class ManagersController extends HttpServlet {
 			manager = new Manager();
 		}
 		
-		System.out.println(manager.getEmail());
-		
 		request.setAttribute("message", message);
 		request.setAttribute("manager", manager);
 		
@@ -263,5 +275,25 @@ public class ManagersController extends HttpServlet {
     	RequestDispatcher rd = request.getRequestDispatcher("manager-dashboard.jsp");
     	rd.forward(request, response);
 	}
+	
+	private void dashboardFilter(HttpServletRequest request, HttpServletResponse response, String message) throws ClassNotFoundException, SQLException, ServletException, IOException {
+		DashboardServiceImpl dahDashboardService = new DashboardServiceImpl();
+		
+		LocalDate localStartDate = LocalDate.parse(request.getParameter("start_date"));
+		LocalDate localEndDate = LocalDate.parse(request.getParameter("end_date"));
+		
+		Date startDate = Date.valueOf(localStartDate);
+		Date endDate = Date.valueOf(localEndDate);
+		
+		DurationFilter duartionDurationFilter = new DurationFilter(startDate, endDate);
+		
+		Dashboard dashboard = dahDashboardService.getDashboardByDates(duartionDurationFilter);
+		request.setAttribute("dashboard", dashboard);
+		request.setAttribute("start", request.getParameter("start_date"));
+		request.setAttribute("end", request.getParameter("end_date"));
+    	RequestDispatcher rd = request.getRequestDispatcher("manager-dashboard.jsp");
+    	rd.forward(request, response);
+	}
+	
 	
 }

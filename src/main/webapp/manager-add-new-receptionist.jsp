@@ -61,15 +61,15 @@
 	      <div class="col-md-5 mx-auto bg-white p-5">
 	         <form method="post" action="receptionists">
 	            <div class="mb-3">
-	               <label class="form-label">Name</label>
+	               <label class="form-label">Name <small class="text-danger">(* required)</small></label>
 	               <input type="text" class="form-control" id="name" name="name" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Email</label>
+	               <label class="form-label">Email <small class="text-danger">(* required)</small></label>
 	               <input type="email" class="form-control" id="email" name="email" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Password</label>
+	               <label class="form-label">Password <small class="text-danger">(* required)</small></label>
 	               <input type="password" class="form-control" id="password" name="password" required>
 	            </div>
 	            <input type="hidden" name="type" value="create-receptionist"/>

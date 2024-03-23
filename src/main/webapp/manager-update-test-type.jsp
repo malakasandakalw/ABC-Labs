@@ -61,16 +61,16 @@
          <div class="col-md-5 mx-auto p-5 bg-white">
             <form method="post" action="testType">
                <div class="mb-3">
-                  <label class="form-label">Test Name</label>
+                  <label class="form-label">Test Name <small class="text-danger">(* required)</small></label>
                   <input type="text" class="form-control" id="test_name" name="test_name" value="${testType.name}" required>
                </div>
                <div class="mb-3">
-                  <label class="form-label">Price (Rs.)</label>
+                  <label class="form-label">Price (Rs.) <small class="text-danger">(* required)</small></label>
                   <input type="number" class="form-control" id="test_price" name="test_price" value="${testType.price}" required>
                </div>
                <div class="mb-3">
                   <tag:set var="isActive" value="${testType.isActive}" />
-                  <label class="form-label">Active Status</label>			
+                  <label class="form-label">Active Status <small class="text-danger">(* required)</small></label>			
                   <select class="form-select" id="test_is_active" name="test_is_active" >
                   <option value="1" ${isActive == 1 ? 'selected' : ''}>Active</option>
                   <option value="0" ${isActive == 0 ? 'selected' : ''}>Inactive</option>

@@ -31,7 +31,7 @@
                   </li>
                   <li class="nav-item">
                   	<form method="post" action="technicians">
-                        <input type="hidden" name="auth_technician_id" value="${auth_technician_id}"" required>
+                        <input type="hidden" name="auth_technician_id" value="${auth_technician_id}" required>
                         <input type="hidden" name="type" value="logout"/>
                         <button type="submit" class="btn btn-danger">Logout</button>
                      </form>

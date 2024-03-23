@@ -236,7 +236,6 @@ public class PatientsController extends HttpServlet {
 	}
 	
 	public void getPatientSpecificAppointment(HttpServletRequest request, HttpServletResponse response, String message) throws IOException, NumberFormatException, ClassNotFoundException, SQLException, ServletException {
- 		System.out.println("here ::::::");
 		AppointmentServiceImpl appointmentService = new AppointmentServiceImpl();
  		String appointmentId = (String) request.getParameter("appointment_id");
  		

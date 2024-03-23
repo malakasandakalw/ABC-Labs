@@ -72,7 +72,6 @@ public class AppointmentsManager {
 		
 		Connection connection = getConnection(); 
 		List<Appointment> appointmentsList = new ArrayList<Appointment>();
-		System.out.println(id);
 		String query = "SELECT * FROM appointments WHERE patient_id = ? ORDER BY created_at DESC";
 		
 		PreparedStatement ps = connection.prepareStatement(query);

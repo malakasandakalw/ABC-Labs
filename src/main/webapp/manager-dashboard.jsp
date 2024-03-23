@@ -14,18 +14,11 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Manager Dashboard</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-	crossorigin="anonymous">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-	crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://unpkg.com/@adminkit/core@latest/dist/css/app.css">
-<script src="https://unpkg.com/@adminkit/core@latest/dist/js/app.js"></script>
-<link href="css/style.css">
+	   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+	   <link rel="stylesheet" href="https://unpkg.com/@adminkit/core@latest/dist/css/app.css">
+	   <script src="https://unpkg.com/@adminkit/core@latest/dist/js/app.js"></script>
+	   <link href="css/style.css">
 <style>
 	h1 {
 	margin-bottom: 0px;
@@ -78,6 +71,23 @@
 	      </div>
 	      <hr>
 	      <div class="table-container">
+	      
+	      <form method="get" action="managers">
+	      	<div class="d-flex align-items-end mb-3 justify-content-end">
+			  <div class="me-2 d-flex align-items-end">
+			    <label class="form-label me-1">From</label>
+			    <input type="date" class="form-control" id="start_date" name="start_date" value="${start}" required>
+			  </div>
+			  <div class="me-2 d-flex align-items-end">
+			    <label class="form-label me-1">To</label>
+			    <input type="date" class="form-control" id="end_date" name="end_date" value="${end}" required>
+			  </div>
+			   <div class="me-2">
+				  <input type="hidden" name="type" value="filter-by-dates"/>
+				  <button type="submit" class="btn btn-primary">Filter</button>
+			   </div>			  	      	
+	      	</div>			  
+			</form>
 	      
 	      	<div class="row">
 	      		<div class="col-md-4">

@@ -74,7 +74,6 @@ public class AppointmentTestsManager {
 		PreparedStatement ps = connection.prepareStatement(query);
 		
 		ps.setString(1, appointmentTest.getStatus());
-		System.out.println(appointmentTest.getTestResult().getid());
 		ps.setInt(2, appointmentTest.getTestResult().getid());
 		ps.setInt(3, appointmentTest.getId());
 		
@@ -141,6 +140,7 @@ public class AppointmentTestsManager {
 		Connection connection = getConnection();
 		TechniciansManager techniciansManager = new TechniciansManager();
 		TestTypeManager testTypeManager = new TestTypeManager();
+		TestResultManager testResultManager = new TestResultManager();
 		
 		List<AppointmentTest> appointmentTestsList = new ArrayList<AppointmentTest>();
 		
@@ -167,7 +167,9 @@ public class AppointmentTestsManager {
 			if (rs.wasNull()) {
 				appointmentTest.setTestResult(null);
 			} else {
-//				appointmentTest.setTestResult(testResultManager.getSpecificTechnician(rs.getInt("result_id")));
+				TestResult testResult = new TestResult();
+				testResult = testResultManager.getSpecifcTestResultById(testResultId);
+				appointmentTest.setTestResult(testResult);
 			}
 			
 			appointmentTest.setTestType(testTypeManager.getSpecificTestType(rs.getInt("test_type_id")));

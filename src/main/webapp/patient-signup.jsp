@@ -55,34 +55,34 @@
 	                <div class="form-container p-5">
 	                    <form method="post" action="patients">
 	            <div class="mb-3">
-	               <label class="form-label">Name</label>
+	               <label class="form-label">Name <small class="text-danger">(* required)</small></label>
 	               <input type="text" class="form-control" id="name" name="name" value="${name}" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">E-mail</label>
+	               <label class="form-label">E-mail <small class="text-danger">(* required)</small></label>
 	               <input type="email" class="form-control" id="email" name="email" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Contact Number</label>
+	               <label class="form-label">Contact Number <small class="text-danger">(* required)</small></label>
 	               <input type="tel" class="form-control" id="contact_number" name="contact_number" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Date of Birth</label>
+	               <label class="form-label">Date of Birth <small class="text-danger">(* required)</small></label>
 	               <input type="date" class="form-control" id="dob" name="dob" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Gender</label>
+	               <label class="form-label">Gender <small class="text-danger">(* required)</small></label>
 	               <select class="form-control" class="form-control" id="gender" name="gender" required>
 	               		<option value="Male">Male</option>
 	               		<option value="Female">Female</option>
 	               </select>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Password</label>
+	               <label class="form-label">Password <small class="text-danger">(* required)</small></label>
 	               <input type="password" class="form-control" id="password" name="password" required>
 	            </div>
 	            <div class="mb-3">
-	               <label class="form-label">Confirm Password</label>
+	               <label class="form-label">Confirm Password <small class="text-danger">(* required)</small></label>
 	               <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
 	            </div>
 	            <input type="hidden" name="type" value="create"/>

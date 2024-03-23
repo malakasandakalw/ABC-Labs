@@ -369,7 +369,6 @@ public class ReceptionistsController extends HttpServlet {
 		
 		
 		try {
-			System.out.println("000000000000000000000----------" + testTypeId);
 			techniciansList = technicianService.getTechniciansByTestTypeId(testTypeId);
 		} catch (Exception e) {
 			message = e.getMessage();

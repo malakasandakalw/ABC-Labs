@@ -185,14 +185,12 @@
 						    		<td>${appointmentTest.status}</td>
 						    		<td>${appointmentTest.testType.price}</td>
 						    		<td>
-										<tag:if test='${appointmentTest.status eq "Confirmed, Waiting for payment" || appointmentTest.status eq "Processing"}'>
+										<tag:if test='${appointmentTest.status eq "Conducted"}'>
 										    <form method="get" action="appointmentTest">
 										        <input type="hidden" value="${appointmentTest.testType.id}" id="test_type_id" name="test_type_id" required>
 										        <input type="hidden" value="${appointment.id}" id="test_appointment_id" name="test_appointment_id" required>
 										        <input type="hidden" value="get-specific-by-appointment" name="type" required>
-										        <tag:if test='${appointmentTest.status eq "Done"}'>
-										        	<a href="view?fileName=${ appointmentTest.getTestResult().getFileUrl()}">View Attached File</a>
-										        </tag:if>
+										        <a href="view?fileName=${ appointmentTest.getTestResult().getFileUrl()}">View Result</a>
 										    </form>
 										</tag:if>
 						    		</td>

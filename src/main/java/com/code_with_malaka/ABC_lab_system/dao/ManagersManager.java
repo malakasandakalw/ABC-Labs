@@ -107,7 +107,6 @@ public class ManagersManager {
 		Connection connection = getConnection(); 
 		String query = "SELECT * FROM managers WHERE id = ?";
 		PreparedStatement ps = connection.prepareStatement(query);
-		System.out.println("id ---- " + id);
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 		Manager manager = new Manager();

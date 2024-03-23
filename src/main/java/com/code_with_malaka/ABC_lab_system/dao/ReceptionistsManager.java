@@ -18,9 +18,7 @@ public class ReceptionistsManager {
 	}
 	
 	private Connection getConnection() throws ClassNotFoundException, SQLException {
-		System.out.println("here 1");
 		DbConnector connector =  getDbConnector();
-		System.out.println(connector);
 		return connector.getDbConnection();
 	}
 	

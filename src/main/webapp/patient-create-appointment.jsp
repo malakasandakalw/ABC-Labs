@@ -52,11 +52,11 @@
 		<div class="col-md-5 mx-auto bg-white p-5">
 			<form method="post" action="appointments">
 			  <div class="mb-3">
-			    <label class="form-label">Recommended Doctor details</label>
+			    <label class="form-label">Recommended Doctor details <small class="text-danger">(* required)</small></label>
 			    <textarea class="form-control" id="details" name="details" required></textarea>
 			  </div>
 			  <div class="mb-3">
-			    <label class="form-label">Required Tests</label>
+			    <label class="form-label">Required Tests <small class="text-danger">(* required)</small></label>
 			    <select class="form-select" id="tests" name="tests" required multiple>
 			    	<tag:forEach var="testType" items="${testTypesList}">	
 					  <option value="${testType.id}">${testType.name} - Rs. ${testType.price}</option>					
@@ -64,11 +64,11 @@
 			    </select>
 			  </div>
 			  <div class="mb-3">
-			    <label class="form-label">Email</label>
+			    <label class="form-label">Email <small class="text-danger">(* required)</small></label>
 			    <input type="email" class="form-control" id="email" name="email" required>
 			  </div>			  
 			  <div class="mb-3">
-			    <label class="form-label">Contact Number</label>
+			    <label class="form-label">Contact Number <small class="text-danger">(* required)</small></label>
 			    <input type="tel" class="form-control" id="contact_number" name="contact_number" required>
 			  </div>			  
 			  <input type="hidden" name="type" value="create"/>
