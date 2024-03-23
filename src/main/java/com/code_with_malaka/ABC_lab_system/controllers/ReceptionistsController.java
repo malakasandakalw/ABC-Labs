@@ -406,6 +406,7 @@ public class ReceptionistsController extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("appointment_id"));
 			appointment = appointmentService.getSpecificAppointment(id);
 			List<AppointmentTest> appointmentTests = appointmentTestsService.getAppointmentTestsByAppointmentId(id);
+			
 			appointment.setAppointmentTests(appointmentTests);
 		} catch (ClassNotFoundException | SQLException e) {
 			message = e.getMessage();
@@ -460,8 +461,6 @@ public class ReceptionistsController extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("appointment_test_id"));
 		Technician technician = new Technician(Integer.parseInt(request.getParameter("appointment_test_technicians")));
 		String status = request.getParameter("appointment_test_status"); 
-		
-		
 		
 		AppointmentTest appointmentTest = new AppointmentTest(id, technician, status);
 		boolean result;

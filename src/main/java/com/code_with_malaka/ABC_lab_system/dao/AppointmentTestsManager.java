@@ -191,7 +191,7 @@ public class AppointmentTestsManager {
 		
 		List<AppointmentTest> appointmentTestsList = new ArrayList<AppointmentTest>();
 		
-		String query = "SELECT * FROM appointment_tests WHERE technician_id = ?";
+		String query = "SELECT * FROM appointment_tests WHERE technician_id = ? ORDER BY id DESC";
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setInt(1, technicianId);
 		ResultSet rs = ps.executeQuery();

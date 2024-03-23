@@ -52,7 +52,8 @@
          </div>
          <hr>
          <div class="table-container">
-	         <table class="table table-stripped">
+         <input class="form-control" type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search by appointment number.." title="">
+	         <table class="table table-stripped" id="dataTable">
 	            <thead>
 	               <tr>
 	                  <th>Appointment Number</th>
@@ -63,7 +64,7 @@
 	            </thead>
 	            <tbody>
 	               <tag:forEach var="technicianAppointmentTest" items="${technicianAppointmentTests}">
-	                  <tr>
+	                  <tr class="filter">
 	                     <td>${technicianAppointmentTest.appointment.id}</td>
 	                     <td>${technicianAppointmentTest.appointment.status}</td>
 	                     <td>${technicianAppointmentTest.status}</td>
@@ -84,6 +85,29 @@
 	         </table>
 	      </div>
       </div>
+      <script>
+	function searchFunction() {
+	  var input, filter, table, tr, td, i, txtValue;
+	  
+	  input = document.getElementById("searchInput");
+	  filter = input.value.toUpperCase();
+	  table = document.getElementById("dataTable");
+	  tr = table.getElementsByClassName("filter");
+	  
+	  for (i = 0; i < tr.length; i++) {
+		td = tr[i].getElementsByTagName("td")[0];
+		if (td) {
+		  txtValue = td.textContent || td.innerText;
+		  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		  } else {
+			tr[i].style.display = "none";
+		  }
+		}       
+	  }
+	  
+	}
+	</script>
    </body>
 </html>
 <%

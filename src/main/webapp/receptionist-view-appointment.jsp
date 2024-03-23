@@ -58,13 +58,37 @@
 			    <div class="row">
 			    	<div class="col-md-6">
 					    <div class="mb-3">
+						    <label class="form-label">Patient's Name</label>
+						    <input type="text" class="form-control" value="${appointment.patient.name}" name="appointment_patient_name" id="appointment_patient_name" required readonly>
+					    </div>
+			    	</div>
+			    	<div class="col-md-6">
+					    <div class="mb-3">
+						    <label class="form-label">Patient's Gender</label>
+						    <input type="text" class="form-control" value="${appointment.patient.gender}" name="appointment_patient_gender" id="appointment_patient_gender" required readonly>
+					    </div>
+			    	</div>
+			    	<div class="col-md-6">
+					    <div class="mb-3">
 						    <label class="form-label">Patient's Contact Number</label>
-						    <input type="text" class="form-control" value="${appointment.contactNumber}" name="appointment_contact_number" id="appointment_contact_number" required readonly>
+						    <input type="text" class="form-control" value="${appointment.patient.contactNumber}" name="appointment_patient_gender" id="appointment_patient_gender" required readonly>
 					    </div>
 			    	</div>
 			    	<div class="col-md-6">
 					    <div class="mb-3">
 						    <label class="form-label">Patient's Email</label>
+						    <input type="text" class="form-control" value="${appointment.patient.email}" name="appointment_patient_gender" id="appointment_patient_gender" required readonly>
+					    </div>
+			    	</div>
+			    	<div class="col-md-6">
+					    <div class="mb-3">
+						    <label class="form-label">Provided Contact Number for Appointment</label>
+						    <input type="text" class="form-control" value="${appointment.contactNumber}" name="appointment_contact_number" id="appointment_contact_number" required readonly>
+					    </div>
+			    	</div>
+			    	<div class="col-md-6">
+					    <div class="mb-3">
+						    <label class="form-label">Provided Email for Appointment</label>
 						    <input type="text" class="form-control" value="${appointment.email}"  name="appointment_email" id="appointment_email" required readonly>
 					    </div>
 			    	</div>

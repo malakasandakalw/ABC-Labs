@@ -15,7 +15,16 @@ public class Appointment {
 	private String email;
 	private Timestamp createdAt;
 	private PaymentRecipt paymentRecipt;
+	private Patient patient;
 	
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
 	public Appointment(int id, Date date, String status, Double totalPrice) {
 		this.id = id;
 		this.date = date;

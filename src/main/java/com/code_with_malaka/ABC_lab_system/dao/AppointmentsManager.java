@@ -98,8 +98,9 @@ public class AppointmentsManager {
 		Connection connection = getConnection();
 		AppointmentTestsManager appointmentTestsManager = new AppointmentTestsManager();
 		PaymentReciptsManager paymentReciptsManager = new PaymentReciptsManager();
+		PatientsManager patientsManager = new PatientsManager();
 		
-		String query = "SELECT id, contact_number, email, created_at, date, doctor_details, status, total_price, (SELECT id FROM payment_recipts WHERE payment_recipts.appointment_id = appointments.id) AS payment_id FROM appointments WHERE id = ?";
+		String query = "SELECT id, patient_id, contact_number, email, created_at, date, doctor_details, status, total_price, (SELECT id FROM payment_recipts WHERE payment_recipts.appointment_id = appointments.id) AS payment_id FROM appointments WHERE id = ?";
 		
 		
 		PreparedStatement ps = connection.prepareStatement(query);
@@ -120,6 +121,7 @@ public class AppointmentsManager {
 			appointment.setStatus(rs.getString("status"));
 			appointment.setTotalPrice(rs.getDouble("total_price"));
 			appointment.setAppointmentTests(appointmentTestsManager.getAppointmentTestsByAppointmentId(id));
+			appointment.setPatient(patientsManager.getSpecificPatient(rs.getInt("patient_id")));
 			
 			int paymentId = rs.getInt("payment_id");
 			
