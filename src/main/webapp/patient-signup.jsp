@@ -29,7 +29,7 @@
 	<body>
 	    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/">ABC Labs Online</a>
+            <a class="navbar-brand" href="#">ABC Labs Online</a>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item me-2">
